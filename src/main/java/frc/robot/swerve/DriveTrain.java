@@ -49,10 +49,10 @@ public class DriveTrain extends SubsystemBase {
     // Note: Angles range from -180 to +180 degrees CW; zero is straight ahead
 
     // Calculate factors once, as they are used multiple times
-    double A = x - (omega * (Constants.DRIVE_LENGTH * 2));
-    double B = x + (omega * (Constants.DRIVE_LENGTH * 2));
-    double C = y - (omega * (Constants.DRIVE_WIDTH * 2));
-    double D = y + (omega * (Constants.DRIVE_WIDTH * 2));
+    double A = x - (omega * (Constants.DRIVE_LENGTH * 2.0));
+    double B = x + (omega * (Constants.DRIVE_LENGTH * 2.0));
+    double C = y - (omega * (Constants.DRIVE_WIDTH * 2.0));
+    double D = y + (omega * (Constants.DRIVE_WIDTH * 2.0));
 
     // Start calculating module positions
     // Speed calculations
