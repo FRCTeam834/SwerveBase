@@ -16,7 +16,7 @@ import frc.robot.subsystems.NavX;
 import frc.robot.swerve.DriveTrain;
 
 // Commands
-
+import frc.robot.commands.LetsRoll;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -30,6 +30,9 @@ public class Robot extends TimedRobot {
   // Subsystems
   public static NavX navX;
   public static DriveTrain driveTrain;
+  
+  // Commands
+  public static LetsRoll letsRoll;
 
 
 
@@ -44,6 +47,7 @@ public class Robot extends TimedRobot {
 
     navX = new NavX();
     driveTrain = new DriveTrain();
+    letsRoll = new LetsRoll();
 
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
@@ -115,6 +119,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+    
   }
 
   @Override
