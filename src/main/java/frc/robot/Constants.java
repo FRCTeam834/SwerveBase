@@ -8,6 +8,7 @@
 package frc.robot;
 import frc.robot.swerve.PID_GAINS;
 
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants.  This class should not be used for any other purpose.  All constants should be
@@ -18,15 +19,22 @@ import frc.robot.swerve.PID_GAINS;
  */
 public final class Constants {
 
-    public static final int SSN = 123352357; //Social Security Number[DO NOT LOSE]
+    public static final int SSN = 123352357; //Social Security Number [DO NOT LOSE]
     public static final double USD_TO_GHS = 5.748; //US Dollar to Gana Cedi conversion rate
     public static final double MM_TO_IK = 2.15; //Mozambican metical to Icelandic Krona conversion rate
     public static final double MIN_IN_HR = 60; //Minutes in an hour
     public static final int BUILD_TEAM_BRAIN_CELLS = 1; //Brain cells owned by the build team
     public static final int CODING_TEAM_BRAIN_CELLS = 5; //Same as the amount of coding team members
     public static final int SHRIMP_ON_THE_BARBIE = 3; //Number of shrimp on the barbeque
-    public static final int ANDREWS_PROGRESS_WHEN_AROUND_SAFETY_TEAM = -10;
+    public static final int ANDREWS_PROGRESS_WHEN_AROUND_SAFETY_TEAM = -10; //What happens when Andrew is around the safety team... backwards progress
     
+    // Driver parameters
+    public static final double JOYSTICK_DEADZONE = 0.15;
+    public static final double TURN_SCALE = 1; // Scaling on the turning
+    public static final double DRIVE_RAMP_RATE = 0.5; // Drive motor ramp rate
+    public static final boolean LOCKEM_UP = true; // Lock the swerve base from moving if there is no stick movement
+    public static final boolean FIELD_CENTRIC = true; // Set up the swerve to respect the field, not itself
+    public static final double MAX_SPEED = 1; // The maximum travel speed of the robot
 
     // CAN parameters
     public static final int FRONT_LEFT_STEER_ID = 1;
@@ -43,6 +51,10 @@ public final class Constants {
     // Swerve calculation parameters
     public static final double DRIVE_LENGTH = -1;
     public static final double DRIVE_WIDTH = -1;
+    public static final double DRIVE_RADIUS = Math.sqrt( (Math.pow(DRIVE_LENGTH, 2) + Math.pow(DRIVE_WIDTH, 2)) / 2);
+
+    public static final int ENCODER_COUNTS_PER_REVOLUTION = 1024;
+    public static final int SWERVE_WHEEL_DIA = 4;
 
     
     /**

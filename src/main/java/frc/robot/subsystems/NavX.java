@@ -17,7 +17,7 @@ public class NavX extends SubsystemBase {
    * Creates a new NavX.
    */
 
-  AHRS ahrs = new AHRS(SPI.Port.kMXP);
+  AHRS navX = new AHRS(SPI.Port.kMXP);
 
   public NavX() {
   }
@@ -29,42 +29,47 @@ public class NavX extends SubsystemBase {
 
   // Grabs the yaw
   public float getYaw() {
-    return ahrs.getYaw();
+    return navX.getYaw();
+  }
+
+  // Fused heading is like yaw, but on crack
+  public float getFusedHeading() {
+    return navX.getFusedHeading();
   }
 
   // Grabs the roll
   public float getRoll() {
-    return ahrs.getRoll();
+    return navX.getRoll();
   }
 
   // Grabs the pitch
   public float getPitch() {
-    return ahrs.getPitch();
+    return navX.getPitch();
   }
 
   // Gets the x displacement
   public float getDisplacementX() {
-    return ahrs.getDisplacementX();
+    return navX.getDisplacementX();
   }
 
   // Gets the y displacement
   public float getDisplacementY() {
-    return ahrs.getDisplacementY();
+    return navX.getDisplacementY();
   }
 
   // Gets the z displacement
   public float getDisplacementZ() {
-    return ahrs.getDisplacementZ();
+    return navX.getDisplacementZ();
   }
 
   // Gets the current degrees
   public float getCurrentDegrees() {
-    return ahrs.getCompassHeading();
+    return navX.getCompassHeading();
   }
 
   // Resets the NavX
   public void resetGyro() {
-    ahrs.reset();
+    navX.reset();
   }
 
   public void resetDisplacement() {
