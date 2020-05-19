@@ -10,6 +10,9 @@ package frc.robot.swerve;
 // Constants
 import frc.robot.Constants;
 
+// Internal libraries
+import frc.robot.swerve.PID_PARAMETERS;
+
 // Vendor Libs
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.revrobotics.CANSparkMax;
@@ -23,21 +26,28 @@ public class SwerveModule {
   private CANSparkMax driveMotor;
   private boolean driveMotorInverted = false;
   
-  public SwerveModule(int steerID, int driveID) {
+  public SwerveModule(int steerID, int driveID, PID_PARAMETERS PID_params) {
 
     // Steering motor
     steerMotor = new WPI_TalonSRX(steerID);
     steerMotor.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.Analog, 0, 10);
-    //steerMotor
-    steerMotor.config_kF(Constants.PID_IDX, Constants.PID_PARAM.F, Constants.PID_TIMEOUT);
-    steerMotor.config_kP(Constants.PID_IDX, Constants.PID_PARAM.P, Constants.PID_TIMEOUT);
-    steerMotor.config_kI(Constants.PID_IDX, Constants.PID_PARAM.I, Constants.PID_TIMEOUT);
-    steerMotor.config_kD(Constants.PID_IDX, Constants.PID_PARAM.D, Constants.PID_TIMEOUT);
+    steerMotor.config_kF(Constants.PID_IDX, PID_params.F, Constants.PID_TIMEOUT);
+    steerMotor.config_kP(Constants.PID_IDX, PID_params.P, Constants.PID_TIMEOUT);
+    steerMotor.config_kI(Constants.PID_IDX, PID_params.I, Constants.PID_TIMEOUT);
+    steerMotor.config_kD(Constants.PID_IDX, PID_params.D, Constants.PID_TIMEOUT);
+
     // Drive motor
     driveMotor = new CANSparkMax(driveID, CANSparkMax.MotorType.kBrushless);
     driveMotor.setOpenLoopRampRate(Constants.DRIVE_RAMP_RATE);
     driveMotor.setIdleMode(IdleMode.kBrake);
     
+  }
+
+  public void setSteerPIDParams(PID_PARAMETERS PID_params) {
+    steerMotor.config_kF(Constants.PID_IDX, PID_params.F, Constants.PID_TIMEOUT);
+    steerMotor.config_kP(Constants.PID_IDX, PID_params.P, Constants.PID_TIMEOUT);
+    steerMotor.config_kI(Constants.PID_IDX, PID_params.I, Constants.PID_TIMEOUT);
+    steerMotor.config_kD(Constants.PID_IDX, PID_params.D, Constants.PID_TIMEOUT);
   }
 
   // Gets the steering motor for the selected module

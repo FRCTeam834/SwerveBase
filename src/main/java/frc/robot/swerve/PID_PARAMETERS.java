@@ -3,7 +3,7 @@
  */
 package frc.robot.swerve;
 
-public class PID_GAINS {
+public class PID_PARAMETERS {
     public final double P;
     public final double I;
     public final double D;
@@ -11,7 +11,7 @@ public class PID_GAINS {
     public final int I_ZONE;
     public final double PEAK_OUTPUT;
     
-    public PID_GAINS(double P, double I, double D, double F, int I_ZONE, double PEAK_OUPUT){
+    public PID_PARAMETERS(double P, double I, double D, double F, int I_ZONE, double PEAK_OUPUT){
         this.P = P;
         this.I = I;
         this.D = D;

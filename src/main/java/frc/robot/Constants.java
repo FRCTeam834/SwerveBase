@@ -6,7 +6,7 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot;
-import frc.robot.swerve.PID_GAINS;
+import frc.robot.swerve.PID_PARAMETERS;
 
 
 /**
@@ -56,14 +56,30 @@ public final class Constants {
     public static final int ENCODER_COUNTS_PER_REVOLUTION = 1024;
     public static final int SWERVE_WHEEL_DIA = 4;
 
-    
     /**
      * PID parameters
 	 * Gains used in each module's steering motor, to be adjusted accordingly
-     * Gains(kp, ki, kd, kf, izone, peak output);
+     * Gains(kp, ki, kd, kf, izone, PID timeout, peak output);
      */
-    public static final PID_GAINS PID_PARAM = new PID_GAINS(0.15, 0.0, 1.0, 0.0, 0, 1.0);
+    public static final PID_PARAMETERS FL_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, 1.0);
+    public static final PID_PARAMETERS FR_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, 1.0);
+    public static final PID_PARAMETERS BL_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, 1.0);
+    public static final PID_PARAMETERS BR_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, 1.0);
+
     public static final int PID_IDX = 0;
     public static final int PID_TIMEOUT = 30;
+
+
+    // Vision parameters - used for distance calculations 
+
+    // Camera-specific parameters (pixels)
+    public static final double CAMERA_FOCAL_LENGTH = 333.82;
+
+
+    // Game-specific parameters (inches)
+    public static final double GOAL_HEIGHT = 34; 
+    public static final double POWER_HEIGHT = 7;
+
+
 
 }
