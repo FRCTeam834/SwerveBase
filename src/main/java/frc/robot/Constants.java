@@ -48,23 +48,28 @@ public final class Constants {
     public static final int BACK_RIGHT_DRIVE_ID = 8;
 
 
-    // Swerve calculation parameters
-    public static final double DRIVE_LENGTH = -1;
-    public static final double DRIVE_WIDTH = -1;
+    // Swerve calculation parameters (in meters)
+    public static final double DRIVE_LENGTH = 0.4;
+    public static final double DRIVE_WIDTH = 0.3;
     public static final double DRIVE_RADIUS = Math.sqrt( (Math.pow(DRIVE_LENGTH, 2) + Math.pow(DRIVE_WIDTH, 2)) / 2);
 
     public static final int ENCODER_COUNTS_PER_REVOLUTION = 1024;
-    public static final int SWERVE_WHEEL_DIA = 4;
+    public static final int SWERVE_WHEEL_DIA = 4; // Inches
 
     /**
      * PID parameters
 	 * Gains used in each module's steering motor, to be adjusted accordingly
      * Gains(kp, ki, kd, kf, izone, PID timeout, peak output);
      */
-    public static final PID_PARAMETERS FL_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, 1.0);
-    public static final PID_PARAMETERS FR_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, 1.0);
-    public static final PID_PARAMETERS BL_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, 1.0);
-    public static final PID_PARAMETERS BR_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, 1.0);
+    public static final PID_PARAMETERS FL_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, MAX_SPEED);
+    public static final PID_PARAMETERS FR_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, MAX_SPEED);
+    public static final PID_PARAMETERS BL_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, MAX_SPEED);
+    public static final PID_PARAMETERS BR_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, MAX_SPEED);
+
+    public static final PID_PARAMETERS FL_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, MAX_SPEED);
+    public static final PID_PARAMETERS FR_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, MAX_SPEED);
+    public static final PID_PARAMETERS BL_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, MAX_SPEED);
+    public static final PID_PARAMETERS BR_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, MAX_SPEED);
 
     public static final int PID_IDX = 0;
     public static final int PID_TIMEOUT = 30;
@@ -78,7 +83,7 @@ public final class Constants {
 
     // Game-specific parameters (inches)
     public static final double GOAL_HEIGHT = 34; 
-    public static final double POWER_HEIGHT = 7;
+    public static final double POWER_CELL_HEIGHT = 7;
 
 
 

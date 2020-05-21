@@ -15,39 +15,67 @@ import frc.robot.swerve.PID_PARAMETERS;
 
 // Vendor Libs
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.revrobotics.CANPIDController;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.TalonSRXFeedbackDevice;
+
+// WPI Libraries
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+
 
 public class SwerveModule {
 
   private WPI_TalonSRX steerMotor;
   private CANSparkMax driveMotor;
   private boolean driveMotorInverted = false;
+  private CANPIDController driveMotorPID;
   
-  public SwerveModule(int steerID, int driveID, PID_PARAMETERS PID_params) {
+
+  public SwerveModule(int steerID, int driveID, PID_PARAMETERS T_PID_params, PID_PARAMETERS D_PID_params) {
 
     // Steering motor
     steerMotor = new WPI_TalonSRX(steerID);
     steerMotor.configSelectedFeedbackSensor(TalonSRXFeedbackDevice.Analog, 0, 10);
-    steerMotor.config_kF(Constants.PID_IDX, PID_params.F, Constants.PID_TIMEOUT);
-    steerMotor.config_kP(Constants.PID_IDX, PID_params.P, Constants.PID_TIMEOUT);
-    steerMotor.config_kI(Constants.PID_IDX, PID_params.I, Constants.PID_TIMEOUT);
-    steerMotor.config_kD(Constants.PID_IDX, PID_params.D, Constants.PID_TIMEOUT);
+    steerMotor.config_kF(Constants.PID_IDX, T_PID_params.FF, Constants.PID_TIMEOUT);
+    steerMotor.config_kP(Constants.PID_IDX, T_PID_params.P, Constants.PID_TIMEOUT);
+    steerMotor.config_kI(Constants.PID_IDX, T_PID_params.I, Constants.PID_TIMEOUT);
+    steerMotor.config_kD(Constants.PID_IDX, T_PID_params.D, Constants.PID_TIMEOUT);
 
     // Drive motor
     driveMotor = new CANSparkMax(driveID, CANSparkMax.MotorType.kBrushless);
     driveMotor.setOpenLoopRampRate(Constants.DRIVE_RAMP_RATE);
     driveMotor.setIdleMode(IdleMode.kBrake);
+
+    driveMotorPID = new CANPIDController(driveMotor);
+    driveMotor.getEncoder().setVelocityConversionFactor(42);
+    driveMotorPID.setFF(D_PID_params.FF);
+    driveMotorPID.setP(D_PID_params.P);
+    driveMotorPID.setI(D_PID_params.I);
+    driveMotorPID.setD(D_PID_params.D);
+    driveMotorPID.setIZone(D_PID_params.I_ZONE);
+    driveMotorPID.setOutputRange(-D_PID_params.PEAK_OUTPUT, D_PID_params.PEAK_OUTPUT);
     
   }
 
   public void setSteerPIDParams(PID_PARAMETERS PID_params) {
-    steerMotor.config_kF(Constants.PID_IDX, PID_params.F, Constants.PID_TIMEOUT);
+    steerMotor.config_kF(Constants.PID_IDX, PID_params.FF, Constants.PID_TIMEOUT);
     steerMotor.config_kP(Constants.PID_IDX, PID_params.P, Constants.PID_TIMEOUT);
     steerMotor.config_kI(Constants.PID_IDX, PID_params.I, Constants.PID_TIMEOUT);
     steerMotor.config_kD(Constants.PID_IDX, PID_params.D, Constants.PID_TIMEOUT);
+  }
+
+  public void setDrivePIDParams(PID_PARAMETERS PID_params) {
+    driveMotorPID.setFF(PID_params.FF);
+    driveMotorPID.setP(PID_params.P);
+    driveMotorPID.setI(PID_params.I);
+    driveMotorPID.setD(PID_params.D);
+    driveMotorPID.setIZone(PID_params.I_ZONE);
+    driveMotorPID.setOutputRange(-PID_params.PEAK_OUTPUT, PID_params.PEAK_OUTPUT);
   }
 
   // Gets the steering motor for the selected module
@@ -101,5 +129,29 @@ public class SwerveModule {
     driveMotor.set(speed);
   }
 
+  public void setDriveSpeedM(double metersPerSec) {
+    // Do some things
+    
+
+  }
+
+  public void setDesiredState(SwerveModuleState state) {
+    // Set module to the right angles and speeds
+    setDriveAngle(state.angle.getDegrees()); 
+    setDriveSpeedM(state.speedMetersPerSecond);
+
+  }
+
+  public SwerveModuleState getState() {
+
+    // Get the current position of the encoder and then calculate the degrees
+    double currentPosition = steerMotor.getSelectedSensorPosition(0);
+    double currentAngle = (currentPosition * 360.0 / Constants.ENCODER_COUNTS_PER_REVOLUTION) % 360.0;
+
+    // Get RPM and multiply by the circumference of the wheel in meters
+    double speedMetersPerSecond = driveMotor.getEncoder().getVelocity() * (Constants.SWERVE_WHEEL_DIA / 39.37) * Math.PI;
+
+    return new SwerveModuleState(speedMetersPerSecond, new Rotation2d(Math.toRadians(currentAngle)));
+  }
   
 }
