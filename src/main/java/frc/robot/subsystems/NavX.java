@@ -11,6 +11,7 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 
 public class NavX extends SubsystemBase {
   /**
@@ -35,6 +36,11 @@ public class NavX extends SubsystemBase {
   // Fused heading is like yaw, but on crack
   public float getFusedHeading() {
     return navX.getFusedHeading();
+  }
+
+  // The Rotation2D big brother of fused heading
+  public Rotation2d getFusedRotation2d() {
+    return Rotation2d.fromDegrees(navX.getFusedHeading());
   }
 
   // Grabs the roll

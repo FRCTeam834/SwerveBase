@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.geometry.Rotation2d;
 
 // Import constants
 import frc.robot.Constants;
@@ -54,17 +53,12 @@ public class DriveTrain extends SubsystemBase {
 
   }
   
-  private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, getAngle());
-
-  public Rotation2d getAngle() {
-    // Adjusted angle
-    return Rotation2d.fromDegrees(Robot.navX.getFusedHeading());
-  }
+  private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, Robot.navX.getFusedRotation2d());
 
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
     var swerveModuleStates = kinematics.toSwerveModuleStates(
         fieldRelative ? ChassisSpeeds.fromFieldRelativeSpeeds(
-            xSpeed, ySpeed, rot, getAngle())
+            xSpeed, ySpeed, rot, Robot.navX.getFusedRotation2d())
             : new ChassisSpeeds(xSpeed, ySpeed, rot)
     );
     SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, Constants.MAX_SPEED);
@@ -87,19 +81,18 @@ public class DriveTrain extends SubsystemBase {
    */
   public void updateOdometry() {
     odometry.update(
-        getAngle(),
+        Robot.navX.getFusedRotation2d(),
         frontLeft.getState(),
         frontRight.getState(),
         backLeft.getState(),
         backRight.getState()
     );
   }
-/*
-  public void resetOdometry(FieldCoordinates currentPosition) {
-    odometry.resetPose()
 
+  public void resetOdometry(FieldCoordinates currentPosition) {
+    odometry.resetPosition(currentPosition.toPose2D(), Robot.navX.getFusedRotation2d());
   }
-*/
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

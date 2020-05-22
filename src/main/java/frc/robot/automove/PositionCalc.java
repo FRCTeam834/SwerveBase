@@ -34,7 +34,7 @@ public class PositionCalc extends SubsystemBase {
     double x = distanceToGoal * Math.cos(robotAngle);
     double y = distanceToGoal * Math.sin(robotAngle);
 
-    FieldCoordinates currentPosition = new FieldCoordinates(x, y);
+    FieldCoordinates currentPosition = new FieldCoordinates(x, y, Robot.navX.getFusedHeading());
 
     return currentPosition;
   }
