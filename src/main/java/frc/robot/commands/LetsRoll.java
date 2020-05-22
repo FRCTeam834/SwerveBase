@@ -33,7 +33,8 @@ public class LetsRoll extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    driveTrain.drive(Constants.MAX_SPEED, Constants.FIELD_CENTRIC, Constants.LOCKEM_UP);
+    // X and Y are flipped because WPI dumb
+    driveTrain.drive(left.getY(), left.getX(), right.getX(), Constants.FIELD_CENTRIC);
   }
 
   // Called once the command ends or is interrupted.

@@ -75,7 +75,11 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public void lockemUp() {
-    // Fix later
+    // Makes an X pattern with the swerve base
+    frontLeft.setDriveAngle(-45);
+    frontRight.setDriveAngle(45);
+    backLeft.setDriveAngle(45);
+    backRight.setDriveAngle(-45);
   }
 
   /**

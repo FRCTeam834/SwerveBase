@@ -54,7 +54,8 @@ public final class Constants {
     public static final double DRIVE_RADIUS = Math.sqrt( (Math.pow(DRIVE_LENGTH, 2) + Math.pow(DRIVE_WIDTH, 2)) / 2);
 
     public static final int ENCODER_COUNTS_PER_REVOLUTION = 1024;
-    public static final int SWERVE_WHEEL_DIA = 4; // Inches
+    public static final double SWERVE_WHEEL_DIA = 4; // Inches
+    public static final double SWERVE_WHEEL_DIA_M = SWERVE_WHEEL_DIA / 39.37; // Meters (for odometry calculations)
 
     /**
      * PID parameters
