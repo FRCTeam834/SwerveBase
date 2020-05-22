@@ -9,7 +9,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants;
+import frc.robot.Parameters;
 import frc.robot.Robot;
 import frc.robot.swerve.DriveTrain;
 
@@ -33,8 +33,50 @@ public class LetsRoll extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // X and Y are flipped because WPI dumb
-    driveTrain.drive(left.getY(), left.getX(), right.getX(), Constants.FIELD_CENTRIC);
+
+    // Get all of the current joystick inputs
+    double leftX = left.getX();
+    double leftY = left.getY();
+    double rightX = right.getX();
+
+    // Do we need to move?
+    boolean move = false;
+
+    // Check to see if joysticks are out of range. If out, we need to move, otherwise set the sticks to zero.
+    // Left X
+    if (leftX < Parameters.JOYSTICK_DEADZONE) {
+      leftX = 0;
+    }
+    else {
+      move = true;
+    }
+
+    // Left Y
+    if (leftY < Parameters.JOYSTICK_DEADZONE) {
+      leftY = 0;
+    }
+    else {
+      move = true;
+    }
+
+    // Right X
+    if (rightX < Parameters.JOYSTICK_DEADZONE) {
+      rightX = 0;
+    }
+    else {
+      move = true;
+    }
+    
+    // If any of the sticks are out of range, then we need to move. Otherwise, get to it
+    if (move) {
+      // X and Y are flipped because WPI dumb
+      driveTrain.drive(left.getY(), left.getX(), right.getX(), Parameters.FIELD_CENTRIC);
+    }
+    else if (Parameters.LOCKEM_UP) {
+      driveTrain.lockemUp();
+    }
+    
+    
   }
 
   // Called once the command ends or is interrupted.

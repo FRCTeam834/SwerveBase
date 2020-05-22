@@ -69,7 +69,7 @@ public class NavX extends SubsystemBase {
   }
 
   // Gets the current degrees
-  public float getCurrentDegrees() {
+  public float getCompassHeading() {
     return navX.getCompassHeading();
   }
 

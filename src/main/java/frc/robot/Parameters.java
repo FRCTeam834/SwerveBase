@@ -6,6 +6,8 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot;
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import frc.robot.swerve.PID_PARAMETERS;
 
 
@@ -17,7 +19,7 @@ import frc.robot.swerve.PID_PARAMETERS;
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
  */
-public final class Constants {
+public final class Parameters {
 
     public static final int SSN = 123352357; //Social Security Number [DO NOT LOSE]
     public static final double USD_TO_GHS = 5.748; //US Dollar to Gana Cedi conversion rate
@@ -29,12 +31,13 @@ public final class Constants {
     public static final int ANDREWS_PROGRESS_WHEN_AROUND_SAFETY_TEAM = -10; //What happens when Andrew is around the safety team... backwards progress
     
     // Driver parameters
-    public static final double JOYSTICK_DEADZONE = 0.15;
-    public static final double TURN_SCALE = 1; // Scaling on the turning
-    public static final double DRIVE_RAMP_RATE = 0.5; // Drive motor ramp rate
-    public static final boolean LOCKEM_UP = true; // Lock the swerve base from moving if there is no stick movement
-    public static final boolean FIELD_CENTRIC = true; // Set up the swerve to respect the field, not itself
-    public static final double MAX_SPEED = 1; // The maximum travel speed of the robot
+    public static double JOYSTICK_DEADZONE = 0.15;
+    public static double TURN_SCALE = 1; // Scaling on the turning
+    public static double DRIVE_RAMP_RATE = 0.5; // Drive motor ramp rate
+    public static boolean LOCKEM_UP = true; // Lock the swerve base from moving if there is no stick movement
+    public static boolean FIELD_CENTRIC = true; // Set up the swerve to respect the field, not itself
+    public static double MAX_SPEED = 1; // The maximum travel speed of the robot
+    public static IdleMode DRIVE_IDLE_MODE = IdleMode.kBrake; // Brake when no other commands are in
 
     // CAN parameters
     public static final int FRONT_LEFT_STEER_ID = 1;
@@ -62,18 +65,18 @@ public final class Constants {
 	 * Gains used in each module's steering motor, to be adjusted accordingly
      * Gains(kp, ki, kd, kf, izone, PID timeout, peak output);
      */
-    public static final PID_PARAMETERS FL_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, MAX_SPEED);
-    public static final PID_PARAMETERS FR_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, MAX_SPEED);
-    public static final PID_PARAMETERS BL_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, MAX_SPEED);
-    public static final PID_PARAMETERS BR_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, MAX_SPEED);
+    public static PID_PARAMETERS FL_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, MAX_SPEED);
+    public static PID_PARAMETERS FR_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, MAX_SPEED);
+    public static PID_PARAMETERS BL_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, MAX_SPEED);
+    public static PID_PARAMETERS BR_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, MAX_SPEED);
 
-    public static final PID_PARAMETERS FL_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, MAX_SPEED);
-    public static final PID_PARAMETERS FR_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, MAX_SPEED);
-    public static final PID_PARAMETERS BL_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, MAX_SPEED);
-    public static final PID_PARAMETERS BR_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, MAX_SPEED);
+    public static PID_PARAMETERS FL_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, MAX_SPEED);
+    public static PID_PARAMETERS FR_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, MAX_SPEED);
+    public static PID_PARAMETERS BL_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, MAX_SPEED);
+    public static PID_PARAMETERS BR_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, MAX_SPEED);
 
-    public static final int PID_IDX = 0;
-    public static final int PID_TIMEOUT = 30;
+    public static int PID_IDX = 0;
+    public static int PID_TIMEOUT = 30;
 
 
     // Vision parameters - used for distance calculations 

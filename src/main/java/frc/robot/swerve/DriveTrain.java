@@ -7,7 +7,6 @@
 
 package frc.robot.swerve;
 
-
 // WPI libraries
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
@@ -15,15 +14,17 @@ import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-// Import constants
-import frc.robot.Constants;
+import com.revrobotics.ControlType;
+
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+// Import Parameters
+import frc.robot.Parameters;
 
 // Import robot
 import frc.robot.Robot;
-
+import frc.robot.commands.UpdatePIDs;
 // Internal libraries
 import frc.robot.swerve.SwerveModule;
-import frc.robot.automove.FieldCoordinates;
 
 
 public class DriveTrain extends SubsystemBase {
@@ -36,20 +37,20 @@ public class DriveTrain extends SubsystemBase {
   SwerveModule backLeft;
   SwerveModule backRight;
 
-  Translation2d FLLocation = new Translation2d(Constants.DRIVE_LENGTH / 2, Constants.DRIVE_WIDTH / 2);
-  Translation2d FRLocation = new Translation2d(Constants.DRIVE_LENGTH / 2, -Constants.DRIVE_WIDTH / 2);
-  Translation2d BLLocation = new Translation2d(-Constants.DRIVE_LENGTH / 2, Constants.DRIVE_WIDTH / 2);
-  Translation2d BRLocation = new Translation2d(-Constants.DRIVE_LENGTH / 2, -Constants.DRIVE_WIDTH / 2);
+  Translation2d FLLocation = new Translation2d(Parameters.DRIVE_LENGTH / 2, Parameters.DRIVE_WIDTH / 2);
+  Translation2d FRLocation = new Translation2d(Parameters.DRIVE_LENGTH / 2, -Parameters.DRIVE_WIDTH / 2);
+  Translation2d BLLocation = new Translation2d(-Parameters.DRIVE_LENGTH / 2, Parameters.DRIVE_WIDTH / 2);
+  Translation2d BRLocation = new Translation2d(-Parameters.DRIVE_LENGTH / 2, -Parameters.DRIVE_WIDTH / 2);
 
   SwerveDriveKinematics kinematics = new SwerveDriveKinematics(FLLocation, FRLocation, BLLocation, BRLocation);
 
 
   public DriveTrain() {
 
-    frontLeft = new SwerveModule(Constants.FRONT_LEFT_STEER_ID, Constants.FRONT_LEFT_DRIVE_ID, Constants.FL_T_PID_PARAM, Constants.FL_D_PID_PARAM);
-    frontRight = new SwerveModule(Constants.FRONT_RIGHT_STEER_ID, Constants.FRONT_RIGHT_DRIVE_ID, Constants.FR_T_PID_PARAM, Constants.FR_D_PID_PARAM);
-    backLeft = new SwerveModule(Constants.BACK_LEFT_STEER_ID, Constants.BACK_LEFT_DRIVE_ID, Constants.BL_T_PID_PARAM, Constants.BL_D_PID_PARAM);
-    backRight = new SwerveModule(Constants.BACK_RIGHT_STEER_ID, Constants.BACK_RIGHT_DRIVE_ID, Constants.BR_T_PID_PARAM, Constants.BR_D_PID_PARAM);
+    frontLeft = new SwerveModule(Parameters.FRONT_LEFT_STEER_ID, Parameters.FRONT_LEFT_DRIVE_ID, Parameters.FL_T_PID_PARAM, Parameters.FL_D_PID_PARAM);
+    frontRight = new SwerveModule(Parameters.FRONT_RIGHT_STEER_ID, Parameters.FRONT_RIGHT_DRIVE_ID, Parameters.FR_T_PID_PARAM, Parameters.FR_D_PID_PARAM);
+    backLeft = new SwerveModule(Parameters.BACK_LEFT_STEER_ID, Parameters.BACK_LEFT_DRIVE_ID, Parameters.BL_T_PID_PARAM, Parameters.BL_D_PID_PARAM);
+    backRight = new SwerveModule(Parameters.BACK_RIGHT_STEER_ID, Parameters.BACK_RIGHT_DRIVE_ID, Parameters.BR_T_PID_PARAM, Parameters.BR_D_PID_PARAM);
 
   }
   
@@ -61,7 +62,7 @@ public class DriveTrain extends SubsystemBase {
             xSpeed, ySpeed, rot, Robot.navX.getFusedRotation2d())
             : new ChassisSpeeds(xSpeed, ySpeed, rot)
     );
-    SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, Constants.MAX_SPEED);
+    SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, Parameters.MAX_SPEED);
     frontLeft.setDesiredState(swerveModuleStates[0]);
     frontRight.setDesiredState(swerveModuleStates[1]);
     backLeft.setDesiredState(swerveModuleStates[2]);
@@ -70,10 +71,18 @@ public class DriveTrain extends SubsystemBase {
 
   public void lockemUp() {
     // Makes an X pattern with the swerve base
+    // Set the drives to 45s
     frontLeft.setDriveAngle(-45);
     frontRight.setDriveAngle(45);
     backLeft.setDriveAngle(45);
     backRight.setDriveAngle(-45);
+
+    // Halt all the motors and hold them there
+    frontLeft.setDriveSpeed(0, ControlType.kVelocity);
+    frontRight.setDriveSpeed(0, ControlType.kVelocity);
+    backRight.setDriveSpeed(0, ControlType.kVelocity);
+    backLeft.setDriveSpeed(0, ControlType.kVelocity);
+
   }
 
   /**
@@ -89,8 +98,22 @@ public class DriveTrain extends SubsystemBase {
     );
   }
 
-  public void resetOdometry(FieldCoordinates currentPosition) {
-    odometry.resetPosition(currentPosition.toPose2D(), Robot.navX.getFusedRotation2d());
+  public void resetOdometry(Pose2d currentPosition) {
+    odometry.resetPosition(currentPosition, Robot.navX.getFusedRotation2d());
+  }
+
+  public void updateParameters() {
+    // Set steering parameters
+    frontLeft.setSteerParams(Parameters.FL_T_PID_PARAM);
+    frontRight.setSteerParams(Parameters.FR_T_PID_PARAM);
+    backLeft.setSteerParams(Parameters.BL_T_PID_PARAM);
+    backRight.setSteerParams(Parameters.BR_T_PID_PARAM);
+
+    // Set driving parameters
+    frontLeft.setDriveParams(Parameters.FL_D_PID_PARAM, Parameters.DRIVE_RAMP_RATE, Parameters.DRIVE_IDLE_MODE);
+    frontRight.setDriveParams(Parameters.FR_D_PID_PARAM, Parameters.DRIVE_RAMP_RATE, Parameters.DRIVE_IDLE_MODE);
+    backLeft.setDriveParams(Parameters.BL_D_PID_PARAM, Parameters.DRIVE_RAMP_RATE, Parameters.DRIVE_IDLE_MODE);
+    backRight.setDriveParams(Parameters.BR_D_PID_PARAM, Parameters.DRIVE_RAMP_RATE, Parameters.DRIVE_IDLE_MODE);
   }
 
   @Override

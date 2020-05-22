@@ -57,6 +57,9 @@ dependencies {
     // Enable simulation gui support. Must check the box in vscode to enable support
     // upon debugging
     simulation wpi.deps.sim.gui(wpi.platforms.desktop, false)
+
+    // Json library
+    compile 'com.googlecode.json-simple:json-simple:1.1.1'
 }
 
 // Setting up my Jar File. In this case, adding all libraries into the main jar ('fat jar')
