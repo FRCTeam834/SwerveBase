@@ -8,6 +8,7 @@
 package frc.robot;
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import frc.robot.DriverProfiles.DriverProfile;
 import frc.robot.swerve.PID_PARAMETERS;
 
 
@@ -29,16 +30,37 @@ public final class Parameters {
     public static final int CODING_TEAM_BRAIN_CELLS = 5; //Same as the amount of coding team members
     public static final int SHRIMP_ON_THE_BARBIE = 3; //Number of shrimp on the barbeque
     public static final int ANDREWS_PROGRESS_WHEN_AROUND_SAFETY_TEAM = -10; //What happens when Andrew is around the safety team... backwards progress
-    
-    // Driver parameters
-    public static double JOYSTICK_DEADZONE = 0.15;
-    public static double TURN_SCALE = 1; // Scaling on the turning
-    public static double DRIVE_RAMP_RATE = 0.5; // Drive motor ramp rate
-    public static boolean LOCKEM_UP = true; // Lock the swerve base from moving if there is no stick movement
-    public static boolean FIELD_CENTRIC = true; // Set up the swerve to respect the field, not itself
-    public static double MAX_SPEED = 1; // The maximum travel speed of the robot
-    public static IdleMode DRIVE_IDLE_MODE = IdleMode.kBrake; // Brake when no other commands are in
 
+    // Driver parameters
+    //public static double JOYSTICK_DEADZONE = 0.15;
+    //public static double TURN_SCALE = 1; // Scaling on the turning
+    //public static double DRIVE_RAMP_RATE = 0.5; // Drive motor ramp rate
+    //public static boolean LOCKEM_UP = true; // Lock the swerve base from moving if there is no stick movement
+    //public static boolean FIELD_CENTRIC = true; // Set up the swerve to respect the field, not itself
+    //public static double MAX_SPEED = 1; // The maximum travel speed of the robot
+    //public static IdleMode DRIVE_IDLE_MODE = IdleMode.kBrake; // Brake when no other commands are in
+
+    public static DriverProfile[] driverProfiles = {
+
+            // DriverProfile NAME, double JOYSTICK_DEADZONE, double TURN_SCALE, double DRIVE_RAMP_RATE, boolean LOCKEM_UP, boolean FIELD_CENTRIC, double MAX_SPEED, IdleMode DRIVE_IDLE_MODE) 
+
+            new DriverProfile("Default",         0.15, 1.0, 0.5, true, true, 1.0, IdleMode.kBrake),
+            new DriverProfile("CAP1Sup",         0.05, 1.0, 0.5, true, true, 1.0, IdleMode.kBrake),
+            new DriverProfile("Christian Velez", 0.15, 1.0, 0.5, true, true, 1.0, IdleMode.kBrake),
+            new DriverProfile("Test",            0.15, 1.0, 0.5, true, true, 1.0, IdleMode.kBrake) 
+        
+    };
+
+    public static int DEFAULT_DRIVER_PROFILE_INDEX         = 0;
+    public static int CAP1SUP_DRIVER_PROFILE_INDEX         = 1;
+    public static int CHRISTIAN_VELEZ_DRIVER_PROFILE_INDEX = 2;
+    public static int TEST_DRIVER_PROFILE                  = 3;
+
+
+    //Current Driver Profile being used
+    public static DriverProfile currentDriverProfile = driverProfiles[DEFAULT_DRIVER_PROFILE_INDEX];
+
+    
     // CAN parameters
     public static final int FRONT_LEFT_STEER_ID = 1;
     public static final int FRONT_RIGHT_STEER_ID = 2;
@@ -65,15 +87,15 @@ public final class Parameters {
 	 * Gains used in each module's steering motor, to be adjusted accordingly
      * Gains(kp, ki, kd, kf, izone, PID timeout, peak output);
      */
-    public static PID_PARAMETERS FL_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, MAX_SPEED);
-    public static PID_PARAMETERS FR_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, MAX_SPEED);
-    public static PID_PARAMETERS BL_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, MAX_SPEED);
-    public static PID_PARAMETERS BR_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, MAX_SPEED);
+    public static PID_PARAMETERS FL_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, currentDriverProfile.MAX_SPEED);
+    public static PID_PARAMETERS FR_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, currentDriverProfile.MAX_SPEED);
+    public static PID_PARAMETERS BL_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, currentDriverProfile.MAX_SPEED);
+    public static PID_PARAMETERS BR_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, currentDriverProfile.MAX_SPEED);
 
-    public static PID_PARAMETERS FL_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, MAX_SPEED);
-    public static PID_PARAMETERS FR_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, MAX_SPEED);
-    public static PID_PARAMETERS BL_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, MAX_SPEED);
-    public static PID_PARAMETERS BR_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, MAX_SPEED);
+    public static PID_PARAMETERS FL_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, currentDriverProfile.MAX_SPEED);
+    public static PID_PARAMETERS FR_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, currentDriverProfile.MAX_SPEED);
+    public static PID_PARAMETERS BL_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, currentDriverProfile.MAX_SPEED);
+    public static PID_PARAMETERS BR_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, currentDriverProfile.MAX_SPEED);
 
     public static int PID_IDX = 0;
     public static int PID_TIMEOUT = 30;

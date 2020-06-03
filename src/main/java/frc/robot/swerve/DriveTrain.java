@@ -23,6 +23,7 @@ import frc.robot.Parameters;
 // Import robot
 import frc.robot.Robot;
 import frc.robot.commands.UpdatePIDs;
+
 // Internal libraries
 import frc.robot.swerve.SwerveModule;
 
@@ -62,7 +63,7 @@ public class DriveTrain extends SubsystemBase {
             xSpeed, ySpeed, rot, Robot.navX.getFusedRotation2d())
             : new ChassisSpeeds(xSpeed, ySpeed, rot)
     );
-    SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, Parameters.MAX_SPEED);
+    SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, Parameters.currentDriverProfile.MAX_SPEED);
     frontLeft.setDesiredState(swerveModuleStates[0]);
     frontRight.setDesiredState(swerveModuleStates[1]);
     backLeft.setDesiredState(swerveModuleStates[2]);
@@ -110,10 +111,10 @@ public class DriveTrain extends SubsystemBase {
     backRight.setSteerParams(Parameters.BR_T_PID_PARAM);
 
     // Set driving parameters
-    frontLeft.setDriveParams(Parameters.FL_D_PID_PARAM, Parameters.DRIVE_RAMP_RATE, Parameters.DRIVE_IDLE_MODE);
-    frontRight.setDriveParams(Parameters.FR_D_PID_PARAM, Parameters.DRIVE_RAMP_RATE, Parameters.DRIVE_IDLE_MODE);
-    backLeft.setDriveParams(Parameters.BL_D_PID_PARAM, Parameters.DRIVE_RAMP_RATE, Parameters.DRIVE_IDLE_MODE);
-    backRight.setDriveParams(Parameters.BR_D_PID_PARAM, Parameters.DRIVE_RAMP_RATE, Parameters.DRIVE_IDLE_MODE);
+    frontLeft.setDriveParams(Parameters.FL_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_RAMP_RATE, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
+    frontRight.setDriveParams(Parameters.FR_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_RAMP_RATE, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
+    backLeft.setDriveParams(Parameters.BL_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_RAMP_RATE, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
+    backRight.setDriveParams(Parameters.BR_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_RAMP_RATE, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
   }
 
   @Override

@@ -5,22 +5,25 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.subsystems;
+package frc.robot.DriverProfiles;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 // Import Parameters
 import frc.robot.Parameters;
 
-// Java libraries
-import org.json.simple.JSONObject;
 
-public class DriverProfiling extends SubsystemBase {
+public class ProfilingManagement extends SubsystemBase {
+
   /**
    * Creates a new DriverProfiling.
    */
-  public DriverProfiling() {
+  public ProfilingManagement() {
 
+  }
+
+  public void updateCurrentProfile(DriverProfile newProfile) {
+    Parameters.currentDriverProfile = newProfile;
   }
 
   @Override

@@ -47,8 +47,8 @@ public class SwerveModule {
 
     // Drive motor
     driveMotor = new CANSparkMax(driveID, CANSparkMax.MotorType.kBrushless);
-    driveMotor.setOpenLoopRampRate(Parameters.DRIVE_RAMP_RATE);
-    driveMotor.setIdleMode(Parameters.DRIVE_IDLE_MODE);
+    driveMotor.setOpenLoopRampRate(Parameters.currentDriverProfile.DRIVE_RAMP_RATE);
+    driveMotor.setIdleMode(Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
 
     driveMotorPID = new CANPIDController(driveMotor);
     driveMotorPID.setSmartMotionAccelStrategy(CANPIDController.AccelStrategy.kSCurve, 0);

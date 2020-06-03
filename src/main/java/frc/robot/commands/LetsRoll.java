@@ -44,7 +44,7 @@ public class LetsRoll extends CommandBase {
 
     // Check to see if joysticks are out of range. If out, we need to move, otherwise set the sticks to zero.
     // Left X
-    if (leftX < Parameters.JOYSTICK_DEADZONE) {
+    if (leftX < Parameters.currentDriverProfile.JOYSTICK_DEADZONE) {
       leftX = 0;
     }
     else {
@@ -52,7 +52,7 @@ public class LetsRoll extends CommandBase {
     }
 
     // Left Y
-    if (leftY < Parameters.JOYSTICK_DEADZONE) {
+    if (leftY < Parameters.currentDriverProfile.JOYSTICK_DEADZONE) {
       leftY = 0;
     }
     else {
@@ -60,7 +60,7 @@ public class LetsRoll extends CommandBase {
     }
 
     // Right X
-    if (rightX < Parameters.JOYSTICK_DEADZONE) {
+    if (rightX < Parameters.currentDriverProfile.JOYSTICK_DEADZONE) {
       rightX = 0;
     }
     else {
@@ -70,9 +70,9 @@ public class LetsRoll extends CommandBase {
     // If any of the sticks are out of range, then we need to move. Otherwise, get to it
     if (move) {
       // X and Y are flipped because WPI dumb
-      driveTrain.drive(left.getY(), left.getX(), right.getX(), Parameters.FIELD_CENTRIC);
+      driveTrain.drive(left.getY(), left.getX(), right.getX(), Parameters.currentDriverProfile.FIELD_CENTRIC);
     }
-    else if (Parameters.LOCKEM_UP) {
+    else if (Parameters.currentDriverProfile.LOCKEM_UP) {
       driveTrain.lockemUp();
     }
     
