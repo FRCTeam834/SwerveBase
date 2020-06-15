@@ -31,7 +31,7 @@ public class PositionCalc extends SubsystemBase {
 
   // Calculates the field position relative to the goal
   public Pose2d calculateFieldPosition(double goalHeight) {
-    double robotAngle = 90 - Robot.navX.getFusedHeading();
+    double robotAngle = 90 - Robot.navX.getFusedHeading(); // ! Needs fixed !
     double distanceToGoal = calulateDistanceToObject(Parameters.GOAL_HEIGHT, goalHeight);
 
     double x = distanceToGoal * Math.cos(robotAngle) * ((robotAngle >= 0) ? 1 : -1); // If robot is turned to the left looking at the goal, then the robot must be to the right of the goal

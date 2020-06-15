@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.DriverProfiles.ProfilingManagement;
 import frc.robot.commands.LetsRoll;
 import frc.robot.subsystems.NavX;
 import frc.robot.swerve.DriveTrain;
@@ -26,6 +27,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   // Subsystems
+  private final ProfilingManagement profilingManagement = new ProfilingManagement();
   private final NavX navX = new NavX();
   private final DriveTrain driveTrain = new DriveTrain();
 

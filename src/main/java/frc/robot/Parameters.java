@@ -6,14 +6,20 @@
 /*----------------------------------------------------------------------------*/
 
 package frc.robot;
-import com.revrobotics.CANSparkMax.IdleMode;
 
+// Robot 
+import frc.robot.Robot;
+
+// Internal libraries
 import frc.robot.DriverProfiles.DriverProfile;
+import frc.robot.DriverProfiles.ProfilingManagement;
 import frc.robot.swerve.PID_PARAMETERS;
 
+// Vendor libraries
+import com.revrobotics.CANSparkMax.IdleMode;
 
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
+ * The Parameters class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants.  This class should not be used for any other purpose.  All constants should be
  * declared globally (i.e. public static).  Do not put anything functional in this class.
  *
@@ -31,34 +37,19 @@ public final class Parameters {
     public static final int SHRIMP_ON_THE_BARBIE = 3; //Number of shrimp on the barbeque
     public static final int ANDREWS_PROGRESS_WHEN_AROUND_SAFETY_TEAM = -10; //What happens when Andrew is around the safety team... backwards progress
 
-    // Driver parameters
-    //public static double JOYSTICK_DEADZONE = 0.15;
-    //public static double TURN_SCALE = 1; // Scaling on the turning
-    //public static double DRIVE_RAMP_RATE = 0.5; // Drive motor ramp rate
-    //public static boolean LOCKEM_UP = true; // Lock the swerve base from moving if there is no stick movement
-    //public static boolean FIELD_CENTRIC = true; // Set up the swerve to respect the field, not itself
-    //public static double MAX_SPEED = 1; // The maximum travel speed of the robot
-    //public static IdleMode DRIVE_IDLE_MODE = IdleMode.kBrake; // Brake when no other commands are in
-
+    // Driver Profiles
     public static DriverProfile[] driverProfiles = {
-
             // DriverProfile NAME, double JOYSTICK_DEADZONE, double TURN_SCALE, double DRIVE_RAMP_RATE, boolean LOCKEM_UP, boolean FIELD_CENTRIC, double MAX_SPEED, IdleMode DRIVE_IDLE_MODE) 
-
-            new DriverProfile("Default",         0.15, 1.0, 0.5, true, true, 1.0, IdleMode.kBrake),
             new DriverProfile("CAP1Sup",         0.05, 1.0, 0.5, true, true, 1.0, IdleMode.kBrake),
             new DriverProfile("Christian Velez", 0.15, 1.0, 0.5, true, true, 1.0, IdleMode.kBrake),
             new DriverProfile("Test",            0.15, 1.0, 0.5, true, true, 1.0, IdleMode.kBrake) 
-        
     };
 
-    public static int DEFAULT_DRIVER_PROFILE_INDEX         = 0;
-    public static int CAP1SUP_DRIVER_PROFILE_INDEX         = 1;
-    public static int CHRISTIAN_VELEZ_DRIVER_PROFILE_INDEX = 2;
-    public static int TEST_DRIVER_PROFILE                  = 3;
+    public static DriverProfile defaultDriverProfile = new DriverProfile("Default", 0.15, 1.0, 0.5, true, true, 1.0, IdleMode.kBrake);
 
 
-    //Current Driver Profile being used
-    public static DriverProfile currentDriverProfile = driverProfiles[DEFAULT_DRIVER_PROFILE_INDEX];
+    // Current Driver Profile being used
+    public static DriverProfile currentDriverProfile = Robot.profilingManagement.loadSavedProfile();
 
     
     // CAN parameters

@@ -13,16 +13,16 @@ import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
 
+// Vendor libraries
 import com.revrobotics.ControlType;
 
-import edu.wpi.first.wpilibj.geometry.Pose2d;
 // Import Parameters
 import frc.robot.Parameters;
 
 // Import robot
 import frc.robot.Robot;
-import frc.robot.commands.UpdatePIDs;
 
 // Internal libraries
 import frc.robot.swerve.SwerveModule;

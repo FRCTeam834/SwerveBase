@@ -19,6 +19,7 @@ public class DriverProfile {
     public boolean LOCKEM_UP, FIELD_CENTRIC;
     public IdleMode DRIVE_IDLE_MODE;
     
+    // Fully defined profile
     public DriverProfile(String NAME, double JOYSTICK_DEADZONE, double TURN_SCALE, double DRIVE_RAMP_RATE, boolean LOCKEM_UP, boolean FIELD_CENTRIC, double MAX_SPEED, IdleMode DRIVE_IDLE_MODE) {
         this.NAME              = NAME;
         this.JOYSTICK_DEADZONE = JOYSTICK_DEADZONE;
@@ -30,15 +31,21 @@ public class DriverProfile {
         this.DRIVE_IDLE_MODE   = DRIVE_IDLE_MODE;
     }
 
-    public void updateProfile(DriverProfile brofile) {  //brofile = profile but fun 
-        this.NAME              = brofile.NAME;
-        this.JOYSTICK_DEADZONE = brofile.JOYSTICK_DEADZONE;
-        this.TURN_SCALE        = brofile.TURN_SCALE;
-        this.DRIVE_RAMP_RATE   = brofile.DRIVE_RAMP_RATE;
-        this.LOCKEM_UP         = brofile.LOCKEM_UP;
-        this.FIELD_CENTRIC     = brofile.FIELD_CENTRIC;
-        this.MAX_SPEED         = brofile.MAX_SPEED;
-        this.DRIVE_IDLE_MODE   = brofile.DRIVE_IDLE_MODE;
+    // Empty profile
+    public DriverProfile() {
+
+    }
+
+    // Update a profile with new values
+    public void updateProfile(DriverProfile profile) {
+        this.NAME              = profile.NAME;
+        this.JOYSTICK_DEADZONE = profile.JOYSTICK_DEADZONE;
+        this.TURN_SCALE        = profile.TURN_SCALE;
+        this.DRIVE_RAMP_RATE   = profile.DRIVE_RAMP_RATE;
+        this.LOCKEM_UP         = profile.LOCKEM_UP;
+        this.FIELD_CENTRIC     = profile.FIELD_CENTRIC;
+        this.MAX_SPEED         = profile.MAX_SPEED;
+        this.DRIVE_IDLE_MODE   = profile.DRIVE_IDLE_MODE;
     }
 
     

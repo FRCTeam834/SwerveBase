@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 // Subsytems
 import frc.robot.subsystems.NavX;
 import frc.robot.swerve.DriveTrain;
+import frc.robot.DriverProfiles.ProfilingManagement;
 
 // Commands
 import frc.robot.commands.LetsRoll;
@@ -30,6 +31,7 @@ public class Robot extends TimedRobot {
   // Subsystems
   public static NavX navX;
   public static DriveTrain driveTrain;
+  public static ProfilingManagement profilingManagement;
   
   // Commands
   public static LetsRoll letsRoll;
@@ -45,6 +47,8 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
 
+    // Profiling management should be first to avoid errors!
+    profilingManagement = new ProfilingManagement();
     navX = new NavX();
     driveTrain = new DriveTrain();
     letsRoll = new LetsRoll();
