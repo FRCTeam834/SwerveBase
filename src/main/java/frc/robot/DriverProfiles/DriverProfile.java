@@ -46,15 +46,15 @@ public class DriverProfile {
     }
 
     // Update a profile with new values
-    public void updateProfile(DriverProfile profile) {
-        this.NAME              = profile.NAME;
-        this.JOYSTICK_DEADZONE = profile.JOYSTICK_DEADZONE;
-        this.TURN_SCALE        = profile.TURN_SCALE;
-        this.DRIVE_RAMP_RATE   = profile.DRIVE_RAMP_RATE;
-        this.LOCKEM_UP         = profile.LOCKEM_UP;
-        this.FIELD_CENTRIC     = profile.FIELD_CENTRIC;
-        this.MAX_SPEED         = profile.MAX_SPEED;
-        this.DRIVE_IDLE_MODE   = profile.DRIVE_IDLE_MODE;
+    public void updateProfile(DriverProfile new_parameters) {
+        this.NAME              = new_parameters.NAME;
+        this.JOYSTICK_DEADZONE = new_parameters.JOYSTICK_DEADZONE;
+        this.TURN_SCALE        = new_parameters.TURN_SCALE;
+        this.DRIVE_RAMP_RATE   = new_parameters.DRIVE_RAMP_RATE;
+        this.LOCKEM_UP         = new_parameters.LOCKEM_UP;
+        this.FIELD_CENTRIC     = new_parameters.FIELD_CENTRIC;
+        this.MAX_SPEED         = new_parameters.MAX_SPEED;
+        this.DRIVE_IDLE_MODE   = new_parameters.DRIVE_IDLE_MODE;
     }
 
     
