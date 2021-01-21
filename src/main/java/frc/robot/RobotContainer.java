@@ -34,10 +34,13 @@ public class RobotContainer {
   // Commands
   private final LetsRoll letsRoll = new LetsRoll();
 
-
+  // Define the joysticks
   private final Joystick leftJoystick = new Joystick(0);
   private final Joystick rightJoystick = new Joystick(1);
 
+  // Suppress the unused warnings, we don't need them
+  @SuppressWarnings("unused")
+  
   private final JoystickButton
   // Left Joystick
   lJoystick1 = new JoystickButton(leftJoystick, 1), lJoystick2 = new JoystickButton(leftJoystick, 2),
