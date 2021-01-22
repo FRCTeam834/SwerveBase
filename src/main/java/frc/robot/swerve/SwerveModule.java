@@ -119,7 +119,7 @@ public class SwerveModule {
   public void setAngle(double targetAngle) {
  
     // Get our current position and calculate the angle from it
-    double currentPosition = steeringCANCoder.getAbsolutePosition();
+    double currentPosition = steeringCANCoder.getPosition();
     double currentAngle = (currentPosition * 360.0 / Parameters.ENCODER_COUNTS_PER_REVOLUTION) % 360.0;
 
     //steerMotorPID.setSetpoint(targetPosition);
@@ -151,8 +151,9 @@ public class SwerveModule {
   }
 
   public SwerveModuleState getState() {
+
     // Get the current position of the encoder and then calculate the degrees
-    double currentPosition = steeringCANCoder.getAbsolutePosition();
+    double currentPosition = steeringCANCoder.getPosition();
     double currentAngle = (currentPosition * 360.0 / Parameters.ENCODER_COUNTS_PER_REVOLUTION) % 360.0;
 
     // Get RPM and multiply by the circumference of the wheel in meters
@@ -162,7 +163,12 @@ public class SwerveModule {
   }
 
   public double getAngle() {
-    return steeringCANCoder.getAbsolutePosition();
+    return steeringCANCoder.getPosition();
+  }
+
+  // Sets the position of the encoder
+  public void setEncoderAngle(double newPosition) {
+    steeringCANCoder.setPosition(newPosition);
   }
   
 }
