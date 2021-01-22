@@ -69,8 +69,9 @@ public class LetsRoll extends CommandBase {
     
     // If any of the sticks are out of range, then we need to move. Otherwise, get to it
     if (move) {
+
       // X and Y are flipped because WPI dumb
-      driveTrain.drive(left.getY(), left.getX(), right.getX(), Parameters.currentDriverProfile.FIELD_CENTRIC);
+      driveTrain.drive((left.getY() * Parameters.currentDriverProfile.MAX_SPEED), (left.getX() * Parameters.currentDriverProfile.MAX_SPEED), Math.toRadians(right.getX() * Parameters.currentDriverProfile.MAX_TURN_SPEED), Parameters.currentDriverProfile.FIELD_CENTRIC);
     }
     else if (Parameters.currentDriverProfile.LOCKEM_UP) {
       driveTrain.lockemUp();

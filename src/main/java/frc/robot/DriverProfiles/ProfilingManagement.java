@@ -31,7 +31,6 @@ public class ProfilingManagement extends SubsystemBase {
     //driverProfileChooser.setDefaultOption("Default", new updateCurrentProfile(Parameters.defaultDriverProfile));
   }
 
-  
 
   public void updateCurrentProfile(DriverProfile newProfile) {
     Parameters.currentDriverProfile = newProfile;
@@ -46,7 +45,7 @@ public class ProfilingManagement extends SubsystemBase {
 
     // Doubles
     SavedParameters.putDouble("JOYSTICK_DEADZONE", profile.JOYSTICK_DEADZONE);
-    SavedParameters.putDouble("TURN_SCALE",        profile.TURN_SCALE);
+    SavedParameters.putDouble("MAX_TURN_SPEED",    profile.MAX_TURN_SPEED);
     SavedParameters.putDouble("DRIVE_RAMP_RATE",   profile.DRIVE_RAMP_RATE);
     SavedParameters.putDouble("MAX_SPEED",         profile.MAX_SPEED);
 
@@ -79,7 +78,7 @@ public class ProfilingManagement extends SubsystemBase {
 
     // Doubles
     profile.JOYSTICK_DEADZONE = SavedParameters.getDouble("JOYSTICK_DEADZONE", Parameters.defaultDriverProfile.JOYSTICK_DEADZONE);
-    profile.TURN_SCALE        = SavedParameters.getDouble("TURN_SCALE",        Parameters.defaultDriverProfile.TURN_SCALE);
+    profile.MAX_TURN_SPEED    = SavedParameters.getDouble("MAX_TURN_SPEED",    Parameters.defaultDriverProfile.MAX_TURN_SPEED);
     profile.DRIVE_RAMP_RATE   = SavedParameters.getDouble("DRIVE_RAMP_RATE",   Parameters.defaultDriverProfile.DRIVE_RAMP_RATE);
     profile.MAX_SPEED         = SavedParameters.getDouble("MAX_SPEED",         Parameters.defaultDriverProfile.MAX_SPEED);
 

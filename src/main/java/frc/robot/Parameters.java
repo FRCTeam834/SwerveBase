@@ -39,10 +39,10 @@ public final class Parameters {
 
     // Driver Profiles
     public static DriverProfile[] driverProfiles = {
-            // DriverProfile NAME, double JOYSTICK_DEADZONE, double TURN_SCALE, double DRIVE_RAMP_RATE, boolean LOCKEM_UP, boolean FIELD_CENTRIC, double MAX_SPEED, IdleMode DRIVE_IDLE_MODE) 
-            new DriverProfile("CAP1Sup",         0.05, 1.0, 0.5, true, true, 1.0, IdleMode.kBrake),
-            new DriverProfile("Christian Velez", 0.15, 1.0, 0.5, true, true, 1.0, IdleMode.kBrake),
-            new DriverProfile("Test",            0.15, 1.0, 0.5, true, true, 1.0, IdleMode.kBrake)
+        // DriverProfile NAME, double JOYSTICK_DEADZONE, double MAX_TURN_SPEED (deg/s), double DRIVE_RAMP_RATE, boolean LOCKEM_UP, boolean FIELD_CENTRIC, double MAX_SPEED (m/s), IdleMode DRIVE_IDLE_MODE) 
+        new DriverProfile("CAP1Sup",         0.05, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake),
+        new DriverProfile("Christian Velez", 0.15, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake),
+        new DriverProfile("Test",            0.15, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake)
     };
 
     public static DriverProfile defaultDriverProfile = new DriverProfile("Default", 0.15, 1.0, 0.5, true, true, 1.0, IdleMode.kBrake);
@@ -63,11 +63,17 @@ public final class Parameters {
     public static final int BACK_LEFT_DRIVE_ID = 7;
     public static final int BACK_RIGHT_DRIVE_ID = 8;
 
+    public static final int FRONT_LEFT_CODER_ID = 9;
+    public static final int FRONT_RIGHT_CODER_ID = 10;
+    public static final int BACK_LEFT_CODER_ID = 11;
+    public static final int BACK_RIGHT_CODER_ID = 12;
+
 
     // Swerve calculation parameters (in meters)
     public static final double DRIVE_LENGTH = 0.4;
     public static final double DRIVE_WIDTH = 0.3;
     public static final double DRIVE_RADIUS = Math.sqrt( (Math.pow(DRIVE_LENGTH, 2) + Math.pow(DRIVE_WIDTH, 2)) / 2);
+    public static final double MAX_MODULE_SPEED = 2; // (m/s)
 
     public static final int ENCODER_COUNTS_PER_REVOLUTION = 1024;
     public static final double SWERVE_WHEEL_DIA = 4; // Inches

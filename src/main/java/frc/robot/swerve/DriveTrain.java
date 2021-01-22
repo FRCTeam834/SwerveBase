@@ -12,8 +12,10 @@ import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 
 // Vendor libraries
 import com.revrobotics.ControlType;
@@ -48,10 +50,10 @@ public class DriveTrain extends SubsystemBase {
 
   public DriveTrain() {
 
-    frontLeft = new SwerveModule(Parameters.FRONT_LEFT_STEER_ID, Parameters.FRONT_LEFT_DRIVE_ID, Parameters.FL_T_PID_PARAM, Parameters.FL_D_PID_PARAM);
-    frontRight = new SwerveModule(Parameters.FRONT_RIGHT_STEER_ID, Parameters.FRONT_RIGHT_DRIVE_ID, Parameters.FR_T_PID_PARAM, Parameters.FR_D_PID_PARAM);
-    backLeft = new SwerveModule(Parameters.BACK_LEFT_STEER_ID, Parameters.BACK_LEFT_DRIVE_ID, Parameters.BL_T_PID_PARAM, Parameters.BL_D_PID_PARAM);
-    backRight = new SwerveModule(Parameters.BACK_RIGHT_STEER_ID, Parameters.BACK_RIGHT_DRIVE_ID, Parameters.BR_T_PID_PARAM, Parameters.BR_D_PID_PARAM);
+    frontLeft =  new SwerveModule(Parameters.FRONT_LEFT_STEER_ID,  Parameters.FRONT_LEFT_DRIVE_ID,  Parameters.FRONT_LEFT_CODER_ID,  Parameters.FL_T_PID_PARAM, Parameters.FL_D_PID_PARAM);
+    frontRight = new SwerveModule(Parameters.FRONT_RIGHT_STEER_ID, Parameters.FRONT_RIGHT_DRIVE_ID, Parameters.FRONT_RIGHT_CODER_ID, Parameters.FR_T_PID_PARAM, Parameters.FR_D_PID_PARAM);
+    backLeft =   new SwerveModule(Parameters.BACK_LEFT_STEER_ID,   Parameters.BACK_LEFT_DRIVE_ID,   Parameters.BACK_LEFT_CODER_ID,   Parameters.BL_T_PID_PARAM, Parameters.BL_D_PID_PARAM);
+    backRight =  new SwerveModule(Parameters.BACK_RIGHT_STEER_ID,  Parameters.BACK_RIGHT_DRIVE_ID,  Parameters.BACK_RIGHT_CODER_ID,  Parameters.BR_T_PID_PARAM, Parameters.BR_D_PID_PARAM);
 
   }
   
@@ -63,26 +65,26 @@ public class DriveTrain extends SubsystemBase {
             xSpeed, ySpeed, rot, Robot.navX.getFusedRotation2d())
             : new ChassisSpeeds(xSpeed, ySpeed, rot)
     );
-    SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, Parameters.currentDriverProfile.MAX_SPEED);
-    frontLeft.setDesiredState(swerveModuleStates[0]);
-    frontRight.setDesiredState(swerveModuleStates[1]);
-    backLeft.setDesiredState(swerveModuleStates[2]);
-    backRight.setDesiredState(swerveModuleStates[3]);
+    SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, Parameters.MAX_MODULE_SPEED);
+    frontLeft.setDesiredState(SwerveModuleState.optimize(swerveModuleStates[0], new Rotation2d(frontLeft.getAngle())));
+    frontRight.setDesiredState(SwerveModuleState.optimize(swerveModuleStates[1], new Rotation2d(frontLeft.getAngle())));
+    backLeft.setDesiredState(SwerveModuleState.optimize(swerveModuleStates[2], new Rotation2d(frontLeft.getAngle())));
+    backRight.setDesiredState(SwerveModuleState.optimize(swerveModuleStates[3], new Rotation2d(frontLeft.getAngle())));
   }
 
   public void lockemUp() {
     // Makes an X pattern with the swerve base
-    // Set the drives to 45s
-    frontLeft.setDriveAngle(-45);
-    frontRight.setDriveAngle(45);
-    backLeft.setDriveAngle(45);
-    backRight.setDriveAngle(-45);
+    // Set the modules to 45 degree angles
+    frontLeft.setAngle(-45);
+    frontRight.setAngle(45);
+    backLeft.setAngle(45);
+    backRight.setAngle(-45);
 
     // Halt all the motors and hold them there
-    frontLeft.setDriveSpeed(0, ControlType.kVelocity);
-    frontRight.setDriveSpeed(0, ControlType.kVelocity);
-    backRight.setDriveSpeed(0, ControlType.kVelocity);
-    backLeft.setDriveSpeed(0, ControlType.kVelocity);
+    frontLeft.setSpeed(0, ControlType.kVelocity);
+    frontRight.setSpeed(0, ControlType.kVelocity);
+    backRight.setSpeed(0, ControlType.kVelocity);
+    backLeft.setSpeed(0, ControlType.kVelocity);
 
   }
 
@@ -105,16 +107,16 @@ public class DriveTrain extends SubsystemBase {
 
   public void updateParameters() {
     // Set steering parameters
-    frontLeft.setSteerParams(Parameters.FL_T_PID_PARAM);
-    frontRight.setSteerParams(Parameters.FR_T_PID_PARAM);
-    backLeft.setSteerParams(Parameters.BL_T_PID_PARAM);
-    backRight.setSteerParams(Parameters.BR_T_PID_PARAM);
+    frontLeft.setSteerMParams(Parameters.FL_T_PID_PARAM);
+    frontRight.setSteerMParams(Parameters.FR_T_PID_PARAM);
+    backLeft.setSteerMParams(Parameters.BL_T_PID_PARAM);
+    backRight.setSteerMParams(Parameters.BR_T_PID_PARAM);
 
     // Set driving parameters
-    frontLeft.setDriveParams(Parameters.FL_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_RAMP_RATE, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
-    frontRight.setDriveParams(Parameters.FR_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_RAMP_RATE, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
-    backLeft.setDriveParams(Parameters.BL_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_RAMP_RATE, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
-    backRight.setDriveParams(Parameters.BR_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_RAMP_RATE, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
+    frontLeft.setDriveMParams(Parameters.FL_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_RAMP_RATE, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
+    frontRight.setDriveMParams(Parameters.FR_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_RAMP_RATE, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
+    backLeft.setDriveMParams(Parameters.BL_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_RAMP_RATE, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
+    backRight.setDriveMParams(Parameters.BR_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_RAMP_RATE, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
   }
 
   @Override
