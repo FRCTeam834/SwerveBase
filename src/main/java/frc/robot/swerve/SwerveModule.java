@@ -122,12 +122,10 @@ public class SwerveModule {
     double currentPosition = steeringCANCoder.getAbsolutePosition();
     double currentAngle = (currentPosition * 360.0 / Parameters.ENCODER_COUNTS_PER_REVOLUTION) % 360.0;
 
-    // Calculate the target position for the PID loop and tell it to go there
-    double targetPosition = currentPosition + deltaDegrees * Parameters.ENCODER_COUNTS_PER_REVOLUTION / 360.0;
-    steerMotorPID.setSetpoint(targetPosition);
+    //steerMotorPID.setSetpoint(targetPosition);
 
     // Tell the steering motor to move to the desired position
-    steerMotor.set(steerMotorPID.calculate(measurement));
+    //steerMotor.set(steerMotorPID.calculate(measurement));
 
   }
 
