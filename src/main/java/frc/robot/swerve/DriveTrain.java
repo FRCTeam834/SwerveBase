@@ -26,9 +26,6 @@ import frc.robot.Parameters;
 // Import robot
 import frc.robot.Robot;
 
-// Internal libraries
-import frc.robot.swerve.SwerveModule;
-
 
 public class DriveTrain extends SubsystemBase {
   /**

@@ -7,16 +7,16 @@
 
 package frc.robot;
 
-// Robot 
-import frc.robot.Robot;
-
 // Internal libraries
 import frc.robot.DriverProfiles.DriverProfile;
-import frc.robot.DriverProfiles.ProfilingManagement;
 import frc.robot.swerve.PID_PARAMETERS;
 
 // Vendor libraries
 import com.revrobotics.CANSparkMax.IdleMode;
+
+// WPI Libraries
+import edu.wpi.first.wpilibj.util.Units;
+
 
 /**
  * The Parameters class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -34,7 +34,7 @@ public final class Parameters {
     public static final double MIN_IN_HR = 60; //Minutes in an hour
     public static final int BUILD_TEAM_BRAIN_CELLS = 1; //Brain cells owned by the build team
     public static final int CODING_TEAM_BRAIN_CELLS = 5; //Same as the amount of coding team members
-    public static final int SHRIMP_ON_THE_BARBIE = 3; //Number of shrimp on the barbeque
+    public static final int SHRIMP_ON_THE_BARBIE = 3; //Number of shrimp on the barbecue
     public static final int ANDREWS_PROGRESS_WHEN_AROUND_SAFETY_TEAM = -10; //What happens when Andrew is around the safety team... backwards progress
 
     // Driver Profiles
@@ -83,7 +83,7 @@ public final class Parameters {
     public static final double MODULE_D_VELOCITY_FF = 3;
 
     public static final double MODULE_WHEEL_DIA = 4; // Inches
-    public static final double MODULE_WHEEL_DIA_M = MODULE_WHEEL_DIA / 39.37; // Meters (for odometry calculations)
+    public static final double MODULE_WHEEL_DIA_M = Units.inchesToMeters(MODULE_WHEEL_DIA); // Meters (for odometry calculations)
 
     /**
      * PID parameters
@@ -107,7 +107,7 @@ public final class Parameters {
 
 
     // Game-specific parameters (inches)
-    public static final double GOAL_HEIGHT = 34; 
+    public static final double GOAL_HEIGHT = 98.25; 
     public static final double POWER_CELL_HEIGHT = 7;
 
 

@@ -15,6 +15,7 @@
     "**/*~": true
   },
   "cSpell.words": [
+    "AHRS",
     "deadzone",
     "feedforward",
     "odometry"

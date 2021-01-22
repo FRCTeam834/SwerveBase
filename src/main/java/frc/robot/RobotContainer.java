@@ -27,9 +27,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   // Subsystems
-  private final ProfilingManagement profilingManagement = new ProfilingManagement();
-  private final NavX navX = new NavX();
-  private final DriveTrain driveTrain = new DriveTrain();
+  //private final ProfilingManagement profilingManagement = new ProfilingManagement();
+  //private final NavX navX = new NavX();
+  //private final DriveTrain driveTrain = new DriveTrain();
 
   // Commands
   private final LetsRoll letsRoll = new LetsRoll();
@@ -38,6 +38,8 @@ public class RobotContainer {
   private final Joystick leftJoystick = new Joystick(0);
   private final Joystick rightJoystick = new Joystick(1);
 
+  
+  @SuppressWarnings("unused")
   private final JoystickButton
   // Left Joystick
   lJoystick1 = new JoystickButton(leftJoystick, 1), lJoystick2 = new JoystickButton(leftJoystick, 2),
