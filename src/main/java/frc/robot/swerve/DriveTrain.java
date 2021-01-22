@@ -32,21 +32,25 @@ public class DriveTrain extends SubsystemBase {
    * Creates a new Drivetrain.
    */
 
+  // Create the modules
   SwerveModule frontLeft;
   SwerveModule frontRight;
   SwerveModule backLeft;
   SwerveModule backRight;
 
+  // Define their position (relative to center of robot)
   Translation2d FLLocation = new Translation2d(Parameters.DRIVE_LENGTH / 2, Parameters.DRIVE_WIDTH / 2);
   Translation2d FRLocation = new Translation2d(Parameters.DRIVE_LENGTH / 2, -Parameters.DRIVE_WIDTH / 2);
   Translation2d BLLocation = new Translation2d(-Parameters.DRIVE_LENGTH / 2, Parameters.DRIVE_WIDTH / 2);
   Translation2d BRLocation = new Translation2d(-Parameters.DRIVE_LENGTH / 2, -Parameters.DRIVE_WIDTH / 2);
 
+  // Create the drivetrain map
   SwerveDriveKinematics kinematics = new SwerveDriveKinematics(FLLocation, FRLocation, BLLocation, BRLocation);
 
-
+  // Setup the drivetrain
   public DriveTrain() {
 
+    // Create each swerve module instance
     frontLeft =  new SwerveModule(Parameters.FRONT_LEFT_STEER_ID,  Parameters.FRONT_LEFT_DRIVE_ID,  Parameters.FRONT_LEFT_CODER_ID,  Parameters.FL_T_PID_PARAM, Parameters.FL_D_PID_PARAM);
     frontRight = new SwerveModule(Parameters.FRONT_RIGHT_STEER_ID, Parameters.FRONT_RIGHT_DRIVE_ID, Parameters.FRONT_RIGHT_CODER_ID, Parameters.FR_T_PID_PARAM, Parameters.FR_D_PID_PARAM);
     backLeft =   new SwerveModule(Parameters.BACK_LEFT_STEER_ID,   Parameters.BACK_LEFT_DRIVE_ID,   Parameters.BACK_LEFT_CODER_ID,   Parameters.BL_T_PID_PARAM, Parameters.BL_D_PID_PARAM);
@@ -54,32 +58,8 @@ public class DriveTrain extends SubsystemBase {
 
   }
   
+  // Declare the odometry of the robot
   private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, Robot.navX.getFusedRotation2d());
-
-  // More complicated, runs with a custom center
-  public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative, Translation2d customCenter) {
-
-    // Define an accumulator for the states
-    SwerveModuleState[] swerveModuleStates;
-
-    // Set up the modules
-    if (fieldRelative) {
-      swerveModuleStates = kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Robot.navX.getFusedRotation2d()), customCenter);
-    }
-    else {
-      swerveModuleStates = kinematics.toSwerveModuleStates(new ChassisSpeeds(xSpeed, ySpeed, rot), customCenter);
-    }
-    
-    // Setup the max speed of each module
-    SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, Parameters.MAX_MODULE_SPEED);
-
-    // Set each of the modules to their optimized state
-    frontLeft.setDesiredState( swerveModuleStates[0]);
-    frontRight.setDesiredState(swerveModuleStates[1]);
-    backLeft.setDesiredState(  swerveModuleStates[2]);
-    backRight.setDesiredState( swerveModuleStates[3]);
-
-  }
 
   // Less complicated version, runs with the robot's actual center
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
@@ -103,8 +83,78 @@ public class DriveTrain extends SubsystemBase {
     frontRight.setDesiredState(swerveModuleStates[1]);
     backLeft.setDesiredState(  swerveModuleStates[2]);
     backRight.setDesiredState( swerveModuleStates[3]);
+
+    // Update the robot's odometry
+    updateOdometry();
     
   }
+  
+  // More complicated, runs with a custom center relative to robot
+  public void driveRelativeCenter(double xSpeed, double ySpeed, double rot, boolean fieldRelative, Translation2d relativeCenter) {
+
+    // Define an accumulator for the states
+    SwerveModuleState[] swerveModuleStates;
+
+    // Set up the modules
+    if (fieldRelative) {
+      swerveModuleStates = kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Robot.navX.getFusedRotation2d()), relativeCenter);
+    }
+    else {
+      swerveModuleStates = kinematics.toSwerveModuleStates(new ChassisSpeeds(xSpeed, ySpeed, rot), relativeCenter);
+    }
+    
+    // Setup the max speed of each module
+    SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, Parameters.MAX_MODULE_SPEED);
+
+    // Set each of the modules to their optimized state
+    frontLeft.setDesiredState( swerveModuleStates[0]);
+    frontRight.setDesiredState(swerveModuleStates[1]);
+    backLeft.setDesiredState(  swerveModuleStates[2]);
+    backRight.setDesiredState( swerveModuleStates[3]);
+
+    // Update the robot's odometry
+    updateOdometry();
+
+  }
+
+  // More complicated, runs with a custom center relative to field
+  public void driveAbsoluteCenter(double xSpeed, double ySpeed, double rot, boolean fieldRelative, Translation2d absoluteCenter) {
+
+    // Get the current position of the robot on the field
+    Pose2d pose = odometry.getPoseMeters();
+
+    // Convert the pose2d to a translation2d
+    Translation2d position = pose.getTranslation();
+
+    // Create the center of rotation relative to the robot based on the pose
+    Translation2d centerOfRotation = position;
+
+    // Define an accumulator for the states
+    SwerveModuleState[] swerveModuleStates;
+
+    // Set up the modules
+    if (fieldRelative) {
+      swerveModuleStates = kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Robot.navX.getFusedRotation2d()), centerOfRotation);
+    }
+    else {
+      swerveModuleStates = kinematics.toSwerveModuleStates(new ChassisSpeeds(xSpeed, ySpeed, rot), centerOfRotation);
+    }
+    
+    // Setup the max speed of each module
+    SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, Parameters.MAX_MODULE_SPEED);
+
+    // Set each of the modules to their optimized state
+    frontLeft.setDesiredState( swerveModuleStates[0]);
+    frontRight.setDesiredState(swerveModuleStates[1]);
+    backLeft.setDesiredState(  swerveModuleStates[2]);
+    backRight.setDesiredState( swerveModuleStates[3]);
+
+    // Update the robot's odometry
+    updateOdometry();
+
+  }
+
+  
 
   public void lockemUp() {
     // Makes an X pattern with the swerve base
