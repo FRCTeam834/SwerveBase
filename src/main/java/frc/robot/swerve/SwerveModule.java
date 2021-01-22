@@ -12,6 +12,7 @@ import frc.robot.Parameters;
 
 // Vendor Libs
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.EncoderType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANEncoder;
@@ -68,7 +69,7 @@ public class SwerveModule {
     driveMotorPID = new PIDController(D_PID_params.P, D_PID_params.I, D_PID_params.D);
 
     // Drive motor encoder
-    driveMotorEncoder = driveMotor.getEncoder();
+    driveMotorEncoder = driveMotor.getEncoder(EncoderType.kHallSensor, 42);
     driveMotorEncoder.setVelocityConversionFactor(Math.PI * Parameters.MODULE_WHEEL_DIA_M / 60);
     
   }
