@@ -77,10 +77,10 @@ public class DriveTrain extends SubsystemBase {
     SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, Parameters.MAX_MODULE_SPEED);
 
     // Set each of the modules to their optimized state
-    frontLeft.setDesiredState(SwerveModuleState.optimize(swerveModuleStates[0], Rotation2d.fromDegrees(frontLeft.getAngle())));
-    frontRight.setDesiredState(SwerveModuleState.optimize(swerveModuleStates[1], Rotation2d.fromDegrees(frontLeft.getAngle())));
-    backLeft.setDesiredState(SwerveModuleState.optimize(swerveModuleStates[2], Rotation2d.fromDegrees(frontLeft.getAngle())));
-    backRight.setDesiredState(SwerveModuleState.optimize(swerveModuleStates[3], Rotation2d.fromDegrees(frontLeft.getAngle())));
+    frontLeft.setDesiredState( swerveModuleStates[0]);
+    frontRight.setDesiredState(swerveModuleStates[1]);
+    backLeft.setDesiredState(  swerveModuleStates[2]);
+    backRight.setDesiredState( swerveModuleStates[3]);
 
   }
 
@@ -101,11 +101,11 @@ public class DriveTrain extends SubsystemBase {
     // Setup the max speed of each module
     SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, Parameters.MAX_MODULE_SPEED);
 
-    // Set each of the modules to their optimized state
-    frontLeft.setDesiredState(SwerveModuleState.optimize(swerveModuleStates[0], Rotation2d.fromDegrees(frontLeft.getAngle())));
-    frontRight.setDesiredState(SwerveModuleState.optimize(swerveModuleStates[1], Rotation2d.fromDegrees(frontLeft.getAngle())));
-    backLeft.setDesiredState(SwerveModuleState.optimize(swerveModuleStates[2], Rotation2d.fromDegrees(frontLeft.getAngle())));
-    backRight.setDesiredState(SwerveModuleState.optimize(swerveModuleStates[3], Rotation2d.fromDegrees(frontLeft.getAngle())));
+    // Set each of the modules to their state
+    frontLeft.setDesiredState( swerveModuleStates[0]);
+    frontRight.setDesiredState(swerveModuleStates[1]);
+    backLeft.setDesiredState(  swerveModuleStates[2]);
+    backRight.setDesiredState( swerveModuleStates[3]);
     
   }
 
@@ -118,10 +118,10 @@ public class DriveTrain extends SubsystemBase {
     backRight.setAngle(-45);
 
     // Halt all the motors and hold them there
-    frontLeft.setSpeed(0, ControlType.kVelocity);
-    frontRight.setSpeed(0, ControlType.kVelocity);
-    backRight.setSpeed(0, ControlType.kVelocity);
-    backLeft.setSpeed(0, ControlType.kVelocity);
+    frontLeft.setSpeed(0);
+    frontRight.setSpeed(0);
+    backRight.setSpeed(0);
+    backLeft.setSpeed(0);
 
   }
 
@@ -143,17 +143,18 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public void updateParameters() {
+
     // Set steering parameters
-    frontLeft.setSteerMParams(Parameters.FL_T_PID_PARAM);
-    frontRight.setSteerMParams(Parameters.FR_T_PID_PARAM);
-    backLeft.setSteerMParams(Parameters.BL_T_PID_PARAM);
-    backRight.setSteerMParams(Parameters.BR_T_PID_PARAM);
+    frontLeft.setSteerMParams(Parameters.FL_T_PID_PARAM,  Parameters.currentDriverProfile.STEER_IDLE_MODE);
+    frontRight.setSteerMParams(Parameters.FR_T_PID_PARAM, Parameters.currentDriverProfile.STEER_IDLE_MODE);
+    backLeft.setSteerMParams(Parameters.BL_T_PID_PARAM,   Parameters.currentDriverProfile.STEER_IDLE_MODE);
+    backRight.setSteerMParams(Parameters.BR_T_PID_PARAM,  Parameters.currentDriverProfile.STEER_IDLE_MODE);
 
     // Set driving parameters
-    frontLeft.setDriveMParams(Parameters.FL_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_RAMP_RATE, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
-    frontRight.setDriveMParams(Parameters.FR_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_RAMP_RATE, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
-    backLeft.setDriveMParams(Parameters.BL_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_RAMP_RATE, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
-    backRight.setDriveMParams(Parameters.BR_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_RAMP_RATE, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
+    frontLeft.setDriveMParams(Parameters.FL_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
+    frontRight.setDriveMParams(Parameters.FR_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
+    backLeft.setDriveMParams(Parameters.BL_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
+    backRight.setDriveMParams(Parameters.BR_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
   }
 
   @Override
