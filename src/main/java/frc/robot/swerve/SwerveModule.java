@@ -121,29 +121,6 @@ public class SwerveModule {
     // Get our current position and calculate the angle from it
     double currentPosition = steeringCANCoder.getAbsolutePosition();
     double currentAngle = (currentPosition * 360.0 / Parameters.ENCODER_COUNTS_PER_REVOLUTION) % 360.0;
-    
-    // The angle from the encoder is in the range [0, 360], but the swerve computations
-    // return angles in the range [-180, 180], so transform the encoder angle to this range
-    if (currentAngle > 180.0) {
-      currentAngle -= 360.0;
-    }
-
-    // The degrees we need to turn
-    double deltaDegrees = targetAngle - currentAngle;
-
-    // If we need to turn more than 180 degrees, it's faster to turn in the opposite direction
-    if (Math.abs(deltaDegrees) > 180.0) {
-      deltaDegrees -= 360.0 * Math.signum(deltaDegrees);
-    }
-
-    // If we need to turn more than 90 degrees, we can invert the motor direction instead and
-    // only rotate by the complement
-    if (Math.abs(deltaDegrees) > 90.0) {
-      deltaDegrees -= 180.0 * Math.signum(deltaDegrees);
-      driveMotor.setInverted(!driveMotorInverted);
-      driveMotorInverted = !driveMotorInverted;
-      
-    }
 
     // Calculate the target position for the PID loop and tell it to go there
     double targetPosition = currentPosition + deltaDegrees * Parameters.ENCODER_COUNTS_PER_REVOLUTION / 360.0;
