@@ -7,6 +7,9 @@
 
 package frc.robot.swerve;
 
+// Java libraries
+import java.awt.geom.Point2D;
+
 // WPI libraries
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
@@ -126,8 +129,25 @@ public class DriveTrain extends SubsystemBase {
     // Convert the pose2d to a translation2d
     Translation2d position = pose.getTranslation();
 
+    // Get the distance between the desired center and the actual center (WPI made the decision to flip X and Y)
+    double distance = Point2D.distance(position.getY(), position.getX(), absoluteCenter.getY(), absoluteCenter.getX());
+
+    // Calculate the differences in the points (X is forward/back, Y is left/right)
+    double fieldXDiff = Math.abs(position.getX() - absoluteCenter.getX());
+    double fieldYDiff = Math.abs(position.getY() - absoluteCenter.getY());
+
+    // Calculate the angle of the distance measurement in relation to the field (using asin(o/h))
+    double fieldDistanceAngle = Math.toDegrees(Math.asin(fieldXDiff / distance));
+
+    // Calculate the remaining angle (the angle of the triangle for our robot-relative coordinates) (done by subtracting the angles that we know from the overall)
+    double coordTriAngle = 90 - (Robot.navX.getFusedHeading() + fieldDistanceAngle);
+
+    // Calculate the legs of our robot-relative coordinate triangle
+    double robotXDiff = distance * Math.cos(Math.toRadians(coordTriAngle));
+    double robotYDiff = distance * Math.sin(Math.toRadians(coordTriAngle));
+
     // Create the center of rotation relative to the robot based on the pose
-    Translation2d centerOfRotation = position;
+    Translation2d centerOfRotation = new Translation2d(robotXDiff, robotYDiff);
 
     // Define an accumulator for the states
     SwerveModuleState[] swerveModuleStates;
