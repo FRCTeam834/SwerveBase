@@ -7,36 +7,74 @@
 
 package frc.robot.DriverProfiles;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
 // Import Parameters
 import frc.robot.Parameters;
 
+// Robot instance
+import frc.robot.Robot;
+
+// Vendor Libraries
 import com.revrobotics.CANSparkMax.IdleMode;
 
-// WPI Libaries
+// WPI Libraries
 import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 
 public class ProfilingManagement extends SubsystemBase {
 
+  // Gets the saved parameters instance, allows pulling values after reboot
   Preferences SavedParameters = Preferences.getInstance();
   
+  // Create a selector on the Dashboard
   private final SendableChooser<DriverProfile> driverProfileChooser = new SendableChooser<>();
-  /**
-   * Creates a new DriverProfiling.
-   */
+
+  // Sets up the profiling management
   public ProfilingManagement() {
+
+    // Set the current profile to the one loaded from memory
+    loadSavedProfile();
+
     // Set up the drop down for driver profiles
-    //driverProfileChooser.setDefaultOption("Default", new updateCurrentProfile(Parameters.defaultDriverProfile));
+    driverProfileChooser.setDefaultOption("Default", Parameters.DEFAULT_DRIVER_PROFILE);
+
+    // Add each one of the profiles available to the SmartDashboard
+    for(int profileIndex = 0; profileIndex < Parameters.DRIVER_PROFILES.length; profileIndex++) {
+      driverProfileChooser.addOption(Parameters.DRIVER_PROFILES[profileIndex].NAME, Parameters.DRIVER_PROFILES[profileIndex]);
+    }
   }
 
+  // Checks to see if there is an update to the current set profile (from SmartDashboard)
+  public void checkForUpdate() {
 
+    // Get the latest
+    DriverProfile selectedProfile = driverProfileChooser.getSelected();
+
+    // Check to make sure that the profile isn't the same as the previous one
+    if(selectedProfile != Parameters.CURRENT_DRIVER_PROFILE) {
+      
+      // Update the current profile with the new one
+      updateCurrentProfile(selectedProfile);
+    }
+  }
+
+  // Updates all of the current settings with new ones
   public void updateCurrentProfile(DriverProfile newProfile) {
-    Parameters.currentDriverProfile = newProfile;
+
+    // Set the global current profile
+    Parameters.CURRENT_DRIVER_PROFILE = newProfile;
+
+    // Update the swerve modules with the new values
+    Robot.driveTrain.updateParameters();
   }
 
+  // Saves the current profile to memory
+  public void saveProfileSettings() {
+    saveProfileSettings(Parameters.CURRENT_DRIVER_PROFILE);
+  }
 
+  // Saves the specified profile to memory for next boot
   public void saveProfileSettings(DriverProfile profile) {
     // Saves the input profile for next boot
 
@@ -67,31 +105,31 @@ public class ProfilingManagement extends SubsystemBase {
   }
 
   
-  public DriverProfile loadSavedProfile() {
+  public void loadSavedProfile() {
     // Loads the saved settings
 
     // Create an empty profile
     DriverProfile profile = new DriverProfile();
 
     // Strings
-    profile.NAME              = SavedParameters.getString("NAME",              Parameters.defaultDriverProfile.NAME);
+    profile.NAME              = SavedParameters.getString("NAME",              Parameters.DEFAULT_DRIVER_PROFILE.NAME);
 
     // Doubles
-    profile.JOYSTICK_DEADZONE = SavedParameters.getDouble("JOYSTICK_DEADZONE", Parameters.defaultDriverProfile.JOYSTICK_DEADZONE);
-    profile.MAX_TURN_SPEED    = SavedParameters.getDouble("MAX_TURN_SPEED",    Parameters.defaultDriverProfile.MAX_TURN_SPEED);
-    profile.DRIVE_RAMP_RATE   = SavedParameters.getDouble("DRIVE_RAMP_RATE",   Parameters.defaultDriverProfile.DRIVE_RAMP_RATE);
-    profile.MAX_SPEED         = SavedParameters.getDouble("MAX_SPEED",         Parameters.defaultDriverProfile.MAX_SPEED);
+    profile.JOYSTICK_DEADZONE = SavedParameters.getDouble("JOYSTICK_DEADZONE", Parameters.DEFAULT_DRIVER_PROFILE.JOYSTICK_DEADZONE);
+    profile.MAX_TURN_SPEED    = SavedParameters.getDouble("MAX_TURN_SPEED",    Parameters.DEFAULT_DRIVER_PROFILE.MAX_TURN_SPEED);
+    profile.DRIVE_RAMP_RATE   = SavedParameters.getDouble("DRIVE_RAMP_RATE",   Parameters.DEFAULT_DRIVER_PROFILE.DRIVE_RAMP_RATE);
+    profile.MAX_SPEED         = SavedParameters.getDouble("MAX_SPEED",         Parameters.DEFAULT_DRIVER_PROFILE.MAX_SPEED);
 
     // Booleans
-    profile.LOCKEM_UP         = SavedParameters.getBoolean("LOCKEM_UP",        Parameters.defaultDriverProfile.LOCKEM_UP);
-    profile.FIELD_CENTRIC     = SavedParameters.getBoolean("FIELD_CENTRIC",    Parameters.defaultDriverProfile.FIELD_CENTRIC);
+    profile.LOCKEM_UP         = SavedParameters.getBoolean("LOCKEM_UP",        Parameters.DEFAULT_DRIVER_PROFILE.LOCKEM_UP);
+    profile.FIELD_CENTRIC     = SavedParameters.getBoolean("FIELD_CENTRIC",    Parameters.DEFAULT_DRIVER_PROFILE.FIELD_CENTRIC);
 
     // Special
 
     // IdleMode is not a supported type of the Preferences class, so brake will be true and coast will be false
     boolean defaultBrakeMode;
 
-    if (Parameters.defaultDriverProfile.DRIVE_IDLE_MODE == IdleMode.kBrake) {
+    if (Parameters.DEFAULT_DRIVER_PROFILE.DRIVE_IDLE_MODE == IdleMode.kBrake) {
       // Brake
       defaultBrakeMode = true;
     }
@@ -109,8 +147,8 @@ public class ProfilingManagement extends SubsystemBase {
       profile.DRIVE_IDLE_MODE = IdleMode.kCoast;
     }
 
-    // Return the profile
-    return profile;
+    // Set the current profile to the values we just obtained
+    Parameters.CURRENT_DRIVER_PROFILE = profile;
   }
 
 

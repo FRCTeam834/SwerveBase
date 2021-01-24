@@ -7,9 +7,6 @@
 
 package frc.robot.swerve;
 
-// Java libraries
-import java.awt.geom.Point2D;
-
 // WPI libraries
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
@@ -19,9 +16,6 @@ import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-
-// Vendor libraries
-import com.revrobotics.ControlType;
 
 // Import Parameters
 import frc.robot.Parameters;
@@ -124,30 +118,13 @@ public class DriveTrain extends SubsystemBase {
   public void driveAbsoluteCenter(double xSpeed, double ySpeed, double rot, boolean fieldRelative, Translation2d absoluteCenter) {
 
     // Get the current position of the robot on the field
-    Pose2d pose = odometry.getPoseMeters();
+    Pose2d currentPose = odometry.getPoseMeters();
 
-    // Convert the pose2d to a translation2d
-    Translation2d position = pose.getTranslation();
+    // Create a pose of the field coordinate
+    Pose2d fieldCenterPose = new Pose2d(absoluteCenter, new Rotation2d(0));
 
-    // Get the distance between the desired center and the actual center (WPI made the decision to flip X and Y)
-    double distance = Point2D.distance(position.getY(), position.getX(), absoluteCenter.getY(), absoluteCenter.getX());
-
-    // Calculate the differences in the points (X is forward/back, Y is left/right)
-    double fieldXDiff = Math.abs(position.getX() - absoluteCenter.getX());
-    double fieldYDiff = Math.abs(position.getY() - absoluteCenter.getY());
-
-    // Calculate the angle of the distance measurement in relation to the field (using asin(o/h))
-    double fieldDistanceAngle = Math.toDegrees(Math.asin(fieldXDiff / distance));
-
-    // Calculate the remaining angle (the angle of the triangle for our robot-relative coordinates) (done by subtracting the angles that we know from the overall)
-    double coordTriAngle = 90 - (Robot.navX.getFusedHeading() + fieldDistanceAngle);
-
-    // Calculate the legs of our robot-relative coordinate triangle
-    double robotXDiff = distance * Math.cos(Math.toRadians(coordTriAngle));
-    double robotYDiff = distance * Math.sin(Math.toRadians(coordTriAngle));
-
-    // Create the center of rotation relative to the robot based on the pose
-    Translation2d centerOfRotation = new Translation2d(robotXDiff, robotYDiff);
+    // Convert the field coordinates to robot coordinates
+    Translation2d centerOfRotation = fieldCenterPose.relativeTo(currentPose).getTranslation();
 
     // Define an accumulator for the states
     SwerveModuleState[] swerveModuleStates;
@@ -211,17 +188,28 @@ public class DriveTrain extends SubsystemBase {
 
   public void updateParameters() {
 
+    // Update the PID parameters with the new driver profile values
+    Parameters.FL_T_PID_PARAM.setPeakOutput(Parameters.CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    Parameters.FR_T_PID_PARAM.setPeakOutput(Parameters.CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    Parameters.BL_T_PID_PARAM.setPeakOutput(Parameters.CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    Parameters.BR_T_PID_PARAM.setPeakOutput(Parameters.CURRENT_DRIVER_PROFILE.MAX_SPEED);
+
+    Parameters.FL_D_PID_PARAM.setPeakOutput(Parameters.CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    Parameters.FR_D_PID_PARAM.setPeakOutput(Parameters.CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    Parameters.BL_D_PID_PARAM.setPeakOutput(Parameters.CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    Parameters.BR_D_PID_PARAM.setPeakOutput(Parameters.CURRENT_DRIVER_PROFILE.MAX_SPEED);
+
     // Set steering parameters
-    frontLeft.setSteerMParams(Parameters.FL_T_PID_PARAM,  Parameters.currentDriverProfile.STEER_IDLE_MODE);
-    frontRight.setSteerMParams(Parameters.FR_T_PID_PARAM, Parameters.currentDriverProfile.STEER_IDLE_MODE);
-    backLeft.setSteerMParams(Parameters.BL_T_PID_PARAM,   Parameters.currentDriverProfile.STEER_IDLE_MODE);
-    backRight.setSteerMParams(Parameters.BR_T_PID_PARAM,  Parameters.currentDriverProfile.STEER_IDLE_MODE);
+    frontLeft.setSteerMParams(Parameters.FL_T_PID_PARAM,  Parameters.CURRENT_DRIVER_PROFILE.STEER_IDLE_MODE);
+    frontRight.setSteerMParams(Parameters.FR_T_PID_PARAM, Parameters.CURRENT_DRIVER_PROFILE.STEER_IDLE_MODE);
+    backLeft.setSteerMParams(Parameters.BL_T_PID_PARAM,   Parameters.CURRENT_DRIVER_PROFILE.STEER_IDLE_MODE);
+    backRight.setSteerMParams(Parameters.BR_T_PID_PARAM,  Parameters.CURRENT_DRIVER_PROFILE.STEER_IDLE_MODE);
 
     // Set driving parameters
-    frontLeft.setDriveMParams(Parameters.FL_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
-    frontRight.setDriveMParams(Parameters.FR_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
-    backLeft.setDriveMParams(Parameters.BL_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
-    backRight.setDriveMParams(Parameters.BR_D_PID_PARAM, Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
+    frontLeft.setDriveMParams(Parameters.FL_D_PID_PARAM,  Parameters.CURRENT_DRIVER_PROFILE.DRIVE_IDLE_MODE);
+    frontRight.setDriveMParams(Parameters.FR_D_PID_PARAM, Parameters.CURRENT_DRIVER_PROFILE.DRIVE_IDLE_MODE);
+    backLeft.setDriveMParams(Parameters.BL_D_PID_PARAM,   Parameters.CURRENT_DRIVER_PROFILE.DRIVE_IDLE_MODE);
+    backRight.setDriveMParams(Parameters.BR_D_PID_PARAM,  Parameters.CURRENT_DRIVER_PROFILE.DRIVE_IDLE_MODE);
   }
 
   @Override

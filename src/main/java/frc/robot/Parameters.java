@@ -38,18 +38,19 @@ public final class Parameters {
     public static final int ANDREWS_PROGRESS_WHEN_AROUND_SAFETY_TEAM = -10; //What happens when Andrew is around the safety team... backwards progress
 
     // Driver Profiles
-    public static DriverProfile[] driverProfiles = {
+    public static DriverProfile[] DRIVER_PROFILES = {
         // DriverProfile NAME, double JOYSTICK_DEADZONE, double MAX_TURN_SPEED (deg/s), double DRIVE_RAMP_RATE, boolean LOCKEM_UP, boolean FIELD_CENTRIC, double MAX_SPEED (m/s), IdleMode DRIVE_IDLE_MODE) 
         new DriverProfile("CAP1Sup",         0.05, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake),
         new DriverProfile("Christian Velez", 0.15, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake),
         new DriverProfile("Test",            0.15, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake)
     };
 
-    public static DriverProfile defaultDriverProfile = new DriverProfile("Default", 0.15, 1.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake);
+    // Default profile (must be kept!)
+    public static DriverProfile DEFAULT_DRIVER_PROFILE = new DriverProfile("Default", 0.15, 1.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake);
 
 
     // Current Driver Profile being used
-    public static DriverProfile currentDriverProfile = Robot.profilingManagement.loadSavedProfile();
+    public static DriverProfile CURRENT_DRIVER_PROFILE = DEFAULT_DRIVER_PROFILE;
 
     
     // CAN parameters
@@ -90,15 +91,15 @@ public final class Parameters {
 	 * Gains used in each module's steering motor, to be adjusted accordingly
      * Gains(kp, ki, kd, static ff, velocity ff, izone, peak output);
      */
-    public static PID_PARAMETERS FL_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, MODULE_T_STATIC_FF, MODULE_T_VELOCITY_FF, 0, currentDriverProfile.MAX_SPEED);
-    public static PID_PARAMETERS FR_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, MODULE_T_STATIC_FF, MODULE_T_VELOCITY_FF, 0, currentDriverProfile.MAX_SPEED);
-    public static PID_PARAMETERS BL_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, MODULE_T_STATIC_FF, MODULE_T_VELOCITY_FF, 0, currentDriverProfile.MAX_SPEED);
-    public static PID_PARAMETERS BR_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, MODULE_T_STATIC_FF, MODULE_T_VELOCITY_FF, 0, currentDriverProfile.MAX_SPEED);
+    public static PID_PARAMETERS FL_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, MODULE_T_STATIC_FF, MODULE_T_VELOCITY_FF, 0, CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    public static PID_PARAMETERS FR_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, MODULE_T_STATIC_FF, MODULE_T_VELOCITY_FF, 0, CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    public static PID_PARAMETERS BL_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, MODULE_T_STATIC_FF, MODULE_T_VELOCITY_FF, 0, CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    public static PID_PARAMETERS BR_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, MODULE_T_STATIC_FF, MODULE_T_VELOCITY_FF, 0, CURRENT_DRIVER_PROFILE.MAX_SPEED);
 
-    public static PID_PARAMETERS FL_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, MODULE_D_STATIC_FF, MODULE_D_VELOCITY_FF, 0, currentDriverProfile.MAX_SPEED);
-    public static PID_PARAMETERS FR_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, MODULE_D_STATIC_FF, MODULE_D_VELOCITY_FF, 0, currentDriverProfile.MAX_SPEED);
-    public static PID_PARAMETERS BL_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, MODULE_D_STATIC_FF, MODULE_D_VELOCITY_FF, 0, currentDriverProfile.MAX_SPEED);
-    public static PID_PARAMETERS BR_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, MODULE_D_STATIC_FF, MODULE_D_VELOCITY_FF, 0, currentDriverProfile.MAX_SPEED);
+    public static PID_PARAMETERS FL_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, MODULE_D_STATIC_FF, MODULE_D_VELOCITY_FF, 0, CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    public static PID_PARAMETERS FR_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, MODULE_D_STATIC_FF, MODULE_D_VELOCITY_FF, 0, CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    public static PID_PARAMETERS BL_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, MODULE_D_STATIC_FF, MODULE_D_VELOCITY_FF, 0, CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    public static PID_PARAMETERS BR_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, MODULE_D_STATIC_FF, MODULE_D_VELOCITY_FF, 0, CURRENT_DRIVER_PROFILE.MAX_SPEED);
 
     // Vision parameters - used for distance calculations 
 

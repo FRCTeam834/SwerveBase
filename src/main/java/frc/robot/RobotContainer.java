@@ -27,9 +27,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   // Subsystems
-  //private final ProfilingManagement profilingManagement = new ProfilingManagement();
-  //private final NavX navX = new NavX();
-  //private final DriveTrain driveTrain = new DriveTrain();
+  private final ProfilingManagement profilingManagement = new ProfilingManagement();
+  private final NavX navX = new NavX();
+  private final DriveTrain driveTrain = new DriveTrain();
 
   // Commands
   private final LetsRoll letsRoll = new LetsRoll();

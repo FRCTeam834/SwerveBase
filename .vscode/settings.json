@@ -19,6 +19,8 @@
     "coord",
     "deadzone",
     "feedforward",
-    "odometry"
+    "odometry",
+    "teleop",
+    "teleoperated"
   ]
 }

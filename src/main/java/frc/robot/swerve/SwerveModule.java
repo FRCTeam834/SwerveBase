@@ -46,8 +46,8 @@ public class SwerveModule {
 
     // Steering motor
     steerMotor = new CANSparkMax(steerMID, CANSparkMax.MotorType.kBrushless);
-    steerMotor.setOpenLoopRampRate(Parameters.currentDriverProfile.DRIVE_RAMP_RATE);
-    steerMotor.setIdleMode(Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
+    steerMotor.setOpenLoopRampRate(Parameters.CURRENT_DRIVER_PROFILE.DRIVE_RAMP_RATE);
+    steerMotor.setIdleMode(Parameters.CURRENT_DRIVER_PROFILE.DRIVE_IDLE_MODE);
 
     // Steering PID controller
     steerMotorPID = new ProfiledPIDController(T_PID_params.P, T_PID_params.I, T_PID_params.D, new TrapezoidProfile.Constraints(Math.toRadians(Parameters.MAX_MODULE_ANGULAR_VELOCITY), Math.toRadians(Parameters.MAX_MODULE_ANGULAR_ACCEL)));
@@ -62,8 +62,8 @@ public class SwerveModule {
 
     // Drive motor
     driveMotor = new CANSparkMax(driveMID, CANSparkMax.MotorType.kBrushless);
-    driveMotor.setOpenLoopRampRate(Parameters.currentDriverProfile.DRIVE_RAMP_RATE);
-    driveMotor.setIdleMode(Parameters.currentDriverProfile.DRIVE_IDLE_MODE);
+    driveMotor.setOpenLoopRampRate(Parameters.CURRENT_DRIVER_PROFILE.DRIVE_RAMP_RATE);
+    driveMotor.setIdleMode(Parameters.CURRENT_DRIVER_PROFILE.DRIVE_IDLE_MODE);
 
     // Drive motor PID controller
     driveMotorPID = new PIDController(D_PID_params.P, D_PID_params.I, D_PID_params.D);
@@ -81,6 +81,9 @@ public class SwerveModule {
     steerMotorPID.setI(PID_params.I);
     steerMotorPID.setD(PID_params.D);
 
+    // Ramp rate
+    steerMotor.setOpenLoopRampRate(Parameters.CURRENT_DRIVER_PROFILE.DRIVE_RAMP_RATE);
+
     // Idle mode of the motor
     steerMotor.setIdleMode(idleMode);
   }
@@ -91,6 +94,9 @@ public class SwerveModule {
     driveMotorPID.setP(PID_params.P);
     driveMotorPID.setI(PID_params.I);
     driveMotorPID.setD(PID_params.D);
+
+    // Ramp rate
+    driveMotor.setOpenLoopRampRate(Parameters.CURRENT_DRIVER_PROFILE.DRIVE_RAMP_RATE);
 
     // Idle mode of the motor
     driveMotor.setIdleMode(idleMode);

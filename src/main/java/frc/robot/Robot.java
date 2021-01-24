@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
-// Subsytems
+// Subsystems
 import frc.robot.subsystems.NavX;
 import frc.robot.swerve.DriveTrain;
 import frc.robot.DriverProfiles.ProfilingManagement;
