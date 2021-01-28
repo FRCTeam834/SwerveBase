@@ -91,6 +91,11 @@ public final class Parameters {
     public static int PID_IDX = 0;
     public static int PID_TIMEOUT = 30;
 
+    // Dynamically allocated Joysticks
+
+    // Joysticks have 11 buttons
+    public static int JOYSTICK_BUTTON_COUNT = 11;
+
 
     // Vision parameters - used for distance calculations 
 
