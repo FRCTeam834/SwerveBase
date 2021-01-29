@@ -38,15 +38,15 @@ public class RobotContainer {
   // Commands
   private final LetsRoll letsRoll = new LetsRoll();
 
-  // Define the joysticks
-  private Joystick leftJoystick;
-  private Joystick rightJoystick;
+  // Define the joysticks (need to be public so commands can access axes)
+  public static Joystick leftJoystick;
+  public static Joystick rightJoystick;
   
   // Left Joystick button array
-  private JoystickButton leftJoystickButtons[];
+  public static JoystickButton leftJoystickButtons[];
 
   // Right Joystick button array
-  private JoystickButton rightJoystickButtons[];
+  public static JoystickButton rightJoystickButtons[];
 
 
   /**

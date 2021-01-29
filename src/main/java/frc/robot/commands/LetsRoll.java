@@ -7,17 +7,19 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+// Robot libraries
 import frc.robot.Parameters;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.swerve.DriveTrain;
+
+// WPI libraries
+import edu.wpi.first.wpilibj2.command.CommandBase;
+
 
 public class LetsRoll extends CommandBase {
 
   DriveTrain driveTrain;
-  Joystick left = new Joystick(0);
-  Joystick right = new Joystick(1);
 
   public LetsRoll() {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -35,43 +37,15 @@ public class LetsRoll extends CommandBase {
   public void execute() {
 
     // Get all of the current joystick inputs
-    double leftX = left.getX();
-    double leftY = left.getY();
-    double rightX = right.getX();
-
-    // Do we need to move?
-    boolean move = false;
-
-    // Check to see if joysticks are out of range. If out, we need to move, otherwise set the sticks to zero.
-    // Left X
-    if (leftX < Parameters.CURRENT_DRIVER_PROFILE.JOYSTICK_DEADZONE) {
-      leftX = 0;
-    }
-    else {
-      move = true;
-    }
-
-    // Left Y
-    if (leftY < Parameters.CURRENT_DRIVER_PROFILE.JOYSTICK_DEADZONE) {
-      leftY = 0;
-    }
-    else {
-      move = true;
-    }
-
-    // Right X
-    if (rightX < Parameters.CURRENT_DRIVER_PROFILE.JOYSTICK_DEADZONE) {
-      rightX = 0;
-    }
-    else {
-      move = true;
-    }
+    double leftX =  constrainJoystick(RobotContainer.leftJoystick.getX());
+    double leftY =  constrainJoystick(RobotContainer.leftJoystick.getY());
+    double rightX = constrainJoystick(RobotContainer.rightJoystick.getX());
     
-    // If any of the sticks are out of range, then we need to move. Otherwise, get to it
-    if (move) {
+    // If any of the sticks are out of range, then we need to move. Otherwise, lock up the drivetrain (if specified)
+    if (leftX != 0 || leftY != 0 || rightX != 0) {
 
       // Move the drivetrain with the desired values
-      driveTrain.drive((left.getX() * Parameters.CURRENT_DRIVER_PROFILE.MAX_SPEED), (left.getY() * Parameters.CURRENT_DRIVER_PROFILE.MAX_SPEED), Math.toRadians(right.getX() * Parameters.CURRENT_DRIVER_PROFILE.MAX_TURN_SPEED), Parameters.CURRENT_DRIVER_PROFILE.FIELD_CENTRIC);
+      driveTrain.drive((leftX * Parameters.CURRENT_DRIVER_PROFILE.MAX_SPEED), (leftY * Parameters.CURRENT_DRIVER_PROFILE.MAX_SPEED), Math.toRadians(rightX * Parameters.CURRENT_DRIVER_PROFILE.MAX_TURN_SPEED), Parameters.CURRENT_DRIVER_PROFILE.FIELD_CENTRIC);
     }
     else if (Parameters.CURRENT_DRIVER_PROFILE.LOCKEM_UP) {
       driveTrain.lockemUp();
@@ -92,5 +66,17 @@ public class LetsRoll extends CommandBase {
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  // Return a constrained Joystick value
+  private double constrainJoystick(double rawValue) {
+
+    // If the value is out of tolerance, then zero it. Otherwise 
+    if (rawValue < Parameters.CURRENT_DRIVER_PROFILE.JOYSTICK_DEADZONE) {
+      return 0;
+    }
+    else {
+      return rawValue;
+    }
   }
 }
