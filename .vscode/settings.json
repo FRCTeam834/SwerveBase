@@ -13,5 +13,14 @@
     "**/.settings": true,
     "**/.factorypath": true,
     "**/*~": true
-  }
+  },
+  "cSpell.words": [
+    "AHRS",
+    "coord",
+    "deadzone",
+    "feedforward",
+    "odometry",
+    "teleop",
+    "teleoperated"
+  ]
 }

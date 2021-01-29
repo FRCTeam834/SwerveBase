@@ -35,10 +35,10 @@ public class NavX extends SubsystemBase {
 
   // Fused heading is like yaw, but on crack
   public float getFusedHeading() {
-    return -navX.getFusedHeading();
+    return navX.getFusedHeading();
   }
 
-  // The Rotation2D big brother of fused heading
+  // The Rotation2D is the big brother of fused heading
   public Rotation2d getFusedRotation2d() {
     return Rotation2d.fromDegrees(navX.getFusedHeading());
   }

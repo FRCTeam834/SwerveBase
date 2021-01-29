@@ -7,16 +7,16 @@
 
 package frc.robot;
 
-// Robot 
-import frc.robot.Robot;
-
 // Internal libraries
 import frc.robot.DriverProfiles.DriverProfile;
-import frc.robot.DriverProfiles.ProfilingManagement;
 import frc.robot.swerve.PID_PARAMETERS;
 
 // Vendor libraries
 import com.revrobotics.CANSparkMax.IdleMode;
+
+// WPI Libraries
+import edu.wpi.first.wpilibj.util.Units;
+
 
 /**
  * The Parameters class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -34,22 +34,23 @@ public final class Parameters {
     public static final double MIN_IN_HR = 60; //Minutes in an hour
     public static final int BUILD_TEAM_BRAIN_CELLS = 1; //Brain cells owned by the build team
     public static final int CODING_TEAM_BRAIN_CELLS = 5; //Same as the amount of coding team members
-    public static final int SHRIMP_ON_THE_BARBIE = 3; //Number of shrimp on the barbeque
+    public static final int SHRIMP_ON_THE_BARBIE = 3; //Number of shrimp on the barbecue
     public static final int ANDREWS_PROGRESS_WHEN_AROUND_SAFETY_TEAM = -10; //What happens when Andrew is around the safety team... backwards progress
 
     // Driver Profiles
-    public static DriverProfile[] driverProfiles = {
-            // DriverProfile NAME, double JOYSTICK_DEADZONE, double TURN_SCALE, double DRIVE_RAMP_RATE, boolean LOCKEM_UP, boolean FIELD_CENTRIC, double MAX_SPEED, IdleMode DRIVE_IDLE_MODE) 
-            new DriverProfile("CAP1Sup",         0.05, 1.0, 0.5, true, true, 1.0, IdleMode.kBrake),
-            new DriverProfile("Christian Velez", 0.15, 1.0, 0.5, true, true, 1.0, IdleMode.kBrake),
-            new DriverProfile("Test",            0.15, 1.0, 0.5, true, true, 1.0, IdleMode.kBrake)
+    public static DriverProfile[] DRIVER_PROFILES = {
+        // DriverProfile NAME, double JOYSTICK_DEADZONE, double MAX_TURN_SPEED (deg/s), double DRIVE_RAMP_RATE, boolean LOCKEM_UP, boolean FIELD_CENTRIC, double MAX_SPEED (m/s), IdleMode DRIVE_IDLE_MODE) 
+        new DriverProfile("CAP1Sup",         0.05, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake),
+        new DriverProfile("Christian Velez", 0.15, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake),
+        new DriverProfile("Test",            0.15, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake)
     };
 
-    public static DriverProfile defaultDriverProfile = new DriverProfile("Default", 0.15, 1.0, 0.5, true, true, 1.0, IdleMode.kBrake);
+    // Default profile (must be kept!)
+    public static DriverProfile DEFAULT_DRIVER_PROFILE = new DriverProfile("Default", 0.15, 1.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake);
 
 
     // Current Driver Profile being used
-    public static DriverProfile currentDriverProfile = Robot.profilingManagement.loadSavedProfile();
+    public static DriverProfile CURRENT_DRIVER_PROFILE = DEFAULT_DRIVER_PROFILE;
 
     
     // CAN parameters
@@ -63,34 +64,44 @@ public final class Parameters {
     public static final int BACK_LEFT_DRIVE_ID = 7;
     public static final int BACK_RIGHT_DRIVE_ID = 8;
 
+    public static final int FRONT_LEFT_CODER_ID = 9;
+    public static final int FRONT_RIGHT_CODER_ID = 10;
+    public static final int BACK_LEFT_CODER_ID = 11;
+    public static final int BACK_RIGHT_CODER_ID = 12;
+
 
     // Swerve calculation parameters (in meters)
     public static final double DRIVE_LENGTH = 0.4;
     public static final double DRIVE_WIDTH = 0.3;
     public static final double DRIVE_RADIUS = Math.sqrt( (Math.pow(DRIVE_LENGTH, 2) + Math.pow(DRIVE_WIDTH, 2)) / 2);
+    public static final double MAX_MODULE_SPEED = 2; // (m/s)
+    public static final double MAX_MODULE_ANGULAR_VELOCITY = 180; // (deg/s)
+    public static final double MAX_MODULE_ANGULAR_ACCEL = 360; // (deg/s/s)
 
-    public static final int ENCODER_COUNTS_PER_REVOLUTION = 1024;
-    public static final double SWERVE_WHEEL_DIA = 4; // Inches
-    public static final double SWERVE_WHEEL_DIA_M = SWERVE_WHEEL_DIA / 39.37; // Meters (for odometry calculations)
+    public static final double MODULE_T_STATIC_FF = 1; // Must be tuned for the modules!
+    public static final double MODULE_T_VELOCITY_FF = 0.5;
+    public static final double MODULE_D_STATIC_FF = 1; 
+    public static final double MODULE_D_VELOCITY_FF = 3;
+
+    public static final double MODULE_WHEEL_DIA = 4; // Inches
+    public static final double MODULE_WHEEL_DIA_M = Units.inchesToMeters(MODULE_WHEEL_DIA); // Meters (for odometry calculations)
 
     /**
      * PID parameters
 	 * Gains used in each module's steering motor, to be adjusted accordingly
-     * Gains(kp, ki, kd, kf, izone, PID timeout, peak output);
+     * Gains(kp, ki, kd, static ff, velocity ff, izone, peak output);
      */
-    public static PID_PARAMETERS FL_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, currentDriverProfile.MAX_SPEED);
-    public static PID_PARAMETERS FR_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, currentDriverProfile.MAX_SPEED);
-    public static PID_PARAMETERS BL_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, currentDriverProfile.MAX_SPEED);
-    public static PID_PARAMETERS BR_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, 0.0, 0, currentDriverProfile.MAX_SPEED);
+    public static PID_PARAMETERS FL_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, MODULE_T_STATIC_FF, MODULE_T_VELOCITY_FF, 0, CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    public static PID_PARAMETERS FR_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, MODULE_T_STATIC_FF, MODULE_T_VELOCITY_FF, 0, CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    public static PID_PARAMETERS BL_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, MODULE_T_STATIC_FF, MODULE_T_VELOCITY_FF, 0, CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    public static PID_PARAMETERS BR_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, MODULE_T_STATIC_FF, MODULE_T_VELOCITY_FF, 0, CURRENT_DRIVER_PROFILE.MAX_SPEED);
 
-    public static PID_PARAMETERS FL_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, currentDriverProfile.MAX_SPEED);
-    public static PID_PARAMETERS FR_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, currentDriverProfile.MAX_SPEED);
-    public static PID_PARAMETERS BL_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, currentDriverProfile.MAX_SPEED);
-    public static PID_PARAMETERS BR_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, 0.0, 0, currentDriverProfile.MAX_SPEED);
+    public static PID_PARAMETERS FL_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, MODULE_D_STATIC_FF, MODULE_D_VELOCITY_FF, 0, CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    public static PID_PARAMETERS FR_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, MODULE_D_STATIC_FF, MODULE_D_VELOCITY_FF, 0, CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    public static PID_PARAMETERS BL_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, MODULE_D_STATIC_FF, MODULE_D_VELOCITY_FF, 0, CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    public static PID_PARAMETERS BR_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, MODULE_D_STATIC_FF, MODULE_D_VELOCITY_FF, 0, CURRENT_DRIVER_PROFILE.MAX_SPEED);
 
-    public static int PID_IDX = 0;
-    public static int PID_TIMEOUT = 30;
-
+    
     // Dynamically allocated Joysticks
 
     // Joysticks have 11 buttons
@@ -104,7 +115,7 @@ public final class Parameters {
 
 
     // Game-specific parameters (inches)
-    public static final double GOAL_HEIGHT = 34; 
+    public static final double GOAL_HEIGHT = 98.25; 
     public static final double POWER_CELL_HEIGHT = 7;
 
 
