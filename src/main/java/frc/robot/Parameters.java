@@ -101,6 +101,13 @@ public final class Parameters {
     public static PID_PARAMETERS BL_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, MODULE_D_STATIC_FF, MODULE_D_VELOCITY_FF, 0, CURRENT_DRIVER_PROFILE.MAX_SPEED);
     public static PID_PARAMETERS BR_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, MODULE_D_STATIC_FF, MODULE_D_VELOCITY_FF, 0, CURRENT_DRIVER_PROFILE.MAX_SPEED);
 
+    
+    // Dynamically allocated Joysticks
+
+    // Joysticks have 11 buttons
+    public static int JOYSTICK_BUTTON_COUNT = 11;
+
+
     // Vision parameters - used for distance calculations 
 
     // Camera-specific parameters (pixels)
