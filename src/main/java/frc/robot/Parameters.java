@@ -16,6 +16,17 @@ import com.revrobotics.CANSparkMax.IdleMode;
 
 // WPI Libraries
 import edu.wpi.first.wpilibj.util.Units;
+import edu.wpi.first.wpiutil.math.MatBuilder;
+import edu.wpi.first.wpiutil.math.Matrix;
+import edu.wpi.first.wpiutil.math.Nat;
+import edu.wpi.first.wpiutil.math.numbers.*;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 
 
 /**
@@ -101,9 +112,27 @@ public final class Parameters {
     public static PID_PARAMETERS BL_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, MODULE_D_STATIC_FF, MODULE_D_VELOCITY_FF, 0, CURRENT_DRIVER_PROFILE.MAX_SPEED);
     public static PID_PARAMETERS BR_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, MODULE_D_STATIC_FF, MODULE_D_VELOCITY_FF, 0, CURRENT_DRIVER_PROFILE.MAX_SPEED);
 
-    
-    // Dynamically allocated Joysticks
 
+    // Pose estimator parameters (units are m, m, radians)
+    public static Matrix<N3,N1> POSE_STANDARD_DEVIATION = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, Math.toRadians(0.125));
+    public static Matrix<N1,N1> ENCODER_GYRO_DEVIATION = new MatBuilder<>(Nat.N1(), Nat.N1()).fill(Math.toRadians(0.125));
+    public static Matrix<N3,N1> VISION_DEVIATION = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, Math.toRadians(0.125));
+
+    // PID controller (rotation constraints are max velocity and max acceleration)
+    public static PIDController MOVEMENT_PID = new PIDController(1, 0, 0);
+    public static ProfiledPIDController ROTATION_PID = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(Math.toRadians(360), Math.toRadians(180)));
+    
+    // DriverStation instance
+    public static DriverStation driverStation = DriverStation.getInstance();
+
+    // All of the possible starting positions (and their angles)
+    public static Pose2d[] POSSIBLE_STARTING_POSITIONS = {new Pose2d(0, 0, Rotation2d.fromDegrees(0)), new Pose2d(0, 0, Rotation2d.fromDegrees(0)), new Pose2d(0, 0, Rotation2d.fromDegrees(0))};
+
+    // Actual starting position (declared in the global scope)
+    public static Pose2d STARTING_POSITION = Parameters.POSSIBLE_STARTING_POSITIONS[Parameters.driverStation.getLocation() - 1];
+
+
+    // Dynamically allocated Joysticks
     // Joysticks have 11 buttons
     public static int JOYSTICK_BUTTON_COUNT = 11;
 

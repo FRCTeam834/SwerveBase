@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.controller.HolonomicDriveController;
+import edu.wpi.first.wpilibj.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 
@@ -43,6 +45,15 @@ public class DriveTrain extends SubsystemBase {
 
   // Create the drivetrain map
   SwerveDriveKinematics kinematics = new SwerveDriveKinematics(FLLocation, FRLocation, BLLocation, BRLocation);
+  
+  // Declare the odometry of the robot
+  private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, Robot.navX.getFusedRotation2d());
+
+  // Pose estimator
+  private SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(Robot.navX.getFusedRotation2d(), Parameters.STARTING_POSITION, kinematics, Parameters.POSE_STANDARD_DEVIATION, Parameters.ENCODER_GYRO_DEVIATION, Parameters.VISION_DEVIATION);
+
+  // Holomonic drive controller
+  private HolonomicDriveController driveController = new HolonomicDriveController(Parameters.MOVEMENT_PID, Parameters.MOVEMENT_PID, Parameters.ROTATION_PID);
 
   // Setup the drivetrain
   public DriveTrain() {
@@ -53,66 +64,37 @@ public class DriveTrain extends SubsystemBase {
     backLeft =   new SwerveModule(Parameters.BACK_LEFT_STEER_ID,   Parameters.BACK_LEFT_DRIVE_ID,   Parameters.BACK_LEFT_CODER_ID,   Parameters.BL_T_PID_PARAM, Parameters.BL_D_PID_PARAM);
     backRight =  new SwerveModule(Parameters.BACK_RIGHT_STEER_ID,  Parameters.BACK_RIGHT_DRIVE_ID,  Parameters.BACK_RIGHT_CODER_ID,  Parameters.BR_T_PID_PARAM, Parameters.BR_D_PID_PARAM);
 
+    // Center the odometry of the robot
+    resetOdometry(Parameters.STARTING_POSITION);
+
   }
-  
-  // Declare the odometry of the robot
-  private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, Robot.navX.getFusedRotation2d());
+
 
   // Less complicated version, runs with the robot's actual center
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
 
-    // Define an accumulator for the states
-    SwerveModuleState[] swerveModuleStates;
-
     // Set up the modules
     if (fieldRelative) {
-      swerveModuleStates = kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Robot.navX.getFusedRotation2d()));
+      setModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Robot.navX.getFusedRotation2d()));
     }
     else {
-      swerveModuleStates = kinematics.toSwerveModuleStates(new ChassisSpeeds(xSpeed, ySpeed, rot));
+      setModuleStates(new ChassisSpeeds(xSpeed, ySpeed, rot));
     }
-    
-    // Setup the max speed of each module
-    SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, Parameters.MAX_MODULE_SPEED);
-
-    // Set each of the modules to their state
-    frontLeft.setDesiredState( swerveModuleStates[0]);
-    frontRight.setDesiredState(swerveModuleStates[1]);
-    backLeft.setDesiredState(  swerveModuleStates[2]);
-    backRight.setDesiredState( swerveModuleStates[3]);
-
-    // Update the robot's odometry
-    updateOdometry();
-    
   }
-  
+
+
   // More complicated, runs with a custom center relative to robot
   public void driveRelativeCenter(double xSpeed, double ySpeed, double rot, boolean fieldRelative, Translation2d relativeCenter) {
 
-    // Define an accumulator for the states
-    SwerveModuleState[] swerveModuleStates;
-
-    // Set up the modules
+    // Drive with selected mode
     if (fieldRelative) {
-      swerveModuleStates = kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Robot.navX.getFusedRotation2d()), relativeCenter);
+      setModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Robot.navX.getFusedRotation2d()), relativeCenter);
     }
     else {
-      swerveModuleStates = kinematics.toSwerveModuleStates(new ChassisSpeeds(xSpeed, ySpeed, rot), relativeCenter);
+      setModuleStates(new ChassisSpeeds(xSpeed, ySpeed, rot), relativeCenter);
     }
-    
-    // Setup the max speed of each module
-    SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, Parameters.MAX_MODULE_SPEED);
-
-    // Set each of the modules to their optimized state
-    frontLeft.setDesiredState( swerveModuleStates[0]);
-    frontRight.setDesiredState(swerveModuleStates[1]);
-    backLeft.setDesiredState(  swerveModuleStates[2]);
-    backRight.setDesiredState( swerveModuleStates[3]);
-
-    // Update the robot's odometry
-    updateOdometry();
-
   }
+
 
   // More complicated, runs with a custom center relative to field
   public void driveAbsoluteCenter(double xSpeed, double ySpeed, double rot, boolean fieldRelative, Translation2d absoluteCenter) {
@@ -126,33 +108,57 @@ public class DriveTrain extends SubsystemBase {
     // Convert the field coordinates to robot coordinates
     Translation2d centerOfRotation = fieldCenterPose.relativeTo(currentPose).getTranslation();
 
-    // Define an accumulator for the states
-    SwerveModuleState[] swerveModuleStates;
-
     // Set up the modules
     if (fieldRelative) {
-      swerveModuleStates = kinematics.toSwerveModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Robot.navX.getFusedRotation2d()), centerOfRotation);
+      setModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Robot.navX.getFusedRotation2d()), centerOfRotation);
     }
     else {
-      swerveModuleStates = kinematics.toSwerveModuleStates(new ChassisSpeeds(xSpeed, ySpeed, rot), centerOfRotation);
+      setModuleStates(new ChassisSpeeds(xSpeed, ySpeed, rot), centerOfRotation);
     }
-    
+  }
+
+
+  // Sets all of the states of the modules and updates the odometry of the robot
+  private void setModuleStates(ChassisSpeeds chassisSpeeds, Translation2d centerOfRotation) {
+
+    // Get the module states
+    SwerveModuleState[] swerveModuleStates = kinematics.toSwerveModuleStates(chassisSpeeds, centerOfRotation);
+
     // Setup the max speed of each module
     SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, Parameters.MAX_MODULE_SPEED);
 
     // Set each of the modules to their optimized state
-    frontLeft.setDesiredState( swerveModuleStates[0]);
+    frontLeft.setDesiredState(swerveModuleStates[0]);
     frontRight.setDesiredState(swerveModuleStates[1]);
-    backLeft.setDesiredState(  swerveModuleStates[2]);
-    backRight.setDesiredState( swerveModuleStates[3]);
+    backLeft.setDesiredState(swerveModuleStates[2]);
+    backRight.setDesiredState(swerveModuleStates[3]);
 
     // Update the robot's odometry
     updateOdometry();
-
   }
 
-  
 
+  // Sets all of the states of the modules and updates the odometry of the robot
+  private void setModuleStates(ChassisSpeeds chassisSpeeds) {
+
+    // Get the module states
+    SwerveModuleState[] swerveModuleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
+
+    // Setup the max speed of each module
+    SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, Parameters.MAX_MODULE_SPEED);
+
+    // Set each of the modules to their optimized state
+    frontLeft.setDesiredState(swerveModuleStates[0]);
+    frontRight.setDesiredState(swerveModuleStates[1]);
+    backLeft.setDesiredState(swerveModuleStates[2]);
+    backRight.setDesiredState(swerveModuleStates[3]);
+
+    // Update the robot's odometry
+    updateOdometry();
+  }
+
+
+  // Locks the modules of the robot to prevent movement
   public void lockemUp() {
     // Makes an X pattern with the swerve base
     // Set the modules to 45 degree angles
@@ -169,9 +175,8 @@ public class DriveTrain extends SubsystemBase {
 
   }
 
-  /**
-   * Updates the field relative position of the robot.
-   */
+
+  // Updates the field relative position of the robot.
   public void updateOdometry() {
     odometry.update(
         Robot.navX.getFusedRotation2d(),
@@ -182,10 +187,25 @@ public class DriveTrain extends SubsystemBase {
     );
   }
 
+
+  // Resets the odometry of the robot
   public void resetOdometry(Pose2d currentPosition) {
     odometry.resetPosition(currentPosition, Robot.navX.getFusedRotation2d());
   }
 
+
+  // Function to have the drivetrain follow a set trajectory
+  public void trajectoryFollow(Pose2d desiredPosition, double linearVelocity) {
+
+    // Calculate the speeds for the chassis
+    ChassisSpeeds adjustedSpeeds = driveController.calculate(odometry.getPoseMeters(), desiredPosition, linearVelocity, desiredPosition.getRotation());
+
+    // Set the modules to move at those speeds
+    setModuleStates(adjustedSpeeds);
+  }
+
+
+  // Updates all of the steering parameters, such as PID loops and driver settings
   public void updateParameters() {
 
     // Update the PID parameters with the new driver profile values
