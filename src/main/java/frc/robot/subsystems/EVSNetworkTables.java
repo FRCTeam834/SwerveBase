@@ -55,6 +55,15 @@ public class EVSNetworkTables extends SubsystemBase {
     // Create a new expandable array for the tables
     ArrayList<double[]> visionArray = new ArrayList<double[]>();
 
+    // Create a new timing data array
+    double timingData[] = new double[1];
+
+    // Add the processing time to the timing array
+    timingData[0] = getVisionTable().getSubTable("timing").getEntry("processing_time").getDouble(100);
+
+    // Add the timing data to the output array
+    visionArray.add(timingData);
+
     // Loop through the available objects
     for (int objectCount = 0; objectCount < 10; objectCount++) {
       
@@ -62,7 +71,7 @@ public class EVSNetworkTables extends SubsystemBase {
       String objectName = "Power_Cell" + objectCount;
       
       // Check if the entry is valid
-      if (getVisionTable().getSubTable(objectName).getEntry("inUse").getBoolean(true)){
+      if (getVisionTable().getSubTable(objectName).getEntry("inUse").getBoolean(false)){
 
         // Create a new array for the values from NetworkTables
         double powerCellArray[] = getVisionTable().getSubTable(objectName).getEntry("values").getDoubleArray(new double[7]);
@@ -88,6 +97,15 @@ public class EVSNetworkTables extends SubsystemBase {
     // Create a new expandable array for the tables
     ArrayList<double[]> visionArray = new ArrayList<double[]>();
 
+    // Create a new timing data array
+    double timingData[] = new double[1];
+
+    // Add the processing time to the timing array
+    timingData[0] = getVisionTable().getSubTable("timing").getEntry("processing_time").getDouble(100);
+
+    // Add the timing data to the output array
+    visionArray.add(timingData);
+
     // Loop through the available objects
     for (int objectCount = 0; objectCount < 1; objectCount++) {
       
@@ -95,13 +113,13 @@ public class EVSNetworkTables extends SubsystemBase {
       String objectName = "Goal" + objectCount;
       
       // Check if the entry is valid
-      if (getVisionTable().getSubTable(objectName).getEntry("inUse").getBoolean(true)){
+      if (getVisionTable().getSubTable(objectName).getEntry("inUse").getBoolean(false)){
 
         // Create a new array for the values from NetworkTables
         double goalArray[] = getVisionTable().getSubTable(objectName).getEntry("values").getDoubleArray(new double[7]);
   
         // Add the data for the object to the array
-        visionArray.add(goalArray); 
+        visionArray.add(goalArray);
         
       } else {
  
