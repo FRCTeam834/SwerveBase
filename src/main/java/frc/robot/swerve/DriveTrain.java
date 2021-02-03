@@ -11,7 +11,6 @@ package frc.robot.swerve;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.wpilibj.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.controller.HolonomicDriveController;
@@ -45,9 +44,6 @@ public class DriveTrain extends SubsystemBase {
 
   // Create the drivetrain map
   SwerveDriveKinematics kinematics = new SwerveDriveKinematics(FLLocation, FRLocation, BLLocation, BRLocation);
-  
-  // Declare the odometry of the robot
-  private final SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, Robot.navX.getFusedRotation2d());
 
   // Pose estimator
   private SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(Robot.navX.getFusedRotation2d(), Parameters.STARTING_POSITION, kinematics, Parameters.POSE_STANDARD_DEVIATION, Parameters.ENCODER_GYRO_DEVIATION, Parameters.VISION_DEVIATION);
@@ -100,7 +96,7 @@ public class DriveTrain extends SubsystemBase {
   public void driveAbsoluteCenter(double xSpeed, double ySpeed, double rot, boolean fieldRelative, Translation2d absoluteCenter) {
 
     // Get the current position of the robot on the field
-    Pose2d currentPose = odometry.getPoseMeters();
+    Pose2d currentPose = poseEstimator.getEstimatedPosition();
 
     // Create a pose of the field coordinate
     Pose2d fieldCenterPose = new Pose2d(absoluteCenter, new Rotation2d(0));
@@ -178,7 +174,7 @@ public class DriveTrain extends SubsystemBase {
 
   // Updates the field relative position of the robot.
   public void updateOdometry() {
-    odometry.update(
+    poseEstimator.update(
         Robot.navX.getFusedRotation2d(),
         frontLeft.getState(),
         frontRight.getState(),
@@ -190,7 +186,13 @@ public class DriveTrain extends SubsystemBase {
 
   // Resets the odometry of the robot
   public void resetOdometry(Pose2d currentPosition) {
-    odometry.resetPosition(currentPosition, Robot.navX.getFusedRotation2d());
+    poseEstimator.resetPosition(currentPosition, Robot.navX.getFusedRotation2d());
+  }
+
+
+  // Updates the pose estimator with a vision position
+  public void visionPositionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds) {
+    poseEstimator.addVisionMeasurement(visionRobotPoseMeters, timestampSeconds);
   }
 
 
@@ -198,7 +200,7 @@ public class DriveTrain extends SubsystemBase {
   public void trajectoryFollow(Pose2d desiredPosition, double linearVelocity) {
 
     // Calculate the speeds for the chassis
-    ChassisSpeeds adjustedSpeeds = driveController.calculate(odometry.getPoseMeters(), desiredPosition, linearVelocity, desiredPosition.getRotation());
+    ChassisSpeeds adjustedSpeeds = driveController.calculate(poseEstimator.getEstimatedPosition(), desiredPosition, linearVelocity, desiredPosition.getRotation());
 
     // Set the modules to move at those speeds
     setModuleStates(adjustedSpeeds);
