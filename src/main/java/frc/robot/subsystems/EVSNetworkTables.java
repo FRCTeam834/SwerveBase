@@ -77,7 +77,7 @@ public class EVSNetworkTables extends SubsystemBase {
         double powerCellArray[] = getVisionTable().getSubTable(objectName).getEntry("values").getDoubleArray(new double[7]);
   
         // Add the data for the object to the array
-        visionArray.add(powerCellArray); 
+        visionArray.add(powerCellArray);
         
       } else {
  

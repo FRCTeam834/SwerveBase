@@ -28,7 +28,7 @@ import frc.robot.Robot;
 public class DriveTrain extends SubsystemBase {
   /**
    * Creates a new Drivetrain.
-   */
+  */
 
   // Create the modules
   SwerveModule frontLeft;
@@ -156,6 +156,7 @@ public class DriveTrain extends SubsystemBase {
 
   // Locks the modules of the robot to prevent movement
   public void lockemUp() {
+
     // Makes an X pattern with the swerve base
     // Set the modules to 45 degree angles
     frontLeft.setAngle(-45);
@@ -168,18 +169,17 @@ public class DriveTrain extends SubsystemBase {
     frontRight.setSpeed(0);
     backRight.setSpeed(0);
     backLeft.setSpeed(0);
-
   }
 
 
   // Updates the field relative position of the robot.
   public void updateOdometry() {
     poseEstimator.update(
-        Robot.navX.getFusedRotation2d(),
-        frontLeft.getState(),
-        frontRight.getState(),
-        backLeft.getState(),
-        backRight.getState()
+      Robot.navX.getFusedRotation2d(),
+      frontLeft.getState(),
+      frontRight.getState(),
+      backLeft.getState(),
+      backRight.getState()
     );
   }
 
@@ -204,6 +204,14 @@ public class DriveTrain extends SubsystemBase {
 
     // Set the modules to move at those speeds
     setModuleStates(adjustedSpeeds);
+  }
+
+
+  // Check if the robot is at the reference point of the trajectory
+  public boolean atTrajectoryReference() {
+
+    // Return if the trajectory is complete
+    return driveController.atReference();
   }
 
 
