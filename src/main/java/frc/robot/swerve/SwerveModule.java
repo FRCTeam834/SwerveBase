@@ -46,11 +46,11 @@ public class SwerveModule {
 
     // Steering motor
     steerMotor = new CANSparkMax(steerMID, CANSparkMax.MotorType.kBrushless);
-    steerMotor.setOpenLoopRampRate(Parameters.CURRENT_DRIVER_PROFILE.DRIVE_RAMP_RATE);
-    steerMotor.setIdleMode(Parameters.CURRENT_DRIVER_PROFILE.DRIVE_IDLE_MODE);
+    steerMotor.setOpenLoopRampRate(Parameters.driver.CURRENT_DRIVER_PROFILE.DRIVE_RAMP_RATE);
+    steerMotor.setIdleMode(Parameters.driver.CURRENT_DRIVER_PROFILE.DRIVE_IDLE_MODE);
 
     // Steering PID controller
-    steerMotorPID = new ProfiledPIDController(T_PID_params.P, T_PID_params.I, T_PID_params.D, new TrapezoidProfile.Constraints(Math.toRadians(Parameters.MAX_MODULE_ANGULAR_VELOCITY), Math.toRadians(Parameters.MAX_MODULE_ANGULAR_ACCEL)));
+    steerMotorPID = new ProfiledPIDController(T_PID_params.P, T_PID_params.I, T_PID_params.D, new TrapezoidProfile.Constraints(Math.toRadians(Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_VELOCITY), Math.toRadians(Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_ACCEL)));
     steerMotorPID.setP(T_PID_params.P);
     steerMotorPID.setI(T_PID_params.I);
     steerMotorPID.setD(T_PID_params.D);
@@ -62,15 +62,15 @@ public class SwerveModule {
 
     // Drive motor
     driveMotor = new CANSparkMax(driveMID, CANSparkMax.MotorType.kBrushless);
-    driveMotor.setOpenLoopRampRate(Parameters.CURRENT_DRIVER_PROFILE.DRIVE_RAMP_RATE);
-    driveMotor.setIdleMode(Parameters.CURRENT_DRIVER_PROFILE.DRIVE_IDLE_MODE);
+    driveMotor.setOpenLoopRampRate(Parameters.driver.CURRENT_DRIVER_PROFILE.DRIVE_RAMP_RATE);
+    driveMotor.setIdleMode(Parameters.driver.CURRENT_DRIVER_PROFILE.DRIVE_IDLE_MODE);
 
     // Drive motor PID controller
     driveMotorPID = new PIDController(D_PID_params.P, D_PID_params.I, D_PID_params.D);
 
     // Drive motor encoder
     driveMotorEncoder = driveMotor.getEncoder(EncoderType.kHallSensor, 42);
-    driveMotorEncoder.setVelocityConversionFactor(Math.PI * Parameters.MODULE_WHEEL_DIA_M / 60);
+    driveMotorEncoder.setVelocityConversionFactor(Math.PI * Parameters.driveTrain.dimensions.MODULE_WHEEL_DIA_M / 60);
     
   }
 
@@ -82,7 +82,7 @@ public class SwerveModule {
     steerMotorPID.setD(PID_params.D);
 
     // Ramp rate
-    steerMotor.setOpenLoopRampRate(Parameters.CURRENT_DRIVER_PROFILE.DRIVE_RAMP_RATE);
+    steerMotor.setOpenLoopRampRate(Parameters.driver.CURRENT_DRIVER_PROFILE.DRIVE_RAMP_RATE);
 
     // Idle mode of the motor
     steerMotor.setIdleMode(idleMode);
@@ -96,7 +96,7 @@ public class SwerveModule {
     driveMotorPID.setD(PID_params.D);
 
     // Ramp rate
-    driveMotor.setOpenLoopRampRate(Parameters.CURRENT_DRIVER_PROFILE.DRIVE_RAMP_RATE);
+    driveMotor.setOpenLoopRampRate(Parameters.driver.CURRENT_DRIVER_PROFILE.DRIVE_RAMP_RATE);
 
     // Idle mode of the motor
     driveMotor.setIdleMode(idleMode);

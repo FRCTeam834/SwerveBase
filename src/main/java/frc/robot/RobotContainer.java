@@ -11,6 +11,7 @@ package frc.robot;
 import frc.robot.DriverProfiles.ProfilingManagement;
 import frc.robot.commands.LetsRoll;
 import frc.robot.subsystems.NavX;
+import frc.robot.subsystems.UltrasonicSensor;
 import frc.robot.swerve.DriveTrain;
 import frc.robot.Parameters;
 
@@ -34,6 +35,7 @@ public class RobotContainer {
   private final ProfilingManagement profilingManagement = new ProfilingManagement();
   private final NavX navX = new NavX();
   private final DriveTrain driveTrain = new DriveTrain();
+  private final UltrasonicSensor ultrasonicSensor = new UltrasonicSensor();
 
   // Commands
   private final LetsRoll letsRoll = new LetsRoll();
@@ -47,7 +49,6 @@ public class RobotContainer {
 
   // Right Joystick button array
   public static JoystickButton rightJoystickButtons[];
-
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -70,12 +71,12 @@ public class RobotContainer {
     Joystick rightJoystick = new Joystick(1);
 
     // Left Joystick button assignment (buttons array starts at 0)
-    for(int buttonIndex = 1; buttonIndex <= Parameters.JOYSTICK_BUTTON_COUNT; buttonIndex++) {
+    for(int buttonIndex = 1; buttonIndex <= Parameters.joysticks.JOYSTICK_BUTTON_COUNT; buttonIndex++) {
       leftJoystickButtons[buttonIndex - 1] = new JoystickButton(leftJoystick, buttonIndex);
     }
 
     // Right Joystick button assignment (buttons array starts at 0)
-    for(int buttonIndex = 1; buttonIndex <= Parameters.JOYSTICK_BUTTON_COUNT; buttonIndex++) {
+    for(int buttonIndex = 1; buttonIndex <= Parameters.joysticks.JOYSTICK_BUTTON_COUNT; buttonIndex++) {
       rightJoystickButtons[buttonIndex - 1] = new JoystickButton(rightJoystick, buttonIndex);
     }
 

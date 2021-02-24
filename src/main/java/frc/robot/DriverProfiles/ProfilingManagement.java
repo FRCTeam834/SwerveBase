@@ -37,11 +37,11 @@ public class ProfilingManagement extends SubsystemBase {
     loadSavedProfile();
 
     // Set up the drop down for driver profiles
-    driverProfileChooser.setDefaultOption("Default", Parameters.DEFAULT_DRIVER_PROFILE);
+    driverProfileChooser.setDefaultOption("Default", Parameters.driver.DEFAULT_DRIVER_PROFILE);
 
     // Add each one of the profiles available to the SmartDashboard
-    for(int profileIndex = 0; profileIndex < Parameters.DRIVER_PROFILES.length; profileIndex++) {
-      driverProfileChooser.addOption(Parameters.DRIVER_PROFILES[profileIndex].NAME, Parameters.DRIVER_PROFILES[profileIndex]);
+    for(int profileIndex = 0; profileIndex < Parameters.driver.DRIVER_PROFILES.length; profileIndex++) {
+      driverProfileChooser.addOption(Parameters.driver.DRIVER_PROFILES[profileIndex].NAME, Parameters.driver.DRIVER_PROFILES[profileIndex]);
     }
   }
 
@@ -52,7 +52,7 @@ public class ProfilingManagement extends SubsystemBase {
     DriverProfile selectedProfile = driverProfileChooser.getSelected();
 
     // Check to make sure that the profile isn't the same as the previous one
-    if(selectedProfile != Parameters.CURRENT_DRIVER_PROFILE) {
+    if(selectedProfile != Parameters.driver.CURRENT_DRIVER_PROFILE) {
       
       // Update the current profile with the new one
       updateCurrentProfile(selectedProfile);
@@ -63,7 +63,7 @@ public class ProfilingManagement extends SubsystemBase {
   public void updateCurrentProfile(DriverProfile newProfile) {
 
     // Set the global current profile
-    Parameters.CURRENT_DRIVER_PROFILE = newProfile;
+    Parameters.driver.CURRENT_DRIVER_PROFILE = newProfile;
 
     // Update the swerve modules with the new values
     Robot.driveTrain.updateParameters();
@@ -71,7 +71,7 @@ public class ProfilingManagement extends SubsystemBase {
 
   // Saves the current profile to memory
   public void saveProfileSettings() {
-    saveProfileSettings(Parameters.CURRENT_DRIVER_PROFILE);
+    saveProfileSettings(Parameters.driver.CURRENT_DRIVER_PROFILE);
   }
 
   // Saves the specified profile to memory for next boot
@@ -112,24 +112,24 @@ public class ProfilingManagement extends SubsystemBase {
     DriverProfile profile = new DriverProfile();
 
     // Strings
-    profile.NAME              = SavedParameters.getString("NAME",              Parameters.DEFAULT_DRIVER_PROFILE.NAME);
+    profile.NAME              = SavedParameters.getString("NAME",              Parameters.driver.DEFAULT_DRIVER_PROFILE.NAME);
 
     // Doubles
-    profile.JOYSTICK_DEADZONE = SavedParameters.getDouble("JOYSTICK_DEADZONE", Parameters.DEFAULT_DRIVER_PROFILE.JOYSTICK_DEADZONE);
-    profile.MAX_TURN_SPEED    = SavedParameters.getDouble("MAX_TURN_SPEED",    Parameters.DEFAULT_DRIVER_PROFILE.MAX_TURN_SPEED);
-    profile.DRIVE_RAMP_RATE   = SavedParameters.getDouble("DRIVE_RAMP_RATE",   Parameters.DEFAULT_DRIVER_PROFILE.DRIVE_RAMP_RATE);
-    profile.MAX_SPEED         = SavedParameters.getDouble("MAX_SPEED",         Parameters.DEFAULT_DRIVER_PROFILE.MAX_SPEED);
+    profile.JOYSTICK_DEADZONE = SavedParameters.getDouble("JOYSTICK_DEADZONE", Parameters.driver.DEFAULT_DRIVER_PROFILE.JOYSTICK_DEADZONE);
+    profile.MAX_TURN_SPEED    = SavedParameters.getDouble("MAX_TURN_SPEED",    Parameters.driver.DEFAULT_DRIVER_PROFILE.MAX_TURN_SPEED);
+    profile.DRIVE_RAMP_RATE   = SavedParameters.getDouble("DRIVE_RAMP_RATE",   Parameters.driver.DEFAULT_DRIVER_PROFILE.DRIVE_RAMP_RATE);
+    profile.MAX_SPEED         = SavedParameters.getDouble("MAX_SPEED",         Parameters.driver.DEFAULT_DRIVER_PROFILE.MAX_SPEED);
 
     // Booleans
-    profile.LOCKEM_UP         = SavedParameters.getBoolean("LOCKEM_UP",        Parameters.DEFAULT_DRIVER_PROFILE.LOCKEM_UP);
-    profile.FIELD_CENTRIC     = SavedParameters.getBoolean("FIELD_CENTRIC",    Parameters.DEFAULT_DRIVER_PROFILE.FIELD_CENTRIC);
+    profile.LOCKEM_UP         = SavedParameters.getBoolean("LOCKEM_UP",        Parameters.driver.DEFAULT_DRIVER_PROFILE.LOCKEM_UP);
+    profile.FIELD_CENTRIC     = SavedParameters.getBoolean("FIELD_CENTRIC",    Parameters.driver.DEFAULT_DRIVER_PROFILE.FIELD_CENTRIC);
 
     // Special
 
     // IdleMode is not a supported type of the Preferences class, so brake will be true and coast will be false
     boolean defaultBrakeMode;
 
-    if (Parameters.DEFAULT_DRIVER_PROFILE.DRIVE_IDLE_MODE == IdleMode.kBrake) {
+    if (Parameters.driver.DEFAULT_DRIVER_PROFILE.DRIVE_IDLE_MODE == IdleMode.kBrake) {
       // Brake
       defaultBrakeMode = true;
     }
@@ -148,7 +148,7 @@ public class ProfilingManagement extends SubsystemBase {
     }
 
     // Set the current profile to the values we just obtained
-    Parameters.CURRENT_DRIVER_PROFILE = profile;
+    Parameters.driver.CURRENT_DRIVER_PROFILE = profile;
   }
 
 

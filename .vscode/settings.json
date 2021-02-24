@@ -18,10 +18,12 @@
     "AHRS",
     "Holomonic",
     "Holonomic",
+    "IRHB",
     "LEDS",
     "coord",
     "deadzone",
     "feedforward",
+    "izone",
     "odometry",
     "teleop",
     "teleoperated"

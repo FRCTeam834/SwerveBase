@@ -28,6 +28,16 @@ public class MoveToPosition extends CommandBase {
     linearVel = linearVelocity;
   }
 
+  // Default to 2 m/s for the linear speed
+  public MoveToPosition(Pose2d desiredPose) {
+
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(Robot.driveTrain);
+    driveTrain = Robot.driveTrain;
+    desiredPosition = desiredPose;
+    linearVel = 2;
+  }
+
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
@@ -39,7 +49,6 @@ public class MoveToPosition extends CommandBase {
   public void execute() {
 
     // Set the drivetrain to run to the position
-    // literally the entire command lol
     driveTrain.trajectoryFollow(desiredPosition, linearVel);
   }
 

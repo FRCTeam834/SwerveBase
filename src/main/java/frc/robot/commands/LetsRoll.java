@@ -45,9 +45,10 @@ public class LetsRoll extends CommandBase {
     if (leftX != 0 || leftY != 0 || rightX != 0) {
 
       // Move the drivetrain with the desired values
-      driveTrain.drive((leftX * Parameters.CURRENT_DRIVER_PROFILE.MAX_SPEED), (leftY * Parameters.CURRENT_DRIVER_PROFILE.MAX_SPEED), Math.toRadians(rightX * Parameters.CURRENT_DRIVER_PROFILE.MAX_TURN_SPEED), Parameters.CURRENT_DRIVER_PROFILE.FIELD_CENTRIC);
+      driveTrain.drive((leftX * Parameters.driver.CURRENT_DRIVER_PROFILE.MAX_SPEED), (leftY * Parameters.driver.CURRENT_DRIVER_PROFILE.MAX_SPEED),
+                        Math.toRadians(rightX * Parameters.driver.CURRENT_DRIVER_PROFILE.MAX_TURN_SPEED), Parameters.driver.CURRENT_DRIVER_PROFILE.FIELD_CENTRIC);
     }
-    else if (Parameters.CURRENT_DRIVER_PROFILE.LOCKEM_UP) {
+    else if (Parameters.driver.CURRENT_DRIVER_PROFILE.LOCKEM_UP) {
       driveTrain.lockemUp();
     }
 
@@ -72,7 +73,7 @@ public class LetsRoll extends CommandBase {
   private double constrainJoystick(double rawValue) {
 
     // If the value is out of tolerance, then zero it. Otherwise 
-    if (rawValue < Parameters.CURRENT_DRIVER_PROFILE.JOYSTICK_DEADZONE) {
+    if (rawValue < Parameters.driver.CURRENT_DRIVER_PROFILE.JOYSTICK_DEADZONE) {
       return 0;
     }
     else {

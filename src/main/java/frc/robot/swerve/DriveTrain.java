@@ -37,31 +37,31 @@ public class DriveTrain extends SubsystemBase {
   SwerveModule backRight;
 
   // Define their position (relative to center of robot)
-  Translation2d FLLocation = new Translation2d(Parameters.DRIVE_LENGTH / 2, Parameters.DRIVE_WIDTH / 2);
-  Translation2d FRLocation = new Translation2d(Parameters.DRIVE_LENGTH / 2, -Parameters.DRIVE_WIDTH / 2);
-  Translation2d BLLocation = new Translation2d(-Parameters.DRIVE_LENGTH / 2, Parameters.DRIVE_WIDTH / 2);
-  Translation2d BRLocation = new Translation2d(-Parameters.DRIVE_LENGTH / 2, -Parameters.DRIVE_WIDTH / 2);
+  Translation2d FLLocation = new Translation2d(Parameters.driveTrain.dimensions.DRIVE_LENGTH / 2, Parameters.driveTrain.dimensions.DRIVE_WIDTH / 2);
+  Translation2d FRLocation = new Translation2d(Parameters.driveTrain.dimensions.DRIVE_LENGTH / 2, -Parameters.driveTrain.dimensions.DRIVE_WIDTH / 2);
+  Translation2d BLLocation = new Translation2d(-Parameters.driveTrain.dimensions.DRIVE_LENGTH / 2, Parameters.driveTrain.dimensions.DRIVE_WIDTH / 2);
+  Translation2d BRLocation = new Translation2d(-Parameters.driveTrain.dimensions.DRIVE_LENGTH / 2, -Parameters.driveTrain.dimensions.DRIVE_WIDTH / 2);
 
   // Create the drivetrain map
   SwerveDriveKinematics kinematics = new SwerveDriveKinematics(FLLocation, FRLocation, BLLocation, BRLocation);
 
   // Pose estimator
-  private SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(Robot.navX.getFusedRotation2d(), Parameters.STARTING_POSITION, kinematics, Parameters.POSE_STANDARD_DEVIATION, Parameters.ENCODER_GYRO_DEVIATION, Parameters.VISION_DEVIATION);
+  private SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(Robot.navX.getFusedRotation2d(), Parameters.positions.STARTING_POSITION, kinematics, Parameters.driveTrain.movement.POSE_STANDARD_DEVIATION, Parameters.driveTrain.movement.ENCODER_GYRO_DEVIATION, Parameters.driveTrain.movement.VISION_DEVIATION);
 
   // Holomonic drive controller
-  private HolonomicDriveController driveController = new HolonomicDriveController(Parameters.MOVEMENT_PID, Parameters.MOVEMENT_PID, Parameters.ROTATION_PID);
+  private HolonomicDriveController driveController = new HolonomicDriveController(Parameters.driveTrain.movement.MOVEMENT_PID, Parameters.driveTrain.movement.MOVEMENT_PID, Parameters.driveTrain.movement.ROTATION_PID);
 
   // Setup the drivetrain
   public DriveTrain() {
 
     // Create each swerve module instance
-    frontLeft =  new SwerveModule(Parameters.FRONT_LEFT_STEER_ID,  Parameters.FRONT_LEFT_DRIVE_ID,  Parameters.FRONT_LEFT_CODER_ID,  Parameters.FL_T_PID_PARAM, Parameters.FL_D_PID_PARAM);
-    frontRight = new SwerveModule(Parameters.FRONT_RIGHT_STEER_ID, Parameters.FRONT_RIGHT_DRIVE_ID, Parameters.FRONT_RIGHT_CODER_ID, Parameters.FR_T_PID_PARAM, Parameters.FR_D_PID_PARAM);
-    backLeft =   new SwerveModule(Parameters.BACK_LEFT_STEER_ID,   Parameters.BACK_LEFT_DRIVE_ID,   Parameters.BACK_LEFT_CODER_ID,   Parameters.BL_T_PID_PARAM, Parameters.BL_D_PID_PARAM);
-    backRight =  new SwerveModule(Parameters.BACK_RIGHT_STEER_ID,  Parameters.BACK_RIGHT_DRIVE_ID,  Parameters.BACK_RIGHT_CODER_ID,  Parameters.BR_T_PID_PARAM, Parameters.BR_D_PID_PARAM);
+    frontLeft =  new SwerveModule(Parameters.driveTrain.can.FRONT_LEFT_STEER_ID,  Parameters.driveTrain.can.FRONT_LEFT_DRIVE_ID,  Parameters.driveTrain.can.FRONT_LEFT_CODER_ID,  Parameters.driveTrain.pid.FL_T_PID_PARAM, Parameters.driveTrain.pid.FL_D_PID_PARAM);
+    frontRight = new SwerveModule(Parameters.driveTrain.can.FRONT_RIGHT_STEER_ID, Parameters.driveTrain.can.FRONT_RIGHT_DRIVE_ID, Parameters.driveTrain.can.FRONT_RIGHT_CODER_ID, Parameters.driveTrain.pid.FR_T_PID_PARAM, Parameters.driveTrain.pid.FR_D_PID_PARAM);
+    backLeft =   new SwerveModule(Parameters.driveTrain.can.BACK_LEFT_STEER_ID,   Parameters.driveTrain.can.BACK_LEFT_DRIVE_ID,   Parameters.driveTrain.can.BACK_LEFT_CODER_ID,   Parameters.driveTrain.pid.BL_T_PID_PARAM, Parameters.driveTrain.pid.BL_D_PID_PARAM);
+    backRight =  new SwerveModule(Parameters.driveTrain.can.BACK_RIGHT_STEER_ID,  Parameters.driveTrain.can.BACK_RIGHT_DRIVE_ID,  Parameters.driveTrain.can.BACK_RIGHT_CODER_ID,  Parameters.driveTrain.pid.BR_T_PID_PARAM, Parameters.driveTrain.pid.BR_D_PID_PARAM);
 
     // Center the odometry of the robot
-    resetOdometry(Parameters.STARTING_POSITION);
+    resetOdometry(Parameters.positions.STARTING_POSITION);
 
   }
 
@@ -121,7 +121,7 @@ public class DriveTrain extends SubsystemBase {
     SwerveModuleState[] swerveModuleStates = kinematics.toSwerveModuleStates(chassisSpeeds, centerOfRotation);
 
     // Setup the max speed of each module
-    SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, Parameters.MAX_MODULE_SPEED);
+    SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, Parameters.driveTrain.maximums.MAX_MODULE_SPEED);
 
     // Set each of the modules to their optimized state
     frontLeft.setDesiredState(swerveModuleStates[0]);
@@ -141,7 +141,7 @@ public class DriveTrain extends SubsystemBase {
     SwerveModuleState[] swerveModuleStates = kinematics.toSwerveModuleStates(chassisSpeeds);
 
     // Setup the max speed of each module
-    SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, Parameters.MAX_MODULE_SPEED);
+    SwerveDriveKinematics.normalizeWheelSpeeds(swerveModuleStates, Parameters.driveTrain.maximums.MAX_MODULE_SPEED);
 
     // Set each of the modules to their optimized state
     frontLeft.setDesiredState(swerveModuleStates[0]);
@@ -219,27 +219,27 @@ public class DriveTrain extends SubsystemBase {
   public void updateParameters() {
 
     // Update the PID parameters with the new driver profile values
-    Parameters.FL_T_PID_PARAM.setPeakOutput(Parameters.CURRENT_DRIVER_PROFILE.MAX_SPEED);
-    Parameters.FR_T_PID_PARAM.setPeakOutput(Parameters.CURRENT_DRIVER_PROFILE.MAX_SPEED);
-    Parameters.BL_T_PID_PARAM.setPeakOutput(Parameters.CURRENT_DRIVER_PROFILE.MAX_SPEED);
-    Parameters.BR_T_PID_PARAM.setPeakOutput(Parameters.CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    Parameters.driveTrain.pid.FL_T_PID_PARAM.setPeakOutput(Parameters.driver.CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    Parameters.driveTrain.pid.FR_T_PID_PARAM.setPeakOutput(Parameters.driver.CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    Parameters.driveTrain.pid.BL_T_PID_PARAM.setPeakOutput(Parameters.driver.CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    Parameters.driveTrain.pid.BR_T_PID_PARAM.setPeakOutput(Parameters.driver.CURRENT_DRIVER_PROFILE.MAX_SPEED);
 
-    Parameters.FL_D_PID_PARAM.setPeakOutput(Parameters.CURRENT_DRIVER_PROFILE.MAX_SPEED);
-    Parameters.FR_D_PID_PARAM.setPeakOutput(Parameters.CURRENT_DRIVER_PROFILE.MAX_SPEED);
-    Parameters.BL_D_PID_PARAM.setPeakOutput(Parameters.CURRENT_DRIVER_PROFILE.MAX_SPEED);
-    Parameters.BR_D_PID_PARAM.setPeakOutput(Parameters.CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    Parameters.driveTrain.pid.FL_D_PID_PARAM.setPeakOutput(Parameters.driver.CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    Parameters.driveTrain.pid.FR_D_PID_PARAM.setPeakOutput(Parameters.driver.CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    Parameters.driveTrain.pid.BL_D_PID_PARAM.setPeakOutput(Parameters.driver.CURRENT_DRIVER_PROFILE.MAX_SPEED);
+    Parameters.driveTrain.pid.BR_D_PID_PARAM.setPeakOutput(Parameters.driver.CURRENT_DRIVER_PROFILE.MAX_SPEED);
 
     // Set steering parameters
-    frontLeft.setSteerMParams(Parameters.FL_T_PID_PARAM,  Parameters.CURRENT_DRIVER_PROFILE.STEER_IDLE_MODE);
-    frontRight.setSteerMParams(Parameters.FR_T_PID_PARAM, Parameters.CURRENT_DRIVER_PROFILE.STEER_IDLE_MODE);
-    backLeft.setSteerMParams(Parameters.BL_T_PID_PARAM,   Parameters.CURRENT_DRIVER_PROFILE.STEER_IDLE_MODE);
-    backRight.setSteerMParams(Parameters.BR_T_PID_PARAM,  Parameters.CURRENT_DRIVER_PROFILE.STEER_IDLE_MODE);
+    frontLeft.setSteerMParams(Parameters.driveTrain.pid.FL_T_PID_PARAM,  Parameters.driver.CURRENT_DRIVER_PROFILE.STEER_IDLE_MODE);
+    frontRight.setSteerMParams(Parameters.driveTrain.pid.FR_T_PID_PARAM, Parameters.driver.CURRENT_DRIVER_PROFILE.STEER_IDLE_MODE);
+    backLeft.setSteerMParams(Parameters.driveTrain.pid.BL_T_PID_PARAM,   Parameters.driver.CURRENT_DRIVER_PROFILE.STEER_IDLE_MODE);
+    backRight.setSteerMParams(Parameters.driveTrain.pid.BR_T_PID_PARAM,  Parameters.driver.CURRENT_DRIVER_PROFILE.STEER_IDLE_MODE);
 
     // Set driving parameters
-    frontLeft.setDriveMParams(Parameters.FL_D_PID_PARAM,  Parameters.CURRENT_DRIVER_PROFILE.DRIVE_IDLE_MODE);
-    frontRight.setDriveMParams(Parameters.FR_D_PID_PARAM, Parameters.CURRENT_DRIVER_PROFILE.DRIVE_IDLE_MODE);
-    backLeft.setDriveMParams(Parameters.BL_D_PID_PARAM,   Parameters.CURRENT_DRIVER_PROFILE.DRIVE_IDLE_MODE);
-    backRight.setDriveMParams(Parameters.BR_D_PID_PARAM,  Parameters.CURRENT_DRIVER_PROFILE.DRIVE_IDLE_MODE);
+    frontLeft.setDriveMParams(Parameters.driveTrain.pid.FL_D_PID_PARAM,  Parameters.driver.CURRENT_DRIVER_PROFILE.DRIVE_IDLE_MODE);
+    frontRight.setDriveMParams(Parameters.driveTrain.pid.FR_D_PID_PARAM, Parameters.driver.CURRENT_DRIVER_PROFILE.DRIVE_IDLE_MODE);
+    backLeft.setDriveMParams(Parameters.driveTrain.pid.BL_D_PID_PARAM,   Parameters.driver.CURRENT_DRIVER_PROFILE.DRIVE_IDLE_MODE);
+    backRight.setDriveMParams(Parameters.driveTrain.pid.BR_D_PID_PARAM,  Parameters.driver.CURRENT_DRIVER_PROFILE.DRIVE_IDLE_MODE);
   }
 
   @Override
