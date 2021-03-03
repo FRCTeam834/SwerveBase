@@ -9,11 +9,13 @@ package frc.robot;
 
 // User files
 import frc.robot.DriverProfiles.ProfilingManagement;
-import frc.robot.commands.LetsRoll;
+import frc.robot.commands.LetsRoll1Joystick;
+import frc.robot.commands.LetsRoll2Joysticks;
 import frc.robot.subsystems.NavX;
 import frc.robot.subsystems.UltrasonicSensor;
 import frc.robot.swerve.DriveTrain;
 import frc.robot.Parameters;
+import frc.robot.robotMode.ROBOT_STATE;
 
 // WPI Libraries
 import edu.wpi.first.wpilibj2.command.Command;
@@ -38,7 +40,8 @@ public class RobotContainer {
   private final UltrasonicSensor ultrasonicSensor = new UltrasonicSensor();
 
   // Commands
-  private final LetsRoll letsRoll = new LetsRoll();
+  private final LetsRoll2Joysticks letsRoll2Joysticks = new LetsRoll2Joysticks();
+  private final LetsRoll1Joystick letsRoll1Joystick = new LetsRoll1Joystick();
 
   // Define the joysticks (need to be public so commands can access axes)
   public static Joystick leftJoystick;
@@ -49,6 +52,9 @@ public class RobotContainer {
 
   // Right Joystick button array
   public static JoystickButton rightJoystickButtons[];
+
+  // The robot's state
+  public static ROBOT_STATE robotState;
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -66,22 +72,66 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    // Define the joysticks
-    Joystick leftJoystick = new Joystick(0);
-    Joystick rightJoystick = new Joystick(1);
+    // Try to assign the left joystick
+    try {
+      leftJoystick = new Joystick(0);
 
-    // Left Joystick button assignment (buttons array starts at 0)
-    for(int buttonIndex = 1; buttonIndex <= Parameters.joysticks.JOYSTICK_BUTTON_COUNT; buttonIndex++) {
-      leftJoystickButtons[buttonIndex - 1] = new JoystickButton(leftJoystick, buttonIndex);
+      // If we get here, then the left joystick was successful and we can try the right joystick
+      try {
+        rightJoystick = new Joystick(1);
+
+        // Both joysticks are present
+        robotState = ROBOT_STATE.TWO_JOYSTICKS;
+
+      }
+      catch (Exception e) {
+
+        // We only have one joystick, the left
+        robotState = ROBOT_STATE.ONE_JOYSTICK;
+      }
+
+    }
+    catch (Exception e) {
+
+      // No joysticks detected
+      robotState = ROBOT_STATE.NO_JOYSTICKS;
     }
 
-    // Right Joystick button assignment (buttons array starts at 0)
-    for(int buttonIndex = 1; buttonIndex <= Parameters.joysticks.JOYSTICK_BUTTON_COUNT; buttonIndex++) {
-      rightJoystickButtons[buttonIndex - 1] = new JoystickButton(rightJoystick, buttonIndex);
-    }
 
-    // Configure the command (on the second button of the joystick)
-    leftJoystickButtons[1].whenPressed(letsRoll);
+    // Setup the robot based on the state of it
+    if (robotState == ROBOT_STATE.TWO_JOYSTICKS) {
+      // Full setup
+
+      // Left Joystick button assignment (buttons array starts at 0)
+      for(int buttonIndex = 1; buttonIndex <= Parameters.joysticks.JOYSTICK_BUTTON_COUNT; buttonIndex++) {
+        leftJoystickButtons[buttonIndex - 1] = new JoystickButton(leftJoystick, buttonIndex);
+      }
+
+      // Right Joystick button assignment (buttons array starts at 0)
+      for(int buttonIndex = 1; buttonIndex <= Parameters.joysticks.JOYSTICK_BUTTON_COUNT; buttonIndex++) {
+        rightJoystickButtons[buttonIndex - 1] = new JoystickButton(rightJoystick, buttonIndex);
+      }
+
+      // Command setup
+      // Configure the command (on the second button of the joystick)
+      leftJoystickButtons[1].whenPressed(letsRoll2Joysticks);
+    }
+    else if (robotState == ROBOT_STATE.ONE_JOYSTICK) {
+      // Left Joystick button assignment (buttons array starts at 0)
+      for(int buttonIndex = 1; buttonIndex <= Parameters.joysticks.JOYSTICK_BUTTON_COUNT; buttonIndex++) {
+        leftJoystickButtons[buttonIndex - 1] = new JoystickButton(leftJoystick, buttonIndex);
+      }
+
+      // Command setup
+      // Configure the command (on the second button of the joystick)
+      leftJoystickButtons[1].whenPressed(letsRoll1Joystick);
+    }
+    else {
+      // No joysticks (show mode)
+
+      // Command setup
+
+    }
   }
 
 

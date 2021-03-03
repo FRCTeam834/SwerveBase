@@ -16,9 +16,9 @@ import frc.robot.subsystems.NavX;
 import frc.robot.subsystems.UltrasonicSensor;
 import frc.robot.swerve.DriveTrain;
 import frc.robot.DriverProfiles.ProfilingManagement;
-
+import frc.robot.commands.LetsRoll1Joystick;
 // Commands
-import frc.robot.commands.LetsRoll;
+import frc.robot.commands.LetsRoll2Joysticks;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -36,7 +36,8 @@ public class Robot extends TimedRobot {
   public static UltrasonicSensor ultrasonicSensor;
   
   // Commands
-  public static LetsRoll letsRoll;
+  public static LetsRoll2Joysticks letsRoll2Joysticks;
+  public static LetsRoll1Joystick letsRoll1Joystick;
 
 
 
@@ -54,7 +55,8 @@ public class Robot extends TimedRobot {
     navX = new NavX();
     driveTrain = new DriveTrain();
     ultrasonicSensor = new UltrasonicSensor();
-    letsRoll = new LetsRoll();
+    letsRoll2Joysticks = new LetsRoll2Joysticks();
+    letsRoll1Joystick = new LetsRoll1Joystick();
 
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.

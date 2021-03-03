@@ -4,7 +4,7 @@
 package frc.robot.robotMode;
 
 public enum ROBOT_STATE {
-    FULL_OPERATION,
-    DRIVETRAIN_AND_LEDS,
-    LEDS_ONLY;
+    TWO_JOYSTICKS,
+    ONE_JOYSTICK,
+    NO_JOYSTICKS;
 }

@@ -17,11 +17,11 @@ import frc.robot.swerve.DriveTrain;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 
-public class LetsRoll extends CommandBase {
+public class LetsRoll2Joysticks extends CommandBase {
 
   DriveTrain driveTrain;
 
-  public LetsRoll() {
+  public LetsRoll2Joysticks() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(Robot.driveTrain);
     driveTrain = Robot.driveTrain;
