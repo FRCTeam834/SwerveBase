@@ -15,7 +15,7 @@ import frc.robot.subsystems.NavX;
 import frc.robot.subsystems.UltrasonicSensor;
 import frc.robot.swerve.DriveTrain;
 import frc.robot.Parameters;
-import frc.robot.robotMode.ROBOT_STATE;
+import frc.robot.enums.ROBOT_STATE;
 
 // WPI Libraries
 import edu.wpi.first.wpilibj2.command.Command;
