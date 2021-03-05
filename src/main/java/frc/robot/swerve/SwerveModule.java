@@ -14,7 +14,9 @@ import frc.robot.Parameters;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.EncoderType;
 import com.revrobotics.CANSparkMax.IdleMode;
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.revrobotics.CANEncoder;
 
 // WPI Libraries
@@ -37,12 +39,16 @@ public class SwerveModule {
   private SimpleMotorFeedforward steerMotorFF;
   private CANCoder steeringCANCoder;
   private CANEncoder driveMotorEncoder;
+  private double cancoderOffset;
 
   // Set up the module and address each of the motor controllers
   public SwerveModule(int steerMID, int driveMID, int CANCoderID, PID_PARAMETERS T_PID_params, PID_PARAMETERS D_PID_params) {
 
     // CANCoder
     steeringCANCoder = new CANCoder(CANCoderID);
+    steeringCANCoder.setPositionToAbsolute();
+    steeringCANCoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
+    steeringCANCoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
 
     // Steering motor
     steerMotor = new CANSparkMax(steerMID, CANSparkMax.MotorType.kBrushless);
@@ -157,7 +163,6 @@ public class SwerveModule {
     // Set module to the right angles and speeds
     setAngle(optimizedState.angle.getDegrees());
     setSpeed(optimizedState.speedMetersPerSecond);
-    
   }
 
   public SwerveModuleState getState() {
@@ -166,7 +171,7 @@ public class SwerveModule {
 
   // Gets the position of the encoder (in deg)
   public double getAngle() {
-    return steeringCANCoder.getPosition();
+    return steeringCANCoder.getAbsolutePosition();
   }
 
   public double getVelocity() {
@@ -174,8 +179,8 @@ public class SwerveModule {
   }
 
   // Sets the position of the encoder
-  public void setEncoderAngle(double newPosition) {
-    steeringCANCoder.setPosition(newPosition);
+  public void setEncoderOffset(double desiredPosition) {
+    steeringCANCoder.configMagnetOffset(desiredPosition - getAngle());
   }
   
 }
