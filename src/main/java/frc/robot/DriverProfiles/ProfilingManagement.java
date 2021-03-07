@@ -83,7 +83,7 @@ public class ProfilingManagement extends SubsystemBase {
 
     // Doubles
     SavedParameters.putDouble("JOYSTICK_DEADZONE", profile.JOYSTICK_DEADZONE);
-    SavedParameters.putDouble("MAX_TURN_SPEED",    profile.MAX_STEER_SPEED);
+    SavedParameters.putDouble("MAX_STEER_SPEED",   profile.MAX_STEER_SPEED);
     SavedParameters.putDouble("DRIVE_RAMP_RATE",   profile.DRIVE_RAMP_RATE);
     SavedParameters.putDouble("MAX_SPEED",         profile.MAX_SPEED);
 
@@ -116,7 +116,7 @@ public class ProfilingManagement extends SubsystemBase {
 
     // Doubles
     profile.JOYSTICK_DEADZONE = SavedParameters.getDouble("JOYSTICK_DEADZONE", Parameters.driver.DEFAULT_DRIVER_PROFILE.JOYSTICK_DEADZONE);
-    profile.MAX_STEER_SPEED   = SavedParameters.getDouble("MAX_TURN_SPEED",    Parameters.driver.DEFAULT_DRIVER_PROFILE.MAX_STEER_SPEED);
+    profile.MAX_STEER_SPEED   = SavedParameters.getDouble("MAX_STEER_SPEED",   Parameters.driver.DEFAULT_DRIVER_PROFILE.MAX_STEER_SPEED);
     profile.DRIVE_RAMP_RATE   = SavedParameters.getDouble("DRIVE_RAMP_RATE",   Parameters.driver.DEFAULT_DRIVER_PROFILE.DRIVE_RAMP_RATE);
     profile.MAX_SPEED         = SavedParameters.getDouble("MAX_SPEED",         Parameters.driver.DEFAULT_DRIVER_PROFILE.MAX_SPEED);
 

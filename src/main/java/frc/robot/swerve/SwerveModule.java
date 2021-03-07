@@ -127,13 +127,13 @@ public class SwerveModule {
   public void setDesiredAngle(double targetAngle) {
  
     // Calculate the turning motor output from the turning PID controller.
-    final double turnOutput = steerMotorPID.calculate(Math.toRadians(getAngle()), Math.toRadians(targetAngle));
+    final double steerOutput = steerMotorPID.calculate(Math.toRadians(getAngle()), Math.toRadians(targetAngle));
 
     // Calculate the feedforward for the motor
-    final double turnFeedforward = steerMotorFF.calculate(steerMotorPID.getSetpoint().velocity);
+    final double steerFeedforward = steerMotorFF.calculate(steerMotorPID.getSetpoint().velocity);
 
     // Set the motor to the correct values
-    steerMotor.setVoltage(turnOutput + turnFeedforward);
+    steerMotor.setVoltage(steerOutput + steerFeedforward);
 
   }
 
