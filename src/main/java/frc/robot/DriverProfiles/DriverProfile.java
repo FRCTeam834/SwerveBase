@@ -15,7 +15,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
  * 
  * @param NAME                The name of the driver
  * @param JOYSTICK_DEADZONE   The deadzone of the joysticks. Joystick values range from -1 to 1, so a 0.1 deadzone is usually sufficient to deal with any wobble
- * @param MAX_TURN_SPEED      Maximum deg/s of rotational speed
+ * @param MAX_STEER_SPEED     Maximum deg/s of rotational speed
  * @param DRIVE_RAMP_RATE     The speed at which the drivetrain ramps to full speed. Prevents sudden jerks. Maybe something to override?
  * @param LOCKEM_UP           If the swerve should lock the modules at 45 degrees, effectively hitting the brakes. Hard on the modules, but worth it in comp
  * @param FIELD_CENTRIC       If the robot should treat itself as forward or if the field's forward should be forward
@@ -25,15 +25,15 @@ import com.revrobotics.CANSparkMax.IdleMode;
  */
 public class DriverProfile {
     public String NAME;
-    public double JOYSTICK_DEADZONE, MAX_TURN_SPEED, DRIVE_RAMP_RATE, MAX_SPEED;
+    public double JOYSTICK_DEADZONE, MAX_STEER_SPEED, DRIVE_RAMP_RATE, MAX_SPEED;
     public boolean LOCKEM_UP, FIELD_CENTRIC;
     public IdleMode DRIVE_IDLE_MODE, STEER_IDLE_MODE;
     
     // Fully defined profile
-    public DriverProfile(String NAME, double JOYSTICK_DEADZONE, double MAX_TURN_SPEED, double DRIVE_RAMP_RATE, boolean LOCKEM_UP, boolean FIELD_CENTRIC, double MAX_SPEED, IdleMode DRIVE_IDLE_MODE, IdleMode STEER_IDLE_MODE) {
+    public DriverProfile(String NAME, double JOYSTICK_DEADZONE, double MAX_STEER_SPEED, double DRIVE_RAMP_RATE, boolean LOCKEM_UP, boolean FIELD_CENTRIC, double MAX_SPEED, IdleMode DRIVE_IDLE_MODE, IdleMode STEER_IDLE_MODE) {
         this.NAME              = NAME;
         this.JOYSTICK_DEADZONE = JOYSTICK_DEADZONE;
-        this.MAX_TURN_SPEED    = MAX_TURN_SPEED;
+        this.MAX_STEER_SPEED   = MAX_STEER_SPEED;
         this.DRIVE_RAMP_RATE   = DRIVE_RAMP_RATE;
         this.LOCKEM_UP         = LOCKEM_UP;
         this.FIELD_CENTRIC     = FIELD_CENTRIC;
@@ -48,16 +48,16 @@ public class DriverProfile {
     }
 
     // Update a profile with new values
-    public void updateProfile(DriverProfile new_parameters) {
-        this.NAME              = new_parameters.NAME;
-        this.JOYSTICK_DEADZONE = new_parameters.JOYSTICK_DEADZONE;
-        this.MAX_TURN_SPEED    = new_parameters.MAX_TURN_SPEED;
-        this.DRIVE_RAMP_RATE   = new_parameters.DRIVE_RAMP_RATE;
-        this.LOCKEM_UP         = new_parameters.LOCKEM_UP;
-        this.FIELD_CENTRIC     = new_parameters.FIELD_CENTRIC;
-        this.MAX_SPEED         = new_parameters.MAX_SPEED;
-        this.DRIVE_IDLE_MODE   = new_parameters.DRIVE_IDLE_MODE;
-        this.STEER_IDLE_MODE   = new_parameters.STEER_IDLE_MODE;
+    public void updateProfile(DriverProfile new_params) {
+        this.NAME              = new_params.NAME;
+        this.JOYSTICK_DEADZONE = new_params.JOYSTICK_DEADZONE;
+        this.MAX_STEER_SPEED   = new_params.MAX_STEER_SPEED;
+        this.DRIVE_RAMP_RATE   = new_params.DRIVE_RAMP_RATE;
+        this.LOCKEM_UP         = new_params.LOCKEM_UP;
+        this.FIELD_CENTRIC     = new_params.FIELD_CENTRIC;
+        this.MAX_SPEED         = new_params.MAX_SPEED;
+        this.DRIVE_IDLE_MODE   = new_params.DRIVE_IDLE_MODE;
+        this.STEER_IDLE_MODE   = new_params.STEER_IDLE_MODE;
     }
 
     

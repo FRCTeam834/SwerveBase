@@ -9,7 +9,7 @@ package frc.robot;
 
 // Internal libraries
 import frc.robot.DriverProfiles.DriverProfile;
-import frc.robot.swerve.PID_PARAMETERS;
+import frc.robot.swerve.PID_PARAMS;
 
 // Vendor libraries
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -58,7 +58,7 @@ public final class Parameters {
 
         // Driver Profiles
         public static DriverProfile[] DRIVER_PROFILES = {
-            // DriverProfile NAME, double JOYSTICK_DEADZONE, double MAX_TURN_SPEED (deg/s), double DRIVE_RAMP_RATE, boolean LOCKEM_UP, boolean FIELD_CENTRIC, double MAX_SPEED (m/s), IdleMode DRIVE_IDLE_MODE)
+            // DriverProfile NAME, double JOYSTICK_DEADZONE, double MAX_STEER_SPEED (deg/s), double DRIVE_RAMP_RATE, boolean LOCKEM_UP, boolean FIELD_CENTRIC, double MAX_SPEED (m/s), IdleMode DRIVE_IDLE_MODE)
             new DriverProfile("CAP1Sup",         0.05, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake),
             new DriverProfile("Christian Velez", 0.15, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake),
             new DriverProfile("Test",            0.15, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake)
@@ -68,7 +68,7 @@ public final class Parameters {
         public static DriverProfile DEFAULT_DRIVER_PROFILE = new DriverProfile("Default", 0.15, 1.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake);
 
         // Current Driver Profile being used
-        public static DriverProfile CURRENT_DRIVER_PROFILE = DEFAULT_DRIVER_PROFILE;
+        public static DriverProfile CURRENT_PROFILE = DEFAULT_DRIVER_PROFILE;
     }
 
 
@@ -80,20 +80,20 @@ public final class Parameters {
         public static final class can {
 
             // CAN parameters
-            public static final int FRONT_LEFT_STEER_ID = 1;
-            public static final int FRONT_RIGHT_STEER_ID = 2;
-            public static final int BACK_LEFT_STEER_ID = 3;
-            public static final int BACK_RIGHT_STEER_ID = 4;
+            public static final int FL_STEER_ID = 1;
+            public static final int FR_STEER_ID = 2;
+            public static final int BL_STEER_ID = 3;
+            public static final int BR_STEER_ID = 4;
 
-            public static final int FRONT_LEFT_DRIVE_ID = 5;
-            public static final int FRONT_RIGHT_DRIVE_ID = 6;
-            public static final int BACK_LEFT_DRIVE_ID = 7;
-            public static final int BACK_RIGHT_DRIVE_ID = 8;
+            public static final int FL_DRIVE_ID = 5;
+            public static final int FR_DRIVE_ID = 6;
+            public static final int BL_DRIVE_ID = 7;
+            public static final int BR_DRIVE_ID = 8;
 
-            public static final int FRONT_LEFT_CODER_ID = 9;
-            public static final int FRONT_RIGHT_CODER_ID = 10;
-            public static final int BACK_LEFT_CODER_ID = 11;
-            public static final int BACK_RIGHT_CODER_ID = 12;
+            public static final int FL_CODER_ID = 9;
+            public static final int FR_CODER_ID = 10;
+            public static final int BL_CODER_ID = 11;
+            public static final int BR_CODER_ID = 12;
         }
 
 
@@ -124,18 +124,18 @@ public final class Parameters {
              * Gains used in each module's steering motor, to be adjusted accordingly
              * Gains(kp, ki, kd, static ff, velocity ff, iZone, peak output);
              */
-            public static PID_PARAMETERS FL_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, driveTrain.pid.MODULE_T_STATIC_FF, driveTrain.pid.MODULE_T_VELOCITY_FF, 0, driver.CURRENT_DRIVER_PROFILE.MAX_SPEED);
-            public static PID_PARAMETERS FR_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, driveTrain.pid.MODULE_T_STATIC_FF, driveTrain.pid.MODULE_T_VELOCITY_FF, 0, driver.CURRENT_DRIVER_PROFILE.MAX_SPEED);
-            public static PID_PARAMETERS BL_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, driveTrain.pid.MODULE_T_STATIC_FF, driveTrain.pid.MODULE_T_VELOCITY_FF, 0, driver.CURRENT_DRIVER_PROFILE.MAX_SPEED);
-            public static PID_PARAMETERS BR_T_PID_PARAM = new PID_PARAMETERS(0.15, 0.0, 1.0, driveTrain.pid.MODULE_T_STATIC_FF, driveTrain.pid.MODULE_T_VELOCITY_FF, 0, driver.CURRENT_DRIVER_PROFILE.MAX_SPEED);
+            public static PID_PARAMS FL_S_PID = new PID_PARAMS(0.15, 0.0, 1.0, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS FR_S_PID = new PID_PARAMS(0.15, 0.0, 1.0, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS BL_S_PID = new PID_PARAMS(0.15, 0.0, 1.0, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS BR_S_PID = new PID_PARAMS(0.15, 0.0, 1.0, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
 
-            public static PID_PARAMETERS FL_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_DRIVER_PROFILE.MAX_SPEED);
-            public static PID_PARAMETERS FR_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_DRIVER_PROFILE.MAX_SPEED);
-            public static PID_PARAMETERS BL_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_DRIVER_PROFILE.MAX_SPEED);
-            public static PID_PARAMETERS BR_D_PID_PARAM = new PID_PARAMETERS(1.0, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_DRIVER_PROFILE.MAX_SPEED);
+            public static PID_PARAMS FL_D_PID = new PID_PARAMS(1.0, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS FR_D_PID = new PID_PARAMS(1.0, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS BL_D_PID = new PID_PARAMS(1.0, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS BR_D_PID = new PID_PARAMS(1.0, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
 
-            public static final double MODULE_T_STATIC_FF = 1; // Must be tuned for the modules!
-            public static final double MODULE_T_VELOCITY_FF = 0.5;
+            public static final double MODULE_S_STATIC_FF = 1; // Must be tuned for the modules!
+            public static final double MODULE_S_VELOCITY_FF = 0.5;
             public static final double MODULE_D_STATIC_FF = 1;
             public static final double MODULE_D_VELOCITY_FF = 3;
         }
@@ -145,8 +145,8 @@ public final class Parameters {
         public static final class movement {
 
             // Pose estimator parameters (units are m, m, radians)
-            public static Matrix<N3,N1> POSE_STANDARD_DEVIATION = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, Math.toRadians(0.125));
-            public static Matrix<N1,N1> ENCODER_GYRO_DEVIATION = new MatBuilder<>(Nat.N1(), Nat.N1()).fill(Math.toRadians(0.125));
+            public static Matrix<N3,N1> POSE_STD_DEV = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, Math.toRadians(0.125));
+            public static Matrix<N1,N1> ENCODER_GYRO_DEV = new MatBuilder<>(Nat.N1(), Nat.N1()).fill(Math.toRadians(0.125));
             public static Matrix<N3,N1> VISION_DEVIATION = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, Math.toRadians(0.125));
 
             // PID controller (rotation constraints are max velocity and max acceleration)
@@ -167,7 +167,7 @@ public final class Parameters {
         public static Pose2d[] POSSIBLE_STARTING_POSITIONS = {new Pose2d(0, 0, Rotation2d.fromDegrees(0)), new Pose2d(0, 0, Rotation2d.fromDegrees(0)), new Pose2d(0, 0, Rotation2d.fromDegrees(0))};
 
         // Actual starting position (declared in the global scope)
-        public static Pose2d STARTING_POSITION = Parameters.positions.POSSIBLE_STARTING_POSITIONS[Parameters.driverStation.getLocation() - 1];
+        public static Pose2d STARTING_POS = Parameters.positions.POSSIBLE_STARTING_POSITIONS[Parameters.driverStation.getLocation() - 1];
     }
 
     //Ultrasonic DIO(Not the jojo reference (Nathan: "I highly doubt that.")) ports

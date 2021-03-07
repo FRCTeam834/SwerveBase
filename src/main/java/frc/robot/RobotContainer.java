@@ -9,6 +9,7 @@ package frc.robot;
 
 // User files
 import frc.robot.DriverProfiles.ProfilingManagement;
+import frc.robot.commands.ZeroCanCoders;
 import frc.robot.commands.LetsRoll1Joystick;
 import frc.robot.commands.LetsRoll2Joysticks;
 import frc.robot.subsystems.NavX;
@@ -42,11 +43,12 @@ public class RobotContainer {
   // Commands
   private final LetsRoll2Joysticks letsRoll2Joysticks = new LetsRoll2Joysticks();
   private final LetsRoll1Joystick letsRoll1Joystick = new LetsRoll1Joystick();
+  private final ZeroCanCoders zeroCanCoders = new ZeroCanCoders();
 
   // Define the joysticks (need to be public so commands can access axes)
   public static Joystick leftJoystick;
   public static Joystick rightJoystick;
-  
+
   // Left Joystick button array
   public static JoystickButton leftJoystickButtons[];
 
@@ -115,6 +117,7 @@ public class RobotContainer {
       // Command setup
       // Configure the command (on the second button of the joystick)
       leftJoystickButtons[1].whenPressed(letsRoll2Joysticks);
+      leftJoystickButtons[2].whenPressed(zeroCanCoders);
     }
     else if (robotState == ROBOT_STATE.ONE_JOYSTICK) {
       // Left Joystick button assignment (buttons array starts at 0)
@@ -125,6 +128,7 @@ public class RobotContainer {
       // Command setup
       // Configure the command (on the second button of the joystick)
       leftJoystickButtons[1].whenPressed(letsRoll1Joystick);
+      leftJoystickButtons[2].whenPressed(zeroCanCoders);
     }
     else {
       // No joysticks (show mode)

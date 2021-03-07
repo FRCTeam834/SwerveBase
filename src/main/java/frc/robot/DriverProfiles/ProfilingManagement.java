@@ -52,7 +52,7 @@ public class ProfilingManagement extends SubsystemBase {
     DriverProfile selectedProfile = driverProfileChooser.getSelected();
 
     // Check to make sure that the profile isn't the same as the previous one
-    if(selectedProfile != Parameters.driver.CURRENT_DRIVER_PROFILE) {
+    if(selectedProfile != Parameters.driver.CURRENT_PROFILE) {
       
       // Update the current profile with the new one
       updateCurrentProfile(selectedProfile);
@@ -63,7 +63,7 @@ public class ProfilingManagement extends SubsystemBase {
   public void updateCurrentProfile(DriverProfile newProfile) {
 
     // Set the global current profile
-    Parameters.driver.CURRENT_DRIVER_PROFILE = newProfile;
+    Parameters.driver.CURRENT_PROFILE = newProfile;
 
     // Update the swerve modules with the new values
     Robot.driveTrain.updateParameters();
@@ -71,7 +71,7 @@ public class ProfilingManagement extends SubsystemBase {
 
   // Saves the current profile to memory
   public void saveProfileSettings() {
-    saveProfileSettings(Parameters.driver.CURRENT_DRIVER_PROFILE);
+    saveProfileSettings(Parameters.driver.CURRENT_PROFILE);
   }
 
   // Saves the specified profile to memory for next boot
@@ -83,7 +83,7 @@ public class ProfilingManagement extends SubsystemBase {
 
     // Doubles
     SavedParameters.putDouble("JOYSTICK_DEADZONE", profile.JOYSTICK_DEADZONE);
-    SavedParameters.putDouble("MAX_TURN_SPEED",    profile.MAX_TURN_SPEED);
+    SavedParameters.putDouble("MAX_TURN_SPEED",    profile.MAX_STEER_SPEED);
     SavedParameters.putDouble("DRIVE_RAMP_RATE",   profile.DRIVE_RAMP_RATE);
     SavedParameters.putDouble("MAX_SPEED",         profile.MAX_SPEED);
 
@@ -116,7 +116,7 @@ public class ProfilingManagement extends SubsystemBase {
 
     // Doubles
     profile.JOYSTICK_DEADZONE = SavedParameters.getDouble("JOYSTICK_DEADZONE", Parameters.driver.DEFAULT_DRIVER_PROFILE.JOYSTICK_DEADZONE);
-    profile.MAX_TURN_SPEED    = SavedParameters.getDouble("MAX_TURN_SPEED",    Parameters.driver.DEFAULT_DRIVER_PROFILE.MAX_TURN_SPEED);
+    profile.MAX_STEER_SPEED   = SavedParameters.getDouble("MAX_TURN_SPEED",    Parameters.driver.DEFAULT_DRIVER_PROFILE.MAX_STEER_SPEED);
     profile.DRIVE_RAMP_RATE   = SavedParameters.getDouble("DRIVE_RAMP_RATE",   Parameters.driver.DEFAULT_DRIVER_PROFILE.DRIVE_RAMP_RATE);
     profile.MAX_SPEED         = SavedParameters.getDouble("MAX_SPEED",         Parameters.driver.DEFAULT_DRIVER_PROFILE.MAX_SPEED);
 
@@ -148,7 +148,7 @@ public class ProfilingManagement extends SubsystemBase {
     }
 
     // Set the current profile to the values we just obtained
-    Parameters.driver.CURRENT_DRIVER_PROFILE = profile;
+    Parameters.driver.CURRENT_PROFILE = profile;
   }
 
 

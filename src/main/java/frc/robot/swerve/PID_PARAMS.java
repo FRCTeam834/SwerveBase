@@ -3,7 +3,7 @@
  */
 package frc.robot.swerve;
 
-public class PID_PARAMETERS {
+public class PID_PARAMS {
     public double P;
     public double I;
     public double D;
@@ -13,7 +13,7 @@ public class PID_PARAMETERS {
     public double PEAK_OUTPUT;
     
     // Creating a new set of PID Parameters
-    public PID_PARAMETERS(double P, double I, double D, double SFF, double VFF, int I_ZONE, double PEAK_OUTPUT){
+    public PID_PARAMS(double P, double I, double D, double SFF, double VFF, int I_ZONE, double PEAK_OUTPUT){
         this.P = P;
         this.I = I;
         this.D = D;
@@ -24,14 +24,14 @@ public class PID_PARAMETERS {
     }
 
     // Change the parameters with the new values
-    public void setPIDParams(PID_PARAMETERS parameters) {
-        this.P = parameters.P;
-        this.I = parameters.I;
-        this.D = parameters.D;
-        this.SFF = parameters.SFF;
-        this.VFF = parameters.VFF;
-        this.I_ZONE = parameters.I_ZONE;
-        this.PEAK_OUTPUT = parameters.PEAK_OUTPUT;
+    public void setPIDParams(PID_PARAMS params) {
+        this.P = params.P;
+        this.I = params.I;
+        this.D = params.D;
+        this.SFF = params.SFF;
+        this.VFF = params.VFF;
+        this.I_ZONE = params.I_ZONE;
+        this.PEAK_OUTPUT = params.PEAK_OUTPUT;
     }
 
     // Set only the peak output (needed when the driver profile changes)
