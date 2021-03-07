@@ -55,10 +55,10 @@ public class DriveTrain extends SubsystemBase {
   public DriveTrain() {
 
     // Create each swerve module instance
-    frontLeft  = new SwerveModule(Parameters.driveTrain.can.FL_STEER_ID,  Parameters.driveTrain.can.FL_DRIVE_ID,  Parameters.driveTrain.can.FL_CODER_ID,  Parameters.driveTrain.pid.FL_S_PID, Parameters.driveTrain.pid.FL_D_PID);
-    frontRight = new SwerveModule(Parameters.driveTrain.can.FR_STEER_ID, Parameters.driveTrain.can.FR_DRIVE_ID, Parameters.driveTrain.can.FR_CODER_ID, Parameters.driveTrain.pid.FR_S_PID, Parameters.driveTrain.pid.FR_D_PID);
-    backLeft   = new SwerveModule(Parameters.driveTrain.can.BL_STEER_ID,   Parameters.driveTrain.can.BL_DRIVE_ID,   Parameters.driveTrain.can.BL_CODER_ID,   Parameters.driveTrain.pid.BL_S_PID, Parameters.driveTrain.pid.BL_D_PID);
-    backRight  = new SwerveModule(Parameters.driveTrain.can.BR_STEER_ID,  Parameters.driveTrain.can.BR_DRIVE_ID,  Parameters.driveTrain.can.BR_CODER_ID,  Parameters.driveTrain.pid.BR_S_PID, Parameters.driveTrain.pid.BR_D_PID);
+    frontLeft  = new SwerveModule(Parameters.driveTrain.can.FL_STEER_ID,  Parameters.driveTrain.can.FL_DRIVE_ID,  Parameters.driveTrain.can.FL_CODER_ID,  Parameters.driveTrain.pid.FL_STEER_PID, Parameters.driveTrain.pid.FL_DRIVE_PID);
+    frontRight = new SwerveModule(Parameters.driveTrain.can.FR_STEER_ID, Parameters.driveTrain.can.FR_DRIVE_ID, Parameters.driveTrain.can.FR_CODER_ID, Parameters.driveTrain.pid.FR_STEER_PID, Parameters.driveTrain.pid.FR_DRIVE_PID);
+    backLeft   = new SwerveModule(Parameters.driveTrain.can.BL_STEER_ID,   Parameters.driveTrain.can.BL_DRIVE_ID,   Parameters.driveTrain.can.BL_CODER_ID,   Parameters.driveTrain.pid.BL_STEER_PID, Parameters.driveTrain.pid.BL_DRIVE_PID);
+    backRight  = new SwerveModule(Parameters.driveTrain.can.BR_STEER_ID,  Parameters.driveTrain.can.BR_DRIVE_ID,  Parameters.driveTrain.can.BR_CODER_ID,  Parameters.driveTrain.pid.BR_STEER_PID, Parameters.driveTrain.pid.BR_DRIVE_PID);
 
     // Center the odometry of the robot
     resetOdometry(Parameters.positions.STARTING_POS);
@@ -218,27 +218,27 @@ public class DriveTrain extends SubsystemBase {
   public void updateParameters() {
 
     // Update the PID parameters with the new driver profile values
-    Parameters.driveTrain.pid.FL_S_PID.setPeakOutput(Parameters.driver.CURRENT_PROFILE.MAX_SPEED);
-    Parameters.driveTrain.pid.FR_S_PID.setPeakOutput(Parameters.driver.CURRENT_PROFILE.MAX_SPEED);
-    Parameters.driveTrain.pid.BL_S_PID.setPeakOutput(Parameters.driver.CURRENT_PROFILE.MAX_SPEED);
-    Parameters.driveTrain.pid.BR_S_PID.setPeakOutput(Parameters.driver.CURRENT_PROFILE.MAX_SPEED);
+    Parameters.driveTrain.pid.FL_STEER_PID.setPeakOutput(Parameters.driver.CURRENT_PROFILE.MAX_SPEED);
+    Parameters.driveTrain.pid.FR_STEER_PID.setPeakOutput(Parameters.driver.CURRENT_PROFILE.MAX_SPEED);
+    Parameters.driveTrain.pid.BL_STEER_PID.setPeakOutput(Parameters.driver.CURRENT_PROFILE.MAX_SPEED);
+    Parameters.driveTrain.pid.BR_STEER_PID.setPeakOutput(Parameters.driver.CURRENT_PROFILE.MAX_SPEED);
 
-    Parameters.driveTrain.pid.FL_D_PID.setPeakOutput(Parameters.driver.CURRENT_PROFILE.MAX_SPEED);
-    Parameters.driveTrain.pid.FR_D_PID.setPeakOutput(Parameters.driver.CURRENT_PROFILE.MAX_SPEED);
-    Parameters.driveTrain.pid.BL_D_PID.setPeakOutput(Parameters.driver.CURRENT_PROFILE.MAX_SPEED);
-    Parameters.driveTrain.pid.BR_D_PID.setPeakOutput(Parameters.driver.CURRENT_PROFILE.MAX_SPEED);
+    Parameters.driveTrain.pid.FL_DRIVE_PID.setPeakOutput(Parameters.driver.CURRENT_PROFILE.MAX_SPEED);
+    Parameters.driveTrain.pid.FR_DRIVE_PID.setPeakOutput(Parameters.driver.CURRENT_PROFILE.MAX_SPEED);
+    Parameters.driveTrain.pid.BL_DRIVE_PID.setPeakOutput(Parameters.driver.CURRENT_PROFILE.MAX_SPEED);
+    Parameters.driveTrain.pid.BR_DRIVE_PID.setPeakOutput(Parameters.driver.CURRENT_PROFILE.MAX_SPEED);
 
     // Set steering parameters
-    frontLeft.setSteerMParams(Parameters.driveTrain.pid.FL_S_PID,  Parameters.driver.CURRENT_PROFILE.STEER_IDLE_MODE);
-    frontRight.setSteerMParams(Parameters.driveTrain.pid.FR_S_PID, Parameters.driver.CURRENT_PROFILE.STEER_IDLE_MODE);
-    backLeft.setSteerMParams(Parameters.driveTrain.pid.BL_S_PID,   Parameters.driver.CURRENT_PROFILE.STEER_IDLE_MODE);
-    backRight.setSteerMParams(Parameters.driveTrain.pid.BR_S_PID,  Parameters.driver.CURRENT_PROFILE.STEER_IDLE_MODE);
+    frontLeft.setSteerMParams(Parameters.driveTrain.pid.FL_STEER_PID,  Parameters.driver.CURRENT_PROFILE.STEER_IDLE_MODE);
+    frontRight.setSteerMParams(Parameters.driveTrain.pid.FR_STEER_PID, Parameters.driver.CURRENT_PROFILE.STEER_IDLE_MODE);
+    backLeft.setSteerMParams(Parameters.driveTrain.pid.BL_STEER_PID,   Parameters.driver.CURRENT_PROFILE.STEER_IDLE_MODE);
+    backRight.setSteerMParams(Parameters.driveTrain.pid.BR_STEER_PID,  Parameters.driver.CURRENT_PROFILE.STEER_IDLE_MODE);
 
     // Set driving parameters
-    frontLeft.setDriveMParams(Parameters.driveTrain.pid.FL_D_PID,  Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
-    frontRight.setDriveMParams(Parameters.driveTrain.pid.FR_D_PID, Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
-    backLeft.setDriveMParams(Parameters.driveTrain.pid.BL_D_PID,   Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
-    backRight.setDriveMParams(Parameters.driveTrain.pid.BR_D_PID,  Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
+    frontLeft.setDriveMParams(Parameters.driveTrain.pid.FL_DRIVE_PID,  Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
+    frontRight.setDriveMParams(Parameters.driveTrain.pid.FR_DRIVE_PID, Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
+    backLeft.setDriveMParams(Parameters.driveTrain.pid.BL_DRIVE_PID,   Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
+    backRight.setDriveMParams(Parameters.driveTrain.pid.BR_DRIVE_PID,  Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
   }
 
 
