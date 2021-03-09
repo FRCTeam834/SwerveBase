@@ -23,6 +23,9 @@ import com.revrobotics.CANEncoder;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
@@ -40,9 +43,28 @@ public class SwerveModule {
   private CANCoder steerCANCoder;
   private CANEncoder driveMotorEncoder;
   private double cancoderOffset;
+  private String name;
+  private boolean enabled = true;
+
+  // NetworkTable values
+  NetworkTableEntry steerPEntry;
+  NetworkTableEntry steerIEntry;
+  NetworkTableEntry steerDEntry;
+  NetworkTableEntry steerSFFEntry;
+  NetworkTableEntry steerVFFEntry;
+
+  NetworkTableEntry drivePEntry;
+  NetworkTableEntry driveIEntry;
+  NetworkTableEntry driveDEntry;
+  NetworkTableEntry driveSFFEntry;
+  NetworkTableEntry driveVFFEntry;
+
 
   // Set up the module and address each of the motor controllers
-  public SwerveModule(int steerMID, int driveMID, int CANCoderID, PID_PARAMS T_PID_params, PID_PARAMS D_PID_params) {
+  public SwerveModule(String moduleName, int steerMID, int driveMID, int CANCoderID, PID_PARAMS steerPIDParams, PID_PARAMS drivePIDParams) {
+
+    // Set the name
+    name = moduleName;
 
     // CANCoder
     steerCANCoder = new CANCoder(CANCoderID);
@@ -56,15 +78,15 @@ public class SwerveModule {
     steerMotor.setIdleMode(Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
 
     // Steering PID controller
-    steerMotorPID = new ProfiledPIDController(T_PID_params.P, T_PID_params.I, T_PID_params.D, new TrapezoidProfile.Constraints(Math.toRadians(Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_VELOCITY), Math.toRadians(Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_ACCEL)));
-    steerMotorPID.setP(T_PID_params.P);
-    steerMotorPID.setI(T_PID_params.I);
-    steerMotorPID.setD(T_PID_params.D);
+    steerMotorPID = new ProfiledPIDController(steerPIDParams.P, steerPIDParams.I, steerPIDParams.D, new TrapezoidProfile.Constraints(Math.toRadians(Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_VELOCITY), Math.toRadians(Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_ACCEL)));
+    steerMotorPID.setP(steerPIDParams.P);
+    steerMotorPID.setI(steerPIDParams.I);
+    steerMotorPID.setD(steerPIDParams.D);
     //steerMotorPID.setIntegratorRange(-T_PID_params.I_ZONE, T_PID_params.I_ZONE);
     steerMotorPID.enableContinuousInput(-Math.PI, Math.PI);
 
     // Steering motor feed forward
-    steerMotorFF = new SimpleMotorFeedforward(T_PID_params.SFF, T_PID_params.VFF);
+    steerMotorFF = new SimpleMotorFeedforward(steerPIDParams.SFF, steerPIDParams.VFF);
 
     // Drive motor
     driveMotor = new CANSparkMax(driveMID, CANSparkMax.MotorType.kBrushless);
@@ -72,20 +94,47 @@ public class SwerveModule {
     driveMotor.setIdleMode(Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
 
     // Drive motor PID controller
-    driveMotorPID = new PIDController(D_PID_params.P, D_PID_params.I, D_PID_params.D);
+    driveMotorPID = new PIDController(drivePIDParams.P, drivePIDParams.I, drivePIDParams.D);
+
+    // Drive motor feed forward
+    driveMotorFF = new SimpleMotorFeedforward(drivePIDParams.SFF, drivePIDParams.VFF);
 
     // Drive motor encoder
     driveMotorEncoder = driveMotor.getEncoder(EncoderType.kHallSensor, 42);
     driveMotorEncoder.setVelocityConversionFactor(Math.PI * Parameters.driveTrain.dimensions.MODULE_WHEEL_DIA_M / 60);
-    
+
+    // Set up the module's table on NetworkTables
+    NetworkTable modulesTable = NetworkTableInstance.getDefault().getTable("Modules");
+    NetworkTable moduleTable = modulesTable.getSubTable(name + "_MODULE");
+
+    // Put all of the module's current values on NetworkTables
+    steerPEntry = moduleTable.getEntry("STEER_P");
+    steerIEntry = moduleTable.getEntry("STEER_I");
+    steerDEntry = moduleTable.getEntry("STEER_D");
+    steerSFFEntry = moduleTable.getEntry("STEER_SFF");
+    steerVFFEntry = moduleTable.getEntry("STEER_VFF");
+
+    drivePEntry = moduleTable.getEntry("DRIVE_P");
+    driveIEntry = moduleTable.getEntry("DRIVE_I");
+    driveDEntry = moduleTable.getEntry("DRIVE_D");
+    driveSFFEntry = moduleTable.getEntry("DRIVE_SFF");
+    driveVFFEntry = moduleTable.getEntry("DRIVE_VFF");
+
+    // Push starting values to the entries
+    pushTuningValues();
   }
 
-  public void setSteerMParams(PID_PARAMS PID_params, IdleMode idleMode) {
+
+  // Sets the steer motor parameters
+  public void setSteerMParams(PID_PARAMS pidParams, IdleMode idleMode) {
 
     // PID parameters
-    steerMotorPID.setP(PID_params.P);
-    steerMotorPID.setI(PID_params.I);
-    steerMotorPID.setD(PID_params.D);
+    steerMotorPID.setP(pidParams.P);
+    steerMotorPID.setI(pidParams.I);
+    steerMotorPID.setD(pidParams.D);
+
+    // Feedforward
+    steerMotorFF = new SimpleMotorFeedforward(pidParams.SFF, pidParams.VFF);
 
     // Ramp rate
     steerMotor.setOpenLoopRampRate(Parameters.driver.CURRENT_PROFILE.DRIVE_RAMP_RATE);
@@ -94,12 +143,17 @@ public class SwerveModule {
     steerMotor.setIdleMode(idleMode);
   }
 
-  public void setDriveMParams(PID_PARAMS PID_params, IdleMode idleMode) {
+
+  // Sets the drive motor parameters
+  public void setDriveMParams(PID_PARAMS pidParams, IdleMode idleMode) {
 
     // PID parameters
-    driveMotorPID.setP(PID_params.P);
-    driveMotorPID.setI(PID_params.I);
-    driveMotorPID.setD(PID_params.D);
+    driveMotorPID.setP(pidParams.P);
+    driveMotorPID.setI(pidParams.I);
+    driveMotorPID.setD(pidParams.D);
+
+    // Feedforward
+    driveMotorFF = new SimpleMotorFeedforward(pidParams.SFF, pidParams.VFF);
 
     // Ramp rate
     driveMotor.setOpenLoopRampRate(Parameters.driver.CURRENT_PROFILE.DRIVE_RAMP_RATE);
@@ -108,53 +162,73 @@ public class SwerveModule {
     driveMotor.setIdleMode(idleMode);
   }
 
+
   // Gets the steering motor for the selected module
   public CANSparkMax getSteerMotor() {
     return steerMotor;
   }
+
 
   // Gets the drive motor for the selected module
   public CANSparkMax getDriveMotor() {
     return driveMotor;
   }
 
+
   // Gets the CANCoder for the selected module
   public CANCoder getCANCoder() {
     return steerCANCoder;
   }
 
+
   // Sets the direction of the wheel, in degrees
   public void setDesiredAngle(double targetAngle) {
- 
-    // Calculate the turning motor output from the turning PID controller.
-    final double steerOutput = steerMotorPID.calculate(Math.toRadians(getAngle()), Math.toRadians(targetAngle));
 
-    // Calculate the feedforward for the motor
-    final double steerFeedforward = steerMotorFF.calculate(steerMotorPID.getSetpoint().velocity);
+    // Check to see if the module is enabled
+    if (enabled) {
 
-    // Set the motor to the correct values
-    steerMotor.setVoltage(steerOutput + steerFeedforward);
+      // Calculate the turning motor output from the turning PID controller.
+      final double steerOutput = steerMotorPID.calculate(Math.toRadians(getAngle()), Math.toRadians(targetAngle));
 
+      // Calculate the feedforward for the motor
+      final double steerFeedforward = steerMotorFF.calculate(steerMotorPID.getSetpoint().velocity);
+
+      // Set the motor to the correct values
+      steerMotor.setVoltage(steerOutput + steerFeedforward);
+    }
   }
+
 
   // Sets the power of the drive motor
   public void setRawPower(double speed) {
-    driveMotor.set(speed);
+
+    // Check to see if the module is enabled
+    if (enabled) {
+      driveMotor.set(speed);
+    }
+
   }
+
 
   // Set the speed in m/s
   public void setDesiredSpeed(double speed) {
 
-    // Calculate the output of the drive
-    final double driveOutput = driveMotorPID.calculate(driveMotorEncoder.getVelocity(), speed);
+    // Check to see if the module is enabled
+    if (enabled) {
 
-    // Calculate the feed forward for the motor
-    final double driveFeedforward = driveMotorFF.calculate(speed);
+      // Calculate the output of the drive
+      final double driveOutput = driveMotorPID.calculate(driveMotorEncoder.getVelocity(), speed);
 
-    // Set the motor to the calculated values
-    driveMotor.setVoltage(driveOutput + driveFeedforward);
+      // Calculate the feed forward for the motor
+      final double driveFeedforward = driveMotorFF.calculate(speed);
+
+      // Set the motor to the calculated values
+      driveMotor.setVoltage(driveOutput + driveFeedforward);
+    }
   }
 
+
+  // Sets the desired state of the module
   public void setDesiredState(SwerveModuleState setState) {
 
     // Optimize the state of the module
@@ -165,22 +239,145 @@ public class SwerveModule {
     setDesiredSpeed(optimizedState.speedMetersPerSecond);
   }
 
+
+  // Gets the state of the module
   public SwerveModuleState getState() {
     return new SwerveModuleState(driveMotorEncoder.getVelocity(), new Rotation2d(Math.toRadians(getAngle())));
   }
+
 
   // Gets the position of the encoder (in deg)
   public double getAngle() {
     return steerCANCoder.getAbsolutePosition();
   }
 
+
+  // Returns the velocity of the module (from the wheel)
   public double getVelocity() {
     return driveMotorEncoder.getVelocity();
   }
 
+
   // Sets the position of the encoder
   public void setEncoderOffset(double correctPosition) {
-    steerCANCoder.configMagnetOffset(correctPosition - getAngle());
+
+    // Set the cancoder offset variable
+    cancoderOffset = correctPosition - getAngle();
+
+    // Set the offset on the encoder
+    steerCANCoder.configMagnetOffset(cancoderOffset);
   }
-  
+
+
+  // Command for disable
+  public void disable() {
+
+    // Shut off all of the motors
+    steerMotor.set(0);
+    driveMotor.set(0);
+
+    enabled = false;
+  }
+
+
+  // Command for enable
+  public void enable() {
+    enabled = true;
+  }
+
+
+  // Saves all parameters relevant to the swerve module
+  public void saveParameters() {
+    // Saves the configured configuration in the present tense
+
+    // Steer PID
+    Parameters.SAVED_PARAMS.putDouble(name + "_STEER_P", steerMotorPID.getP());
+    Parameters.SAVED_PARAMS.putDouble(name + "_STEER_I", steerMotorPID.getI());
+    Parameters.SAVED_PARAMS.putDouble(name + "_STEER_D", steerMotorPID.getD());
+
+    // Drive PID
+    Parameters.SAVED_PARAMS.putDouble(name + "_DRIVE_P", driveMotorPID.getP());
+    Parameters.SAVED_PARAMS.putDouble(name + "_DRIVE_I", driveMotorPID.getI());
+    Parameters.SAVED_PARAMS.putDouble(name + "_DRIVE_D", driveMotorPID.getD());
+
+    // Encoder offset
+    Parameters.SAVED_PARAMS.putDouble(name + "_ENCODER_OFFSET", cancoderOffset);
+
+    // Steer motor feedforward
+    Parameters.SAVED_PARAMS.putDouble(name + "_STEER_SFF", steerMotorFF.ks);
+    Parameters.SAVED_PARAMS.putDouble(name + "_STEER_VFF", steerMotorFF.kv);
+
+    // Drive motor feedforward
+    Parameters.SAVED_PARAMS.putDouble(name + "_DRIVE_SFF", driveMotorFF.ks);
+    Parameters.SAVED_PARAMS.putDouble(name + "_DRIVE_VFF", driveMotorFF.kv);
+
+  }
+
+
+  // Loads all of the parameters from the Rio's saved data
+  public void loadParameters() {
+    // Loads the saved configurations
+
+    // Steer PID
+    steerMotorPID.setP(Parameters.SAVED_PARAMS.getDouble(name + "_STEER_P", steerMotorPID.getP()));
+    steerMotorPID.setI(Parameters.SAVED_PARAMS.getDouble(name + "_STEER_I", steerMotorPID.getI()));
+    steerMotorPID.setD(Parameters.SAVED_PARAMS.getDouble(name + "_STEER_D", steerMotorPID.getD()));
+
+    // Drive PID
+    driveMotorPID.setP(Parameters.SAVED_PARAMS.getDouble(name + "_DRIVE_P", driveMotorPID.getP()));
+    driveMotorPID.setI(Parameters.SAVED_PARAMS.getDouble(name + "_DRIVE_I", driveMotorPID.getI()));
+    driveMotorPID.setD(Parameters.SAVED_PARAMS.getDouble(name + "_DRIVE_D", driveMotorPID.getD()));
+
+    // Encoder offset
+    steerCANCoder.configMagnetOffset(Parameters.SAVED_PARAMS.getDouble(name + "_ENCODER_OFFSET", cancoderOffset));
+
+    // Steer motor feedforward
+    double newSteerKS = Parameters.SAVED_PARAMS.getDouble(name + "_STEER_SFF", steerMotorFF.ks);
+    double newSteerKV = Parameters.SAVED_PARAMS.getDouble(name + "_STEER_VFF", steerMotorFF.kv);
+    steerMotorFF = new SimpleMotorFeedforward(newSteerKS, newSteerKV);
+
+    // Drive motor feedforward
+    double newDriveKS = Parameters.SAVED_PARAMS.getDouble(name + "_DRIVE_SFF", driveMotorFF.ks);
+    double newDriveKV = Parameters.SAVED_PARAMS.getDouble(name + "_DRIVE_VFF", driveMotorFF.kv);
+    driveMotorFF = new SimpleMotorFeedforward(newDriveKS, newDriveKV);
+
+    // Push the new values to the table
+    pushTuningValues();
+  }
+
+
+  // Push the values to NetworkTables
+  public void pushTuningValues() {
+
+    // Steer PIDs
+    steerPEntry.setDouble(steerMotorPID.getP());
+    steerIEntry.setDouble(steerMotorPID.getI());
+    steerDEntry.setDouble(steerMotorPID.getD());
+    steerSFFEntry.setDouble(steerMotorFF.ks);
+    steerVFFEntry.setDouble(steerMotorFF.kv);
+
+    // Drive PIDs
+    drivePEntry.setDouble(driveMotorPID.getP());
+    driveIEntry.setDouble(driveMotorPID.getI());
+    driveDEntry.setDouble(driveMotorPID.getD());
+    driveSFFEntry.setDouble(driveMotorFF.ks);
+    driveVFFEntry.setDouble(driveMotorFF.kv);
+  }
+
+
+  // Get the values from NetworkTables
+  public void pullTuningValues() {
+
+    // Steer PIDs
+    steerMotorPID.setP(steerPEntry.getDouble(steerMotorPID.getP()));
+    steerMotorPID.setI(steerIEntry.getDouble(steerMotorPID.getI()));
+    steerMotorPID.setD(steerDEntry.getDouble(steerMotorPID.getD()));
+    steerMotorFF = new SimpleMotorFeedforward(steerSFFEntry.getDouble(steerMotorFF.ks), steerVFFEntry.getDouble(steerMotorFF.kv));
+
+    // Drive PIDs
+    driveMotorPID.setP(drivePEntry.getDouble(driveMotorPID.getP()));
+    driveMotorPID.setI(driveIEntry.getDouble(driveMotorPID.getI()));
+    driveMotorPID.setD(driveDEntry.getDouble(driveMotorPID.getD()));
+    driveMotorFF = new SimpleMotorFeedforward(driveSFFEntry.getDouble(driveMotorFF.ks), driveVFFEntry.getDouble(driveMotorFF.kv));
+  }
 }

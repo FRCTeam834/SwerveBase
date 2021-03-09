@@ -31,16 +31,16 @@ public class DriveTrain extends SubsystemBase {
   */
 
   // Create the modules
-  SwerveModule frontLeft;
-  SwerveModule frontRight;
-  SwerveModule backLeft;
-  SwerveModule backRight;
+  public SwerveModule frontLeft;
+  public SwerveModule frontRight;
+  public SwerveModule backLeft;
+  public SwerveModule backRight;
 
   // Define their position (relative to center of robot)
-  Translation2d FL_POS = new Translation2d(Parameters.driveTrain.dimensions.DRIVE_LENGTH / 2, Parameters.driveTrain.dimensions.DRIVE_WIDTH / 2);
-  Translation2d FR_POS = new Translation2d(Parameters.driveTrain.dimensions.DRIVE_LENGTH / 2, -Parameters.driveTrain.dimensions.DRIVE_WIDTH / 2);
-  Translation2d BL_POS = new Translation2d(-Parameters.driveTrain.dimensions.DRIVE_LENGTH / 2, Parameters.driveTrain.dimensions.DRIVE_WIDTH / 2);
-  Translation2d BR_POS = new Translation2d(-Parameters.driveTrain.dimensions.DRIVE_LENGTH / 2, -Parameters.driveTrain.dimensions.DRIVE_WIDTH / 2);
+  Translation2d FL_POS = new Translation2d(Parameters.driveTrain.dimensions.DRIVE_LENGTH / 2, -Parameters.driveTrain.dimensions.DRIVE_WIDTH / 2);
+  Translation2d FR_POS = new Translation2d(Parameters.driveTrain.dimensions.DRIVE_LENGTH / 2, Parameters.driveTrain.dimensions.DRIVE_WIDTH / 2);
+  Translation2d BL_POS = new Translation2d(-Parameters.driveTrain.dimensions.DRIVE_LENGTH / 2, -Parameters.driveTrain.dimensions.DRIVE_WIDTH / 2);
+  Translation2d BR_POS = new Translation2d(-Parameters.driveTrain.dimensions.DRIVE_LENGTH / 2, Parameters.driveTrain.dimensions.DRIVE_WIDTH / 2);
 
   // Create the drivetrain map
   SwerveDriveKinematics kinematics = new SwerveDriveKinematics(FL_POS, FR_POS, BL_POS, BR_POS);
@@ -55,10 +55,10 @@ public class DriveTrain extends SubsystemBase {
   public DriveTrain() {
 
     // Create each swerve module instance
-    frontLeft  = new SwerveModule(Parameters.driveTrain.can.FL_STEER_ID,  Parameters.driveTrain.can.FL_DRIVE_ID,  Parameters.driveTrain.can.FL_CODER_ID,  Parameters.driveTrain.pid.FL_STEER_PID, Parameters.driveTrain.pid.FL_DRIVE_PID);
-    frontRight = new SwerveModule(Parameters.driveTrain.can.FR_STEER_ID, Parameters.driveTrain.can.FR_DRIVE_ID, Parameters.driveTrain.can.FR_CODER_ID, Parameters.driveTrain.pid.FR_STEER_PID, Parameters.driveTrain.pid.FR_DRIVE_PID);
-    backLeft   = new SwerveModule(Parameters.driveTrain.can.BL_STEER_ID,   Parameters.driveTrain.can.BL_DRIVE_ID,   Parameters.driveTrain.can.BL_CODER_ID,   Parameters.driveTrain.pid.BL_STEER_PID, Parameters.driveTrain.pid.BL_DRIVE_PID);
-    backRight  = new SwerveModule(Parameters.driveTrain.can.BR_STEER_ID,  Parameters.driveTrain.can.BR_DRIVE_ID,  Parameters.driveTrain.can.BR_CODER_ID,  Parameters.driveTrain.pid.BR_STEER_PID, Parameters.driveTrain.pid.BR_DRIVE_PID);
+    frontLeft  = new SwerveModule("FL", Parameters.driveTrain.can.FL_STEER_ID,  Parameters.driveTrain.can.FL_DRIVE_ID,  Parameters.driveTrain.can.FL_CODER_ID,  Parameters.driveTrain.pid.FL_STEER_PID, Parameters.driveTrain.pid.FL_DRIVE_PID);
+    frontRight = new SwerveModule("FR", Parameters.driveTrain.can.FR_STEER_ID, Parameters.driveTrain.can.FR_DRIVE_ID, Parameters.driveTrain.can.FR_CODER_ID, Parameters.driveTrain.pid.FR_STEER_PID, Parameters.driveTrain.pid.FR_DRIVE_PID);
+    backLeft   = new SwerveModule("BL", Parameters.driveTrain.can.BL_STEER_ID,   Parameters.driveTrain.can.BL_DRIVE_ID,   Parameters.driveTrain.can.BL_CODER_ID,   Parameters.driveTrain.pid.BL_STEER_PID, Parameters.driveTrain.pid.BL_DRIVE_PID);
+    backRight  = new SwerveModule("BR", Parameters.driveTrain.can.BR_STEER_ID,  Parameters.driveTrain.can.BR_DRIVE_ID,  Parameters.driveTrain.can.BR_CODER_ID,  Parameters.driveTrain.pid.BR_STEER_PID, Parameters.driveTrain.pid.BR_DRIVE_PID);
 
     // Center the odometry of the robot
     resetOdometry(Parameters.positions.STARTING_POS);
@@ -251,6 +251,43 @@ public class DriveTrain extends SubsystemBase {
     backLeft.setEncoderOffset(0);
     backRight.setEncoderOffset(0);
   }
+
+
+  // Saves all of the parameters currently in the swerve modules
+  public void saveParameters() {
+    frontLeft.saveParameters();
+    frontRight.saveParameters();
+    backLeft.saveParameters();
+    backRight.saveParameters();
+  }
+
+
+  // Loads all of the currently saved parameters
+  public void loadParameters() {
+    frontLeft.loadParameters();
+    frontRight.loadParameters();
+    backLeft.saveParameters();
+    backRight.saveParameters();
+  }
+
+
+  // Loads all of the NetworkTable parameters
+  public void pullTuningValues() {
+    frontLeft.pullTuningValues();
+    frontRight.pullTuningValues();
+    backLeft.pullTuningValues();
+    backRight.pullTuningValues();
+  }
+
+
+  // Pushes all of the NetworkTable parameters
+  public void pushTuningValues() {
+    frontLeft.pushTuningValues();
+    frontRight.pushTuningValues();
+    backLeft.pushTuningValues();
+    backRight.pushTuningValues();
+  }
+
 
   @Override
   public void periodic() {

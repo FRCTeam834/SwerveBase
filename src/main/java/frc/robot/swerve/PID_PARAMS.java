@@ -4,6 +4,8 @@
 package frc.robot.swerve;
 
 public class PID_PARAMS {
+
+    // The P value of the PID loop
     public double P;
     public double I;
     public double D;

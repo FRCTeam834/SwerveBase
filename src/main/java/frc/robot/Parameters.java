@@ -20,61 +20,70 @@ import edu.wpi.first.wpiutil.math.MatBuilder;
 import edu.wpi.first.wpiutil.math.Matrix;
 import edu.wpi.first.wpiutil.math.Nat;
 import edu.wpi.first.wpiutil.math.numbers.*;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
-
+import edu.wpi.first.wpilibj.Preferences;
 
 /**
- * The Parameters class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants.  This class should not be used for any other purpose.  All constants should be
- * declared globally (i.e. public static).  Do not put anything functional in this class.
+ * The Parameters class provides a convenient place for teams to hold robot-wide
+ * numerical or boolean constants. This class should not be used for any other
+ * purpose. All constants should be declared globally (i.e. public static). Do
+ * not put anything functional in this class.
  *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
+ * <p>
+ * It is advised to statically import this class (or one of its inner classes)
+ * wherever the constants are needed, to reduce verbosity.
  */
 public final class Parameters {
-
 
     // All of the fun parameters
     public static final class funParameters {
 
-        public static final int SSN = 123352357; //Social Security Number [DO NOT LOSE]
-        public static final double USD_TO_GHS = 5.748; //US Dollar to Gana Cedi conversion rate
-        public static final double MM_TO_IK = 2.15; //Mozambican metical to Icelandic Krona conversion rate
-        public static final double MIN_IN_HR = 60; //Minutes in an hour
-        public static final int BUILD_TEAM_BRAIN_CELLS = 1; //Brain cells owned by the build team
-        public static final int CODING_TEAM_BRAIN_CELLS = 5; //Same as the amount of coding team members
-        public static final int SHRIMP_ON_THE_BARBIE = 3; //Number of shrimp on the barbecue
-        public static final int ANDREWS_PROGRESS_WHEN_AROUND_SAFETY_TEAM = -10; //What happens when Andrew is around the safety team... backwards progress
+        public static final int SSN = 123352357; // Social Security Number [DO NOT LOSE]
+        public static final double USD_TO_GHS = 5.748; // US Dollar to Gana Cedi conversion rate
+        public static final double MM_TO_IK = 2.15; // Mozambican metical to Icelandic Krona conversion rate
+        public static final double MIN_IN_HR = 60; // Minutes in an hour
+        public static final int BUILD_TEAM_BRAIN_CELLS = 1; // Brain cells owned by the build team
+        public static final int CODING_TEAM_BRAIN_CELLS = 5; // Same as the amount of coding team members
+        public static final int SHRIMP_ON_THE_BARBIE = 3; // Number of shrimp on the barbecue
+        public static final int ANDREWS_PROGRESS_WHEN_AROUND_SAFETY_TEAM = -10; // What happens when Andrew is around
+                                                                                // the safety team... backwards progress
+        public static final int CHRISTIAN_FORTNITE_WINS = 38;
     }
-
 
     // All of the driver parameters
     public static final class driver {
 
         // Driver Profiles
         public static DriverProfile[] DRIVER_PROFILES = {
-            // DriverProfile NAME, double JOYSTICK_DEADZONE, double MAX_STEER_SPEED (deg/s), double DRIVE_RAMP_RATE, boolean LOCKEM_UP, boolean FIELD_CENTRIC, double MAX_SPEED (m/s), IdleMode DRIVE_IDLE_MODE)
-            new DriverProfile("CAP1Sup",         0.05, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake),
-            new DriverProfile("Christian Velez", 0.15, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake),
-            new DriverProfile("Test",            0.15, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake)
-        };
+                // DriverProfile NAME, double JOYSTICK_DEADZONE, double MAX_STEER_SPEED (deg/s),
+                // double DRIVE_RAMP_RATE, boolean LOCKEM_UP, boolean FIELD_CENTRIC, double
+                // MAX_SPEED (m/s), IdleMode DRIVE_IDLE_MODE)
+                new DriverProfile("CAP1Sup", 0.05, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake),
+                new DriverProfile("Christian Velez", 0.15, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake,
+                        IdleMode.kBrake),
+                new DriverProfile("Test", 0.15, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake) };
 
         // Default profile (must be kept!)
-        public static DriverProfile DEFAULT_DRIVER_PROFILE = new DriverProfile("Default", 0.15, 1.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake);
+        public static DriverProfile DEFAULT_DRIVER_PROFILE = new DriverProfile("Default", 0.15, 1.0, 0.5, true, true,
+                1.0, IdleMode.kBrake, IdleMode.kBrake);
 
         // Current Driver Profile being used
         public static DriverProfile CURRENT_PROFILE = DEFAULT_DRIVER_PROFILE;
+
     }
 
+    // the saved preferences for the current driver
+    public static Preferences SAVED_PARAMS = Preferences.getInstance();
 
     // All of the drivetrain parameters
     public static final class driveTrain {
-
 
         // All of the CAN IDs
         public static final class can {
@@ -170,7 +179,7 @@ public final class Parameters {
         public static Pose2d STARTING_POS = Parameters.positions.POSSIBLE_STARTING_POSITIONS[Parameters.driverStation.getLocation() - 1];
     }
 
-    //Ultrasonic DIO(Not the jojo reference (Nathan: "I highly doubt that.")) ports
+    //Ultrasonic DIO(Not the JoJo reference (Nathan: "I highly doubt that.")) ports
     //US_PING: Ultrasonic Ping
     //US_ECHO: Ultrasonic Echo
     public static final class ultrasonic {

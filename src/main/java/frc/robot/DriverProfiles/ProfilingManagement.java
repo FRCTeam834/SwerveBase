@@ -17,16 +17,12 @@ import frc.robot.Robot;
 import com.revrobotics.CANSparkMax.IdleMode;
 
 // WPI Libraries
-import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 public class ProfilingManagement extends SubsystemBase {
 
-  // Gets the saved parameters instance, allows pulling values after reboot
-  Preferences SavedParameters = Preferences.getInstance();
-  
   // Create a selector on the Dashboard
   private final SendableChooser<DriverProfile> driverProfileChooser = new SendableChooser<>();
 
@@ -79,28 +75,28 @@ public class ProfilingManagement extends SubsystemBase {
     // Saves the input profile for next boot
 
     // Strings
-    SavedParameters.putString("NAME",              profile.NAME);
+    Parameters.SAVED_PARAMS.putString("NAME",              profile.NAME);
 
     // Doubles
-    SavedParameters.putDouble("JOYSTICK_DEADZONE", profile.JOYSTICK_DEADZONE);
-    SavedParameters.putDouble("MAX_STEER_SPEED",   profile.MAX_STEER_SPEED);
-    SavedParameters.putDouble("DRIVE_RAMP_RATE",   profile.DRIVE_RAMP_RATE);
-    SavedParameters.putDouble("MAX_SPEED",         profile.MAX_SPEED);
+    Parameters.SAVED_PARAMS.putDouble("JOYSTICK_DEADZONE", profile.JOYSTICK_DEADZONE);
+    Parameters.SAVED_PARAMS.putDouble("MAX_STEER_SPEED",   profile.MAX_STEER_SPEED);
+    Parameters.SAVED_PARAMS.putDouble("DRIVE_RAMP_RATE",   profile.DRIVE_RAMP_RATE);
+    Parameters.SAVED_PARAMS.putDouble("MAX_SPEED",         profile.MAX_SPEED);
 
     // Booleans
-    SavedParameters.putBoolean("LOCKEM_UP",        profile.LOCKEM_UP);
-    SavedParameters.putBoolean("FIELD_CENTRIC",    profile.FIELD_CENTRIC);
+    Parameters.SAVED_PARAMS.putBoolean("LOCKEM_UP",        profile.LOCKEM_UP);
+    Parameters.SAVED_PARAMS.putBoolean("FIELD_CENTRIC",    profile.FIELD_CENTRIC);
 
     // Special
 
     // IdleMode is not a supported type of the Preferences class, so brake will be true and coast will be false
     if (profile.DRIVE_IDLE_MODE == IdleMode.kBrake) {
       // Brake
-      SavedParameters.putBoolean("BRAKE", true);
+      Parameters.SAVED_PARAMS.putBoolean("BRAKE", true);
     }
     else {
       // Coast 
-      SavedParameters.putBoolean("BRAKE", false);
+      Parameters.SAVED_PARAMS.putBoolean("BRAKE", false);
     }
   }
 
@@ -112,17 +108,17 @@ public class ProfilingManagement extends SubsystemBase {
     DriverProfile profile = new DriverProfile();
 
     // Strings
-    profile.NAME              = SavedParameters.getString("NAME",              Parameters.driver.DEFAULT_DRIVER_PROFILE.NAME);
+    profile.NAME              = Parameters.SAVED_PARAMS.getString("NAME",              Parameters.driver.DEFAULT_DRIVER_PROFILE.NAME);
 
     // Doubles
-    profile.JOYSTICK_DEADZONE = SavedParameters.getDouble("JOYSTICK_DEADZONE", Parameters.driver.DEFAULT_DRIVER_PROFILE.JOYSTICK_DEADZONE);
-    profile.MAX_STEER_SPEED   = SavedParameters.getDouble("MAX_STEER_SPEED",   Parameters.driver.DEFAULT_DRIVER_PROFILE.MAX_STEER_SPEED);
-    profile.DRIVE_RAMP_RATE   = SavedParameters.getDouble("DRIVE_RAMP_RATE",   Parameters.driver.DEFAULT_DRIVER_PROFILE.DRIVE_RAMP_RATE);
-    profile.MAX_SPEED         = SavedParameters.getDouble("MAX_SPEED",         Parameters.driver.DEFAULT_DRIVER_PROFILE.MAX_SPEED);
+    profile.JOYSTICK_DEADZONE = Parameters.SAVED_PARAMS.getDouble("JOYSTICK_DEADZONE", Parameters.driver.DEFAULT_DRIVER_PROFILE.JOYSTICK_DEADZONE);
+    profile.MAX_STEER_SPEED   = Parameters.SAVED_PARAMS.getDouble("MAX_STEER_SPEED",   Parameters.driver.DEFAULT_DRIVER_PROFILE.MAX_STEER_SPEED);
+    profile.DRIVE_RAMP_RATE   = Parameters.SAVED_PARAMS.getDouble("DRIVE_RAMP_RATE",   Parameters.driver.DEFAULT_DRIVER_PROFILE.DRIVE_RAMP_RATE);
+    profile.MAX_SPEED         = Parameters.SAVED_PARAMS.getDouble("MAX_SPEED",         Parameters.driver.DEFAULT_DRIVER_PROFILE.MAX_SPEED);
 
     // Booleans
-    profile.LOCKEM_UP         = SavedParameters.getBoolean("LOCKEM_UP",        Parameters.driver.DEFAULT_DRIVER_PROFILE.LOCKEM_UP);
-    profile.FIELD_CENTRIC     = SavedParameters.getBoolean("FIELD_CENTRIC",    Parameters.driver.DEFAULT_DRIVER_PROFILE.FIELD_CENTRIC);
+    profile.LOCKEM_UP         =  Parameters.SAVED_PARAMS.getBoolean("LOCKEM_UP",        Parameters.driver.DEFAULT_DRIVER_PROFILE.LOCKEM_UP);
+    profile.FIELD_CENTRIC     =  Parameters.SAVED_PARAMS.getBoolean("FIELD_CENTRIC",    Parameters.driver.DEFAULT_DRIVER_PROFILE.FIELD_CENTRIC);
 
     // Special
 
@@ -138,7 +134,7 @@ public class ProfilingManagement extends SubsystemBase {
       defaultBrakeMode = false;
     }
 
-    if (SavedParameters.getBoolean("BRAKE", defaultBrakeMode)) {
+    if (Parameters.SAVED_PARAMS.getBoolean("BRAKE", defaultBrakeMode)) {
       // Brake
       profile.DRIVE_IDLE_MODE = IdleMode.kBrake;
     }
