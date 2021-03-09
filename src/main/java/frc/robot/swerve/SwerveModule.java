@@ -199,6 +199,19 @@ public class SwerveModule {
   }
 
 
+  // Moves the module to the desired angle
+  public void moveToAngle(double angle) {
+
+    // Continuously move the motor at the calculated speeds until it reaches the angle
+    while (getAngle() != angle) {
+      setDesiredAngle(angle);
+    }
+
+    // Shut off the motor once done
+    steerMotor.set(0);
+  }
+
+
   // Sets the power of the drive motor
   public void setRawPower(double speed) {
 
@@ -211,7 +224,7 @@ public class SwerveModule {
 
 
   // Set the speed in m/s
-  public void setDesiredSpeed(double speed) {
+  public void setDesiredVelocity(double speed) {
 
     // Check to see if the module is enabled
     if (enabled) {
@@ -228,6 +241,19 @@ public class SwerveModule {
   }
 
 
+  // Moves the wheel to a desired speed
+  public void reachVelocity(double speed) {
+
+    // Continuously move the motor at the calculated speeds until it reaches the angle
+    while (getVelocity() != speed) {
+      setDesiredVelocity(speed);
+    }
+
+    // Shut off the motor once done
+    driveMotor.set(0);
+  }
+
+
   // Sets the desired state of the module
   public void setDesiredState(SwerveModuleState setState) {
 
@@ -236,7 +262,7 @@ public class SwerveModule {
 
     // Set module to the right angles and speeds
     setDesiredAngle(optimizedState.angle.getDegrees());
-    setDesiredSpeed(optimizedState.speedMetersPerSecond);
+    setDesiredVelocity(optimizedState.speedMetersPerSecond);
   }
 
 

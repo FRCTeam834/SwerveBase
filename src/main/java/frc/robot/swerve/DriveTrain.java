@@ -164,10 +164,10 @@ public class DriveTrain extends SubsystemBase {
     backRight.setDesiredAngle(-45);
 
     // Halt all the motors and hold them there
-    frontLeft.setDesiredSpeed(0);
-    frontRight.setDesiredSpeed(0);
-    backRight.setDesiredSpeed(0);
-    backLeft.setDesiredSpeed(0);
+    frontLeft.setDesiredVelocity(0);
+    frontRight.setDesiredVelocity(0);
+    backRight.setDesiredVelocity(0);
+    backLeft.setDesiredVelocity(0);
   }
 
 

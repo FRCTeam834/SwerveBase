@@ -66,8 +66,7 @@ public final class Parameters {
                 // double DRIVE_RAMP_RATE, boolean LOCKEM_UP, boolean FIELD_CENTRIC, double
                 // MAX_SPEED (m/s), IdleMode DRIVE_IDLE_MODE)
                 new DriverProfile("CAP1Sup", 0.05, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake),
-                new DriverProfile("Christian Velez", 0.15, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake,
-                        IdleMode.kBrake),
+                new DriverProfile("Christian Velez", 0.15, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake),
                 new DriverProfile("Test", 0.15, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake) };
 
         // Default profile (must be kept!)

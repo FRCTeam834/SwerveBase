@@ -9,9 +9,11 @@ package frc.robot;
 
 // User files
 import frc.robot.DriverProfiles.ProfilingManagement;
-import frc.robot.commands.ZeroCanCoders;
 import frc.robot.commands.LetsRoll1Joystick;
 import frc.robot.commands.LetsRoll2Joysticks;
+import frc.robot.commands.PullNTSwerveParams;
+import frc.robot.commands.TestPID;
+import frc.robot.commands.ZeroCanCoders;
 import frc.robot.subsystems.NavX;
 import frc.robot.subsystems.UltrasonicSensor;
 import frc.robot.swerve.DriveTrain;
@@ -24,6 +26,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -44,6 +47,11 @@ public class RobotContainer {
   private final LetsRoll2Joysticks letsRoll2Joysticks = new LetsRoll2Joysticks();
   private final LetsRoll1Joystick letsRoll1Joystick = new LetsRoll1Joystick();
   private final ZeroCanCoders zeroCanCoders = new ZeroCanCoders();
+  private final PullNTSwerveParams pullNtSwerveParams = new PullNTSwerveParams();
+  private final TestPID testPID = new TestPID();
+
+  // Timer (for delays)
+  public static Timer timer = new Timer();
 
   // Define the joysticks (need to be public so commands can access axes)
   public static Joystick leftJoystick;
@@ -118,6 +126,8 @@ public class RobotContainer {
       // Configure the command (on the second button of the joystick)
       leftJoystickButtons[1].whenPressed(letsRoll2Joysticks);
       leftJoystickButtons[2].whenPressed(zeroCanCoders);
+      leftJoystickButtons[3].whenPressed(pullNtSwerveParams);
+      leftJoystickButtons[4].whenPressed(testPID);
     }
     else if (robotState == ROBOT_STATE.ONE_JOYSTICK) {
       // Left Joystick button assignment (buttons array starts at 0)
@@ -129,6 +139,8 @@ public class RobotContainer {
       // Configure the command (on the second button of the joystick)
       leftJoystickButtons[1].whenPressed(letsRoll1Joystick);
       leftJoystickButtons[2].whenPressed(zeroCanCoders);
+      leftJoystickButtons[3].whenPressed(pullNtSwerveParams);
+      leftJoystickButtons[4].whenPressed(testPID);
     }
     else {
       // No joysticks (show mode)

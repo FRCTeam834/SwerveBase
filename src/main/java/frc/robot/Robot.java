@@ -21,6 +21,8 @@ import frc.robot.DriverProfiles.ProfilingManagement;
 import frc.robot.commands.LetsRoll1Joystick;
 import frc.robot.commands.LetsRoll2Joysticks;
 import frc.robot.commands.ZeroCanCoders;
+import frc.robot.commands.PullNTSwerveParams;
+import frc.robot.commands.TestPID;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -41,8 +43,8 @@ public class Robot extends TimedRobot {
   public static LetsRoll2Joysticks letsRoll2Joysticks;
   public static LetsRoll1Joystick letsRoll1Joystick;
   public static ZeroCanCoders zeroCanCoders;
-
-
+  public static PullNTSwerveParams pullNTSwerveParams;
+  public static TestPID testPID;
 
   private RobotContainer m_robotContainer;
 
@@ -61,6 +63,8 @@ public class Robot extends TimedRobot {
     letsRoll2Joysticks = new LetsRoll2Joysticks();
     letsRoll1Joystick = new LetsRoll1Joystick();
     zeroCanCoders = new ZeroCanCoders();
+    pullNTSwerveParams = new PullNTSwerveParams();
+    testPID = new TestPID();
 
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
