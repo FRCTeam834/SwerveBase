@@ -13,8 +13,15 @@ import edu.wpi.first.wpilibj.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.controller.HolonomicDriveController;
+import edu.wpi.first.wpilibj.controller.PIDController;
+import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 
@@ -23,6 +30,7 @@ import frc.robot.Parameters;
 
 // Import robot
 import frc.robot.Robot;
+import frc.robot.Parameters.driveTrain.movement;
 
 
 public class DriveTrain extends SubsystemBase {
@@ -35,6 +43,28 @@ public class DriveTrain extends SubsystemBase {
   public SwerveModule frontRight;
   public SwerveModule backLeft;
   public SwerveModule backRight;
+
+  // PID value storage, with default values from Parameters
+  public PIDController X_MOVE_PID = Parameters.driveTrain.movement.MOVEMENT_PID;
+  public PIDController Y_MOVE_PID = Parameters.driveTrain.movement.MOVEMENT_PID;
+  public Constraints ROTATION_CONSTRAINTS = Parameters.driveTrain.movement.ROTATION_CONSTRAINTS;
+  public ProfiledPIDController ROTATION_PID = Parameters.driveTrain.movement.ROTATION_PID;
+
+  // NetworkTable entries
+  NetworkTableEntry X_MOVE_PID_P_ENTRY;
+  NetworkTableEntry X_MOVE_PID_I_ENTRY;
+  NetworkTableEntry X_MOVE_PID_D_ENTRY;
+  NetworkTableEntry Y_MOVE_PID_P_ENTRY;
+  NetworkTableEntry Y_MOVE_PID_I_ENTRY;
+  NetworkTableEntry Y_MOVE_PID_D_ENTRY;
+  NetworkTableEntry ROTATION_PID_P_ENTRY;
+  NetworkTableEntry ROTATION_PID_I_ENTRY;
+  NetworkTableEntry ROTATION_PID_D_ENTRY;
+  NetworkTableEntry ROTATION_PID_MAX_ACCEL_ENTRY;
+  NetworkTableEntry ROTATION_PID_MAX_VEL_ENTRY;
+  NetworkTableEntry X_POSITION_ENTRY;
+  NetworkTableEntry Y_POSITION_ENTRY;
+  NetworkTableEntry ROTATIONAL_POSITION_ENTRY;
 
   // Define their position (relative to center of robot)
   Translation2d FL_POS = new Translation2d(Parameters.driveTrain.dimensions.DRIVE_LENGTH / 2, -Parameters.driveTrain.dimensions.DRIVE_WIDTH / 2);
@@ -49,7 +79,7 @@ public class DriveTrain extends SubsystemBase {
   private SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(Robot.navX.getFusedRotation2d(), Parameters.positions.STARTING_POS, kinematics, Parameters.driveTrain.movement.POSE_STD_DEV, Parameters.driveTrain.movement.ENCODER_GYRO_DEV, Parameters.driveTrain.movement.VISION_DEVIATION);
 
   // Holomonic drive controller
-  private HolonomicDriveController driveController = new HolonomicDriveController(Parameters.driveTrain.movement.MOVEMENT_PID, Parameters.driveTrain.movement.MOVEMENT_PID, Parameters.driveTrain.movement.ROTATION_PID);
+  private HolonomicDriveController driveController = new HolonomicDriveController(X_MOVE_PID, Y_MOVE_PID, ROTATION_PID);
 
   // Setup the drivetrain
   public DriveTrain() {
@@ -59,6 +89,42 @@ public class DriveTrain extends SubsystemBase {
     frontRight = new SwerveModule("FR", Parameters.driveTrain.can.FR_STEER_ID, Parameters.driveTrain.can.FR_DRIVE_ID, Parameters.driveTrain.can.FR_CODER_ID, Parameters.driveTrain.pid.FR_STEER_PID, Parameters.driveTrain.pid.FR_DRIVE_PID);
     backLeft   = new SwerveModule("BL", Parameters.driveTrain.can.BL_STEER_ID,   Parameters.driveTrain.can.BL_DRIVE_ID,   Parameters.driveTrain.can.BL_CODER_ID,   Parameters.driveTrain.pid.BL_STEER_PID, Parameters.driveTrain.pid.BL_DRIVE_PID);
     backRight  = new SwerveModule("BR", Parameters.driveTrain.can.BR_STEER_ID,  Parameters.driveTrain.can.BR_DRIVE_ID,  Parameters.driveTrain.can.BR_CODER_ID,  Parameters.driveTrain.pid.BR_STEER_PID, Parameters.driveTrain.pid.BR_DRIVE_PID);
+
+    // Set up the module's table on NetworkTables
+    NetworkTable swerveTable = NetworkTableInstance.getDefault().getTable("Swerve");
+    NetworkTable driveTrainTable = swerveTable.getSubTable("DRIVETRAIN");
+
+    // PID tables
+    NetworkTable xPIDTable = driveTrainTable.getSubTable("X_PID");
+    NetworkTable yPIDTable = driveTrainTable.getSubTable("Y_PID");
+    NetworkTable rotationPIDTable = driveTrainTable.getSubTable("ROTATION_PID");
+    NetworkTable positionTable = driveTrainTable.getSubTable("POSITION");
+
+    // Create new entries for the PID tuning values
+    // X movement
+    X_MOVE_PID_P_ENTRY = xPIDTable.getEntry("P");
+    X_MOVE_PID_I_ENTRY = xPIDTable.getEntry("I");
+    X_MOVE_PID_D_ENTRY = xPIDTable.getEntry("D");
+
+    // Y movement
+    Y_MOVE_PID_P_ENTRY = yPIDTable.getEntry("P");
+    Y_MOVE_PID_I_ENTRY = yPIDTable.getEntry("I");
+    Y_MOVE_PID_D_ENTRY = yPIDTable.getEntry("D");
+
+    // Rotational movement
+    ROTATION_PID_P_ENTRY = rotationPIDTable.getEntry("P");
+    ROTATION_PID_I_ENTRY = rotationPIDTable.getEntry("I");
+    ROTATION_PID_D_ENTRY = rotationPIDTable.getEntry("D");
+    ROTATION_PID_MAX_ACCEL_ENTRY = rotationPIDTable.getEntry("MAX_ACCEL");
+    ROTATION_PID_MAX_VEL_ENTRY = rotationPIDTable.getEntry("MAX_VEL");
+
+    // Position data
+    X_POSITION_ENTRY = positionTable.getEntry("X");
+    Y_POSITION_ENTRY = positionTable.getEntry("Y");
+    ROTATIONAL_POSITION_ENTRY = positionTable.getEntry("THETA");
+
+    // Push the parameters to NetworkTables
+    publishTuningValues();
 
     // Center the odometry of the robot
     resetOdometry(Parameters.positions.STARTING_POS);
@@ -206,6 +272,24 @@ public class DriveTrain extends SubsystemBase {
   }
 
 
+  // Gets the X position of the drivetrain
+  public double getXPosition() {
+    return poseEstimator.getEstimatedPosition().getX();
+  }
+
+
+  // Gets the Y position of the drivetrain
+  public double getYPosition() {
+    return poseEstimator.getEstimatedPosition().getY();
+  }
+
+
+  // Gets the angle of the robot
+  public Rotation2d getThetaPosition() {
+    return poseEstimator.getEstimatedPosition().getRotation();
+  }
+
+
   // Check if the robot is at the reference point of the trajectory
   public boolean atTrajectoryReference() {
 
@@ -255,37 +339,148 @@ public class DriveTrain extends SubsystemBase {
 
   // Saves all of the parameters currently in the swerve modules
   public void saveParameters() {
+
+    // Save module values
     frontLeft.saveParameters();
     frontRight.saveParameters();
     backLeft.saveParameters();
     backRight.saveParameters();
+
+    // X Movement PID
+    Parameters.SAVED_PARAMS.putDouble("DRIVETRAIN_X_MOVE_PID_P", X_MOVE_PID.getP());
+    Parameters.SAVED_PARAMS.putDouble("DRIVETRAIN_X_MOVE_PID_I", X_MOVE_PID.getI());
+    Parameters.SAVED_PARAMS.putDouble("DRIVETRAIN_X_MOVE_PID_D", X_MOVE_PID.getD());
+
+    // Y Movement PID
+    Parameters.SAVED_PARAMS.putDouble("DRIVETRAIN_Y_MOVE_PID_P", Y_MOVE_PID.getP());
+    Parameters.SAVED_PARAMS.putDouble("DRIVETRAIN_Y_MOVE_PID_I", Y_MOVE_PID.getI());
+    Parameters.SAVED_PARAMS.putDouble("DRIVETRAIN_Y_MOVE_PID_D", Y_MOVE_PID.getD());
+
+    // Rotation PID (PID values)
+    Parameters.SAVED_PARAMS.putDouble("DRIVETRAIN_ROTATION_PID_P", ROTATION_PID.getP());
+    Parameters.SAVED_PARAMS.putDouble("DRIVETRAIN_ROTATION_PID_I", ROTATION_PID.getI());
+    Parameters.SAVED_PARAMS.putDouble("DRIVETRAIN_ROTATION_PID_D", ROTATION_PID.getD());
+
+    // Rotation PID (Constraints)
+    Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_ROTATION_PID_MAX_VEL", Math.toDegrees(ROTATION_CONSTRAINTS.maxVelocity));
+    Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_ROTATION_PID_MAX_ACCEL", Math.toDegrees(ROTATION_CONSTRAINTS.maxAcceleration));
   }
 
 
   // Loads all of the currently saved parameters
   public void loadParameters() {
+
+    // Load module values
     frontLeft.loadParameters();
     frontRight.loadParameters();
     backLeft.saveParameters();
     backRight.saveParameters();
+
+    // X Movement PID
+    X_MOVE_PID.setP(Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_X_MOVE_PID_P", X_MOVE_PID.getP()));
+    X_MOVE_PID.setI(Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_X_MOVE_PID_I", X_MOVE_PID.getI()));
+    X_MOVE_PID.setD(Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_X_MOVE_PID_D", X_MOVE_PID.getD()));
+
+    // Y Movement PID
+    Y_MOVE_PID.setP(Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_Y_MOVE_PID_P", Y_MOVE_PID.getP()));
+    Y_MOVE_PID.setI(Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_Y_MOVE_PID_I", Y_MOVE_PID.getI()));
+    Y_MOVE_PID.setD(Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_Y_MOVE_PID_D", Y_MOVE_PID.getD()));
+
+    // Rotation PID (PID values)
+    ROTATION_PID.setP(Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_ROTATION_PID_P", ROTATION_PID.getP()));
+    ROTATION_PID.setI(Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_ROTATION_PID_I", ROTATION_PID.getI()));
+    ROTATION_PID.setD(Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_ROTATION_PID_D", ROTATION_PID.getD()));
+
+    // Rotation PID (Constraints)
+    ROTATION_CONSTRAINTS.maxVelocity = Math.toRadians(Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_ROTATION_PID_MAX_VEL", Math.toDegrees(ROTATION_CONSTRAINTS.maxVelocity)));
+    ROTATION_CONSTRAINTS.maxAcceleration = Math.toRadians(Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_ROTATION_PID_MAX_ACCEL", Math.toDegrees(ROTATION_CONSTRAINTS.maxAcceleration)));
+    ROTATION_PID.setConstraints(ROTATION_CONSTRAINTS);
+
+    // Redeclare the drive controller
+    driveController = new HolonomicDriveController(X_MOVE_PID, Y_MOVE_PID, ROTATION_PID);
+
+    // Publish the new tuning values
+    publishTuningValues();
   }
 
 
   // Loads all of the NetworkTable parameters
   public void pullTuningValues() {
+
+    // Pull module tuning values
     frontLeft.pullTuningValues();
     frontRight.pullTuningValues();
     backLeft.pullTuningValues();
     backRight.pullTuningValues();
+
+    // X Movement PID
+    X_MOVE_PID.setP(X_MOVE_PID_P_ENTRY.getDouble(X_MOVE_PID.getP()));
+    X_MOVE_PID.setI(X_MOVE_PID_I_ENTRY.getDouble(X_MOVE_PID.getI()));
+    X_MOVE_PID.setD(X_MOVE_PID_D_ENTRY.getDouble(X_MOVE_PID.getD()));
+
+    // Y Movement PID
+    Y_MOVE_PID.setP(Y_MOVE_PID_P_ENTRY.getDouble(Y_MOVE_PID.getP()));
+    Y_MOVE_PID.setI(Y_MOVE_PID_I_ENTRY.getDouble(Y_MOVE_PID.getI()));
+    Y_MOVE_PID.setD(Y_MOVE_PID_D_ENTRY.getDouble(Y_MOVE_PID.getD()));
+
+    // Rotation PID (PID values)
+    ROTATION_PID.setP(ROTATION_PID_P_ENTRY.getDouble(ROTATION_PID.getP()));
+    ROTATION_PID.setI(ROTATION_PID_I_ENTRY.getDouble(ROTATION_PID.getI()));
+    ROTATION_PID.setD(ROTATION_PID_D_ENTRY.getDouble(ROTATION_PID.getD()));
+
+    // Rotation PID (Constraints)
+    ROTATION_CONSTRAINTS.maxVelocity = Math.toRadians(ROTATION_PID_MAX_VEL_ENTRY.getDouble(Math.toDegrees(ROTATION_CONSTRAINTS.maxVelocity)));
+    ROTATION_CONSTRAINTS.maxAcceleration = Math.toRadians(ROTATION_PID_MAX_ACCEL_ENTRY.getDouble(Math.toDegrees(ROTATION_CONSTRAINTS.maxAcceleration)));
+    ROTATION_PID.setConstraints(ROTATION_CONSTRAINTS);
+
+    // Redeclare the drive controller
+    driveController = new HolonomicDriveController(X_MOVE_PID, Y_MOVE_PID, ROTATION_PID);
   }
 
 
   // Pushes all of the NetworkTable parameters
-  public void pushTuningValues() {
-    frontLeft.pushTuningValues();
-    frontRight.pushTuningValues();
-    backLeft.pushTuningValues();
-    backRight.pushTuningValues();
+  public void publishTuningValues() {
+
+    // Publish module tuning values
+    frontLeft.publishTuningValues();
+    frontRight.publishTuningValues();
+    backLeft.publishTuningValues();
+    backRight.publishTuningValues();
+
+    // X Movement PID
+    X_MOVE_PID_P_ENTRY.setDouble(X_MOVE_PID.getP());
+    X_MOVE_PID_I_ENTRY.setDouble(X_MOVE_PID.getI());
+    X_MOVE_PID_D_ENTRY.setDouble(X_MOVE_PID.getD());
+
+    // Y Movement PID
+    Y_MOVE_PID_P_ENTRY.setDouble(Y_MOVE_PID.getP());
+    Y_MOVE_PID_I_ENTRY.setDouble(Y_MOVE_PID.getI());
+    Y_MOVE_PID_D_ENTRY.setDouble(Y_MOVE_PID.getD());
+
+    // Rotation PID (PID values)
+    ROTATION_PID_P_ENTRY.setDouble(ROTATION_PID.getP());
+    ROTATION_PID_I_ENTRY.setDouble(ROTATION_PID.getI());
+    ROTATION_PID_D_ENTRY.setDouble(ROTATION_PID.getD());
+
+    // Rotation PID (Constraints)
+    ROTATION_PID_MAX_VEL_ENTRY.setDouble(Math.toDegrees(ROTATION_CONSTRAINTS.maxVelocity));
+    ROTATION_PID_MAX_ACCEL_ENTRY.setDouble(Math.toDegrees(ROTATION_CONSTRAINTS.maxAcceleration));
+  }
+
+
+  // Publish the performance data from each of the modules to the NetworkTable
+  public void publishPerformanceData() {
+
+    // Publish module velocity/angle
+    frontLeft.publishPerformanceData();
+    frontRight.publishPerformanceData();
+    backLeft.publishPerformanceData();
+    backRight.publishPerformanceData();
+
+    // Publish the positional data of the robot
+    X_POSITION_ENTRY.setDouble(getXPosition());
+    Y_POSITION_ENTRY.setDouble(getYPosition());
+    ROTATIONAL_POSITION_ENTRY.setDouble(getThetaPosition().getDegrees());
   }
 
 

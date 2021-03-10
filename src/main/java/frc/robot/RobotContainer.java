@@ -12,13 +12,15 @@ import frc.robot.DriverProfiles.ProfilingManagement;
 import frc.robot.commands.LetsRoll1Joystick;
 import frc.robot.commands.LetsRoll2Joysticks;
 import frc.robot.commands.PullNTSwerveParams;
-import frc.robot.commands.TestPID;
+import frc.robot.commands.TestModulePID;
+import frc.robot.commands.TestMovementPID;
 import frc.robot.commands.ZeroCanCoders;
 import frc.robot.subsystems.NavX;
 import frc.robot.subsystems.UltrasonicSensor;
 import frc.robot.swerve.DriveTrain;
 import frc.robot.Parameters;
 import frc.robot.enums.ROBOT_STATE;
+import frc.robot.commands.SaveSwerveParameters;
 
 // WPI Libraries
 import edu.wpi.first.wpilibj2.command.Command;
@@ -48,7 +50,9 @@ public class RobotContainer {
   private final LetsRoll1Joystick letsRoll1Joystick = new LetsRoll1Joystick();
   private final ZeroCanCoders zeroCanCoders = new ZeroCanCoders();
   private final PullNTSwerveParams pullNtSwerveParams = new PullNTSwerveParams();
-  private final TestPID testPID = new TestPID();
+  private final TestModulePID testModulePID = new TestModulePID();
+  private final TestMovementPID testMovementPID = new TestMovementPID();
+  private final SaveSwerveParameters saveSwerveParameters = new SaveSwerveParameters();
 
   // Timer (for delays)
   public static Timer timer = new Timer();
@@ -124,10 +128,12 @@ public class RobotContainer {
 
       // Command setup
       // Configure the command (on the second button of the joystick)
-      leftJoystickButtons[1].whenPressed(letsRoll2Joysticks);
-      leftJoystickButtons[2].whenPressed(zeroCanCoders);
-      leftJoystickButtons[3].whenPressed(pullNtSwerveParams);
-      leftJoystickButtons[4].whenPressed(testPID);
+      leftJoystickButtons[0].whenPressed(letsRoll2Joysticks);
+      leftJoystickButtons[1].whenPressed(saveSwerveParameters);
+      leftJoystickButtons[2].whenPressed(pullNtSwerveParams);
+      leftJoystickButtons[3].whenPressed(testModulePID);
+      leftJoystickButtons[4].whenPressed(testMovementPID);
+      leftJoystickButtons[7].whenPressed(zeroCanCoders);
     }
     else if (robotState == ROBOT_STATE.ONE_JOYSTICK) {
       // Left Joystick button assignment (buttons array starts at 0)
@@ -137,10 +143,12 @@ public class RobotContainer {
 
       // Command setup
       // Configure the command (on the second button of the joystick)
-      leftJoystickButtons[1].whenPressed(letsRoll1Joystick);
-      leftJoystickButtons[2].whenPressed(zeroCanCoders);
-      leftJoystickButtons[3].whenPressed(pullNtSwerveParams);
-      leftJoystickButtons[4].whenPressed(testPID);
+      leftJoystickButtons[0].whenPressed(letsRoll1Joystick);
+      leftJoystickButtons[1].whenPressed(saveSwerveParameters);
+      leftJoystickButtons[2].whenPressed(pullNtSwerveParams);
+      //leftJoystickButtons[3].whenPressed(testModulePID);
+      leftJoystickButtons[4].whenPressed(testMovementPID);
+      leftJoystickButtons[7].whenPressed(zeroCanCoders);
     }
     else {
       // No joysticks (show mode)

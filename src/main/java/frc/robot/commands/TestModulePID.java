@@ -8,9 +8,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
 import edu.wpi.first.networktables.*;
 
-public class TestPID extends CommandBase {
+public class TestModulePID extends CommandBase {
   /** Creates a new TestPID. */
-  public TestPID() {
+  public TestModulePID() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(Robot.driveTrain);
   }
@@ -34,7 +34,7 @@ public class TestPID extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+
     // The top right button
     if (RobotContainer.leftJoystickButtons[10].get()) {
       Robot.driveTrain.frontRight.moveToAngle(45);
@@ -115,6 +115,6 @@ public class TestPID extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.rightJoystickButtons[0].get();
+    return RobotContainer.leftJoystickButtons[0].get();
   }
 }

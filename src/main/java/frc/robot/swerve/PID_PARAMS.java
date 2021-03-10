@@ -5,7 +5,7 @@ package frc.robot.swerve;
 
 public class PID_PARAMS {
 
-    // The P value of the PID loop
+    // The values of the PID loop
     public double P;
     public double I;
     public double D;
@@ -40,5 +40,5 @@ public class PID_PARAMS {
     public void setPeakOutput(double PEAK_OUTPUT) {
         this.PEAK_OUTPUT = PEAK_OUTPUT;
     }
-    
+
 }

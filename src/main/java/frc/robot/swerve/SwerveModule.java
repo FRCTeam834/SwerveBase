@@ -22,6 +22,7 @@ import com.revrobotics.CANEncoder;
 // WPI Libraries
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
@@ -47,17 +48,20 @@ public class SwerveModule {
   private boolean enabled = true;
 
   // NetworkTable values
-  NetworkTableEntry steerPEntry;
-  NetworkTableEntry steerIEntry;
-  NetworkTableEntry steerDEntry;
-  NetworkTableEntry steerSFFEntry;
-  NetworkTableEntry steerVFFEntry;
+  private NetworkTableEntry steerPEntry;
+  private NetworkTableEntry steerIEntry;
+  private NetworkTableEntry steerDEntry;
+  private NetworkTableEntry steerSFFEntry;
+  private NetworkTableEntry steerVFFEntry;
 
-  NetworkTableEntry drivePEntry;
-  NetworkTableEntry driveIEntry;
-  NetworkTableEntry driveDEntry;
-  NetworkTableEntry driveSFFEntry;
-  NetworkTableEntry driveVFFEntry;
+  private NetworkTableEntry drivePEntry;
+  private NetworkTableEntry driveIEntry;
+  private NetworkTableEntry driveDEntry;
+  private NetworkTableEntry driveSFFEntry;
+  private NetworkTableEntry driveVFFEntry;
+
+  private NetworkTableEntry velocity;
+  private NetworkTableEntry angle;
 
 
   // Set up the module and address each of the motor controllers
@@ -78,7 +82,8 @@ public class SwerveModule {
     steerMotor.setIdleMode(Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
 
     // Steering PID controller
-    steerMotorPID = new ProfiledPIDController(steerPIDParams.P, steerPIDParams.I, steerPIDParams.D, new TrapezoidProfile.Constraints(Math.toRadians(Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_VELOCITY), Math.toRadians(Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_ACCEL)));
+    Constraints constraints = new TrapezoidProfile.Constraints(Math.toRadians(Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_VELOCITY), Math.toRadians(Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_ACCEL));
+    steerMotorPID = new ProfiledPIDController(steerPIDParams.P, steerPIDParams.I, steerPIDParams.D, constraints);
     steerMotorPID.setP(steerPIDParams.P);
     steerMotorPID.setI(steerPIDParams.I);
     steerMotorPID.setD(steerPIDParams.D);
@@ -104,24 +109,27 @@ public class SwerveModule {
     driveMotorEncoder.setVelocityConversionFactor(Math.PI * Parameters.driveTrain.dimensions.MODULE_WHEEL_DIA_M / 60);
 
     // Set up the module's table on NetworkTables
-    NetworkTable modulesTable = NetworkTableInstance.getDefault().getTable("Modules");
-    NetworkTable moduleTable = modulesTable.getSubTable(name + "_MODULE");
+    NetworkTable swerveTable = NetworkTableInstance.getDefault().getTable("Swerve");
+    NetworkTable moduleTable = swerveTable.getSubTable(name + "_MODULE");
 
     // Put all of the module's current values on NetworkTables
+    // Steer PID
     steerPEntry = moduleTable.getEntry("STEER_P");
     steerIEntry = moduleTable.getEntry("STEER_I");
     steerDEntry = moduleTable.getEntry("STEER_D");
     steerSFFEntry = moduleTable.getEntry("STEER_SFF");
     steerVFFEntry = moduleTable.getEntry("STEER_VFF");
 
+    // Drive PID
     drivePEntry = moduleTable.getEntry("DRIVE_P");
     driveIEntry = moduleTable.getEntry("DRIVE_I");
     driveDEntry = moduleTable.getEntry("DRIVE_D");
     driveSFFEntry = moduleTable.getEntry("DRIVE_SFF");
     driveVFFEntry = moduleTable.getEntry("DRIVE_VFF");
 
-    // Push starting values to the entries
-    pushTuningValues();
+    // Performance data
+    velocity = moduleTable.getEntry("CURRENT_VELOCITY");
+    angle = moduleTable.getEntry("CURRENT_ANGLE");
   }
 
 
@@ -368,12 +376,12 @@ public class SwerveModule {
     driveMotorFF = new SimpleMotorFeedforward(newDriveKS, newDriveKV);
 
     // Push the new values to the table
-    pushTuningValues();
+    publishTuningValues();
   }
 
 
   // Push the values to NetworkTables
-  public void pushTuningValues() {
+  public void publishTuningValues() {
 
     // Steer PIDs
     steerPEntry.setDouble(steerMotorPID.getP());
@@ -405,5 +413,12 @@ public class SwerveModule {
     driveMotorPID.setI(driveIEntry.getDouble(driveMotorPID.getI()));
     driveMotorPID.setD(driveDEntry.getDouble(driveMotorPID.getD()));
     driveMotorFF = new SimpleMotorFeedforward(driveSFFEntry.getDouble(driveMotorFF.ks), driveVFFEntry.getDouble(driveMotorFF.kv));
+  }
+
+
+  // Pushes the performance data to the NetworkTable
+  public void publishPerformanceData() {
+    velocity.setDouble(getVelocity());
+    angle.setDouble(getAngle());
   }
 }

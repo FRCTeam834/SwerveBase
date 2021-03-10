@@ -28,6 +28,7 @@ import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.Preferences;
 
 /**
@@ -159,7 +160,8 @@ public final class Parameters {
 
             // PID controller (rotation constraints are max velocity and max acceleration)
             public static PIDController MOVEMENT_PID = new PIDController(1, 0, 0);
-            public static ProfiledPIDController ROTATION_PID = new ProfiledPIDController(1, 0, 0, new TrapezoidProfile.Constraints(Math.toRadians(360), Math.toRadians(180)));
+            public static Constraints ROTATION_CONSTRAINTS = new Constraints(Math.toRadians(360), Math.toRadians(180));
+            public static ProfiledPIDController ROTATION_PID = new ProfiledPIDController(1, 0, 0, ROTATION_CONSTRAINTS);
         }
     }
 
