@@ -82,13 +82,13 @@ public class SwerveModule {
     steerMotor.setIdleMode(Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
 
     // Steering PID controller
-    Constraints constraints = new TrapezoidProfile.Constraints(Math.toRadians(Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_VELOCITY), Math.toRadians(Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_ACCEL));
+    Constraints constraints = new Constraints(Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_VELOCITY, Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_ACCEL);
     steerMotorPID = new ProfiledPIDController(steerPIDParams.P, steerPIDParams.I, steerPIDParams.D, constraints);
     steerMotorPID.setP(steerPIDParams.P);
     steerMotorPID.setI(steerPIDParams.I);
     steerMotorPID.setD(steerPIDParams.D);
-    //steerMotorPID.setIntegratorRange(-T_PID_params.I_ZONE, T_PID_params.I_ZONE);
-    steerMotorPID.enableContinuousInput(-Math.PI, Math.PI);
+    //steerMotorPID.setIntegratorRange(-steerPIDParams.I_ZONE, steerPIDParams.I_ZONE);
+    steerMotorPID.enableContinuousInput(-180, 180);
 
     // Steering motor feed forward
     steerMotorFF = new SimpleMotorFeedforward(steerPIDParams.SFF, steerPIDParams.VFF);
@@ -196,7 +196,7 @@ public class SwerveModule {
     if (enabled) {
 
       // Calculate the turning motor output from the turning PID controller.
-      final double steerOutput = steerMotorPID.calculate(Math.toRadians(getAngle()), Math.toRadians(targetAngle));
+      final double steerOutput = steerMotorPID.calculate(getAngle(), targetAngle);
 
       // Calculate the feedforward for the motor
       final double steerFeedforward = steerMotorFF.calculate(steerMotorPID.getSetpoint().velocity);
@@ -276,7 +276,7 @@ public class SwerveModule {
 
   // Gets the state of the module
   public SwerveModuleState getState() {
-    return new SwerveModuleState(driveMotorEncoder.getVelocity(), new Rotation2d(Math.toRadians(getAngle())));
+    return new SwerveModuleState(driveMotorEncoder.getVelocity(), Rotation2d.fromDegrees(getAngle()));
   }
 
 
