@@ -40,10 +40,10 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   // Subsystems
-  private final ProfilingManagement profilingManagement = new ProfilingManagement();
-  private final NavX navX = new NavX();
-  private final DriveTrain driveTrain = new DriveTrain();
-  private final UltrasonicSensor ultrasonicSensor = new UltrasonicSensor();
+  //private final ProfilingManagement profilingManagement = new ProfilingManagement();
+  //private final NavX navX = new NavX();
+  //private final DriveTrain driveTrain = new DriveTrain();
+  //private final UltrasonicSensor ultrasonicSensor = new UltrasonicSensor();
 
   // Commands
   private final LetsRoll2Joysticks letsRoll2Joysticks = new LetsRoll2Joysticks();
@@ -58,17 +58,65 @@ public class RobotContainer {
   public static Timer timer = new Timer();
 
   // Define the joysticks (need to be public so commands can access axes)
-  public static Joystick leftJoystick;
-  public static Joystick rightJoystick;
+  public static Joystick leftJoystick = new Joystick(0);
+  public static Joystick rightJoystick = new Joystick(1);
 
   // Left Joystick button array
-  public static JoystickButton leftJoystickButtons[];
+  //public static JoystickButton leftJoystickButtons[];
 
   // Right Joystick button array
-  public static JoystickButton rightJoystickButtons[];
+  //public static JoystickButton rightJoystickButtons[];
 
   // The robot's state
   public static ROBOT_STATE robotState;
+
+
+  public static final JoystickButton
+  // Left Joystick
+  lJoystick1 = new JoystickButton(leftJoystick, 1), lJoystick2 = new JoystickButton(leftJoystick, 2),
+  lJoystick3 = new JoystickButton(leftJoystick, 3), lJoystick4 = new JoystickButton(leftJoystick, 4),
+  lJoystick5 = new JoystickButton(leftJoystick, 5), lJoystick6 = new JoystickButton(leftJoystick, 6),
+  lJoystick7 = new JoystickButton(leftJoystick, 7), lJoystick8 = new JoystickButton(leftJoystick, 8),
+  lJoystick9 = new JoystickButton(leftJoystick, 9), lJoystick10 = new JoystickButton(leftJoystick, 10),
+  lJoystick11 = new JoystickButton(leftJoystick, 11),
+
+  // Right Joystick
+  rJoystick1 = new JoystickButton(rightJoystick, 1), rJoystick2 = new JoystickButton(rightJoystick, 2),
+  rJoystick3 = new JoystickButton(rightJoystick, 3), rJoystick4 = new JoystickButton(rightJoystick, 4),
+  rJoystick5 = new JoystickButton(rightJoystick, 5), rJoystick6 = new JoystickButton(rightJoystick, 6),
+  rJoystick7 = new JoystickButton(rightJoystick, 7), rJoystick8 = new JoystickButton(rightJoystick, 8),
+  rJoystick9 = new JoystickButton(rightJoystick, 9), rJoystick10 = new JoystickButton(rightJoystick, 10),
+  rJoystick11 = new JoystickButton(rightJoystick, 11);
+
+  // Arcade Buttons
+  /*
+  Button Naming Convention:
+  BG = Button Group
+  TL = Top Left
+  TM = Top Middle
+  TR = Top Right
+  ML = Middle Left
+  MM = Middle Middle
+  MR = Middle RIght
+  BL = Bottom Left
+  BM = Bottom Middle
+  BR = Bottom Right
+  */
+  /*
+  BGTL = new JoystickButton(launchpad, 7), BGTM = new JoystickButton(launchpad, 2),
+  BGTR = new JoystickButton(launchpad, 4), BGML = new JoystickButton(launchpad, 1),
+  BGMM = new JoystickButton(launchpad, 6),
+  BGMR = new JoystickButton(launchpad, 3),
+  BGBL = new JoystickButton(launchpad, 10), BGBM = new JoystickButton(launchpad, 9),
+  BGBR = new JoystickButton(launchpad, 8);
+  */
+
+// Xbox Buttons
+/*
+private final JoystickButton xboxStart = new JoystickButton(xbox, Button.kStart.value), xboxBack = new JoystickButton(xbox, Button.kBack.value),
+  xboxB = new JoystickButton(xbox, Button.kB.value), xboxA = new JoystickButton(xbox, Button.kA.value), xboxY = new JoystickButton(xbox, Button.kY.value),
+  xboxX = new JoystickButton(xbox, Button.kX.value), xboxLB = new JoystickButton(xbox, Button.kBumperLeft.value), xboxRB = new JoystickButton(xbox, Button.kBumperRight.value),
+  xboxLJB = new JoystickButton(xbox, 9); */
 
   /**
    * The container for the robot.  Contains subsystems, OI devices, and commands.
@@ -86,6 +134,14 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
+    lJoystick1.whenPressed(letsRoll2Joysticks);
+    lJoystick2.whenPressed(saveSwerveParameters);
+    lJoystick3.whenPressed(pullNtSwerveParams);
+    lJoystick4.whenPressed(testModulePID);
+    lJoystick5.whenPressed(testMovementPID);
+    lJoystick8.whenPressed(zeroCanCoders);
+
+    /*
     // Try to assign the left joystick
     try {
       leftJoystick = new Joystick(0);
@@ -117,23 +173,18 @@ public class RobotContainer {
       // Full setup
 
       // Left Joystick button assignment (buttons array starts at 0)
-      for(int buttonIndex = 1; buttonIndex <= Parameters.joysticks.JOYSTICK_BUTTON_COUNT; buttonIndex++) {
-        leftJoystickButtons[buttonIndex - 1] = new JoystickButton(leftJoystick, buttonIndex);
+      for(int buttonIndex = 0; buttonIndex < Parameters.joysticks.JOYSTICK_BUTTON_COUNT; buttonIndex++) {
+        leftJoystickButtons[buttonIndex] = new JoystickButton(leftJoystick, buttonIndex);
       }
 
       // Right Joystick button assignment (buttons array starts at 0)
-      for(int buttonIndex = 1; buttonIndex <= Parameters.joysticks.JOYSTICK_BUTTON_COUNT; buttonIndex++) {
-        rightJoystickButtons[buttonIndex - 1] = new JoystickButton(rightJoystick, buttonIndex);
+      for(int buttonIndex = 0; buttonIndex < Parameters.joysticks.JOYSTICK_BUTTON_COUNT; buttonIndex++) {
+        rightJoystickButtons[buttonIndex] = new JoystickButton(rightJoystick, buttonIndex);
       }
 
       // Command setup
       // Configure the command (on the second button of the joystick)
-      leftJoystickButtons[0].whenPressed(letsRoll2Joysticks);
-      leftJoystickButtons[1].whenPressed(saveSwerveParameters);
-      leftJoystickButtons[2].whenPressed(pullNtSwerveParams);
-      leftJoystickButtons[3].whenPressed(testModulePID);
-      leftJoystickButtons[4].whenPressed(testMovementPID);
-      leftJoystickButtons[7].whenPressed(zeroCanCoders);
+
     }
     else if (robotState == ROBOT_STATE.ONE_JOYSTICK) {
       // Left Joystick button assignment (buttons array starts at 0)
@@ -156,6 +207,8 @@ public class RobotContainer {
       // Command setup
 
     }
+    */
+
   }
 
 

@@ -85,6 +85,8 @@ public final class Parameters {
     // All of the drivetrain parameters
     public static final class driveTrain {
 
+        public static final double steerTolerance = 2;
+
         // All of the CAN IDs
         public static final class can {
 
@@ -133,18 +135,18 @@ public final class Parameters {
              * Gains used in each module's steering motor, to be adjusted accordingly
              * Gains(kp, ki, kd, static ff, velocity ff, iZone, peak output);
              */
-            public static PID_PARAMS FL_STEER_PID = new PID_PARAMS(0.15, 0.0, 1.0, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
-            public static PID_PARAMS FR_STEER_PID = new PID_PARAMS(0.15, 0.0, 1.0, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
-            public static PID_PARAMS BL_STEER_PID = new PID_PARAMS(0.15, 0.0, 1.0, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
-            public static PID_PARAMS BR_STEER_PID = new PID_PARAMS(0.15, 0.0, 1.0, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS FL_STEER_PID = new PID_PARAMS(0.075, 0.0, 0.00, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS FR_STEER_PID = new PID_PARAMS(0.075, 0.0, 0.00, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS BL_STEER_PID = new PID_PARAMS(0.075, 0.0, 0.00, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS BR_STEER_PID = new PID_PARAMS(0.075, 0.0, 0.00, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
 
-            public static PID_PARAMS FL_DRIVE_PID = new PID_PARAMS(1.0, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
-            public static PID_PARAMS FR_DRIVE_PID = new PID_PARAMS(1.0, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
-            public static PID_PARAMS BL_DRIVE_PID = new PID_PARAMS(1.0, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
-            public static PID_PARAMS BR_DRIVE_PID = new PID_PARAMS(1.0, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS FL_DRIVE_PID = new PID_PARAMS(0.15, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS FR_DRIVE_PID = new PID_PARAMS(0.15, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS BL_DRIVE_PID = new PID_PARAMS(0.15, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS BR_DRIVE_PID = new PID_PARAMS(0.15, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
 
-            public static final double MODULE_S_STATIC_FF = 1; // Must be tuned for the modules!
-            public static final double MODULE_S_VELOCITY_FF = 0.5;
+            public static final double MODULE_S_STATIC_FF = 0.5; // Must be tuned for the modules!
+            public static final double MODULE_S_VELOCITY_FF = 0.025;
             public static final double MODULE_D_STATIC_FF = 1;
             public static final double MODULE_D_VELOCITY_FF = 3;
         }

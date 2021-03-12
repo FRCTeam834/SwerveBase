@@ -36,40 +36,40 @@ public class TestModulePID extends CommandBase {
   public void execute() {
 
     // The top right button
-    if (RobotContainer.leftJoystickButtons[10].get()) {
+    if (RobotContainer.leftJoystick.getRawButton(11)) {
       Robot.driveTrain.frontRight.moveToAngle(45);
-      RobotContainer.timer.delay(3);
+      RobotContainer.timer.delay(1);
       Robot.driveTrain.frontRight.moveToAngle(-45);
-      RobotContainer.timer.delay(3);
+      RobotContainer.timer.delay(1);
     }
 
     // The top left button
-    else if (RobotContainer.leftJoystickButtons[5].get()) {
+    else if (RobotContainer.leftJoystick.getRawButton(6)) {
       Robot.driveTrain.frontLeft.moveToAngle(45);
-      RobotContainer.timer.delay(3);
+      RobotContainer.timer.delay(1);
       Robot.driveTrain.frontLeft.moveToAngle(-45);
-      RobotContainer.timer.delay(3);
+      RobotContainer.timer.delay(1);
     }
 
     // The bottom left button
-    else if (RobotContainer.leftJoystickButtons[6].get()) {
+    else if (RobotContainer.leftJoystick.getRawButton(7)) {
       Robot.driveTrain.backLeft.moveToAngle(45);
-      RobotContainer.timer.delay(3);
+      RobotContainer.timer.delay(1);
       Robot.driveTrain.backLeft.moveToAngle(-45);
-      RobotContainer.timer.delay(3);
+      RobotContainer.timer.delay(1);
     }
 
     // The bottom right button
-    else if (RobotContainer.leftJoystickButtons[9].get()) {
+    else if (RobotContainer.leftJoystick.getRawButton(10)) {
       Robot.driveTrain.backRight.moveToAngle(45);
-      RobotContainer.timer.delay(3);
+      RobotContainer.timer.delay(1);
       Robot.driveTrain.backRight.moveToAngle(-45);
-      RobotContainer.timer.delay(3);
+      RobotContainer.timer.delay(1);
     }
 
 
     // The top right button
-    else if (RobotContainer.rightJoystickButtons[10].get()) {
+    else if (RobotContainer.rightJoystick.getRawButton(11)) {
       Robot.driveTrain.frontRight.reachVelocity(60);
       RobotContainer.timer.delay(3);
       Robot.driveTrain.frontRight.reachVelocity(-60);
@@ -77,7 +77,7 @@ public class TestModulePID extends CommandBase {
     }
 
     // The top left button
-    else if (RobotContainer.rightJoystickButtons[5].get()) {
+    else if (RobotContainer.rightJoystick.getRawButton(6)) {
       Robot.driveTrain.frontLeft.reachVelocity(60);
       RobotContainer.timer.delay(3);
       Robot.driveTrain.frontLeft.reachVelocity(-60);
@@ -85,7 +85,7 @@ public class TestModulePID extends CommandBase {
     }
 
     // The bottom left button
-    else if (RobotContainer.rightJoystickButtons[6].get()) {
+    else if (RobotContainer.rightJoystick.getRawButton(7)) {
       Robot.driveTrain.backLeft.reachVelocity(60);
       RobotContainer.timer.delay(3);
       Robot.driveTrain.backLeft.reachVelocity(-60);
@@ -93,7 +93,7 @@ public class TestModulePID extends CommandBase {
     }
 
     // The bottom right button
-    else if (RobotContainer.rightJoystickButtons[9].get()) {
+    else if (RobotContainer.rightJoystick.getRawButton(10)) {
       Robot.driveTrain.backRight.reachVelocity(60);
       RobotContainer.timer.delay(3);
       Robot.driveTrain.backRight.reachVelocity(-60);
@@ -115,6 +115,6 @@ public class TestModulePID extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.leftJoystickButtons[0].get();
+    return RobotContainer.leftJoystick.getTrigger();
   }
 }

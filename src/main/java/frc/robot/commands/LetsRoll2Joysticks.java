@@ -38,15 +38,15 @@ public class LetsRoll2Joysticks extends CommandBase {
 
     // Get all of the current joystick inputs
     double leftX =  constrainJoystick(RobotContainer.leftJoystick.getX());
-    double leftY =  constrainJoystick(RobotContainer.leftJoystick.getY());
     double rightX = constrainJoystick(RobotContainer.rightJoystick.getX());
-    
+    double rightY =  constrainJoystick(RobotContainer.rightJoystick.getY());
+
     // If any of the sticks are out of range, then we need to move. Otherwise, lock up the drivetrain (if specified)
-    if (leftX != 0 || leftY != 0 || rightX != 0) {
+    if (leftX != 0 || rightX != 0 || rightY != 0) {
 
       // Move the drivetrain with the desired values
-      driveTrain.drive((leftX * Parameters.driver.CURRENT_PROFILE.MAX_SPEED), (leftY * Parameters.driver.CURRENT_PROFILE.MAX_SPEED),
-                        Math.toRadians(rightX * Parameters.driver.CURRENT_PROFILE.MAX_STEER_SPEED), Parameters.driver.CURRENT_PROFILE.FIELD_CENTRIC);
+      driveTrain.drive((rightY * Parameters.driver.CURRENT_PROFILE.MAX_SPEED), (rightX * Parameters.driver.CURRENT_PROFILE.MAX_SPEED),
+                        Math.toRadians(leftX * Parameters.driver.CURRENT_PROFILE.MAX_STEER_SPEED), Parameters.driver.CURRENT_PROFILE.FIELD_CENTRIC);
     }
     else if (Parameters.driver.CURRENT_PROFILE.LOCKEM_UP) {
       driveTrain.lockemUp();

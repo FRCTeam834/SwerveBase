@@ -33,6 +33,7 @@ public class TestMovementPID extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    /*
 
     // The top button
     if (RobotContainer.leftJoystickButtons[2].get()) {
@@ -66,7 +67,7 @@ public class TestMovementPID extends CommandBase {
 
     // Publishes velocity and angle to network tables
     Robot.driveTrain.publishPerformanceData();
-  }
+  */}
 
 
   // Called once the command ends or is interrupted.
@@ -79,6 +80,6 @@ public class TestMovementPID extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotContainer.rightJoystickButtons[0].get();
+    return true; //RobotContainer.rightJoystickButtons[0].get();
   }
 }

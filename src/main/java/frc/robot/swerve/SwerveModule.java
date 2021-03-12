@@ -210,9 +210,19 @@ public class SwerveModule {
   // Moves the module to the desired angle
   public void moveToAngle(double angle) {
 
+    int maxCount = 10000;
+    int counter = 0;
+
     // Continuously move the motor at the calculated speeds until it reaches the angle
-    while (getAngle() != angle) {
+    while (!(getAngle() < (angle + Parameters.driveTrain.steerTolerance) && (getAngle() > angle - Parameters.driveTrain.steerTolerance))) {
+      if (counter < maxCount) {
+        counter++;
+      }
+      else {
+        break;
+      }
       setDesiredAngle(angle);
+      publishPerformanceData();
     }
 
     // Shut off the motor once done
@@ -249,7 +259,7 @@ public class SwerveModule {
   }
 
 
-  // Moves the wheel to a desired speed
+  // Moves the wheel to a desired speed 
   public void reachVelocity(double speed) {
 
     // Continuously move the motor at the calculated speeds until it reaches the angle

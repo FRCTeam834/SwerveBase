@@ -46,8 +46,8 @@ public class LetsRoll1Joystick extends CommandBase {
     double turning = 0;
 
     // Check the values of the buttons
-    boolean counterClockwiseButton = RobotContainer.leftJoystickButtons[5].get();
-    boolean clockwiseButton = RobotContainer.leftJoystickButtons[6].get();
+    boolean counterClockwiseButton = RobotContainer.leftJoystick.getRawButton(6);
+    boolean clockwiseButton = RobotContainer.leftJoystick.getRawButton(7);
 
     // Determine the correct amount of turning based on the button inputs
     if (!(clockwiseButton && counterClockwiseButton)) {
