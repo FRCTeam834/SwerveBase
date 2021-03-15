@@ -33,41 +33,40 @@ public class TestMovementPID extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    /*
 
     // The top button
-    if (RobotContainer.leftJoystickButtons[2].get()) {
+    if (RobotContainer.leftJoystick.getRawButton(3)) {
       Robot.driveTrain.trajectoryFollow(new Pose2d(Robot.driveTrain.getXPosition() + 1, Robot.driveTrain.getYPosition(), new Rotation2d()), 1);
     }
 
     // The bottom button
-    else if (RobotContainer.leftJoystickButtons[1].get()) {
+    else if (RobotContainer.leftJoystick.getRawButton(2)) {
       Robot.driveTrain.trajectoryFollow(new Pose2d(Robot.driveTrain.getXPosition() - 1, Robot.driveTrain.getYPosition(), new Rotation2d()), 1);
     }
 
     // The left button
-    else if (RobotContainer.leftJoystickButtons[3].get()) {
+    else if (RobotContainer.leftJoystick.getRawButton(4)) {
       Robot.driveTrain.trajectoryFollow(new Pose2d(Robot.driveTrain.getXPosition(), Robot.driveTrain.getYPosition() - 1, new Rotation2d()), 1);
     }
 
     // The right button
-    else if (RobotContainer.leftJoystickButtons[4].get()) {
+    else if (RobotContainer.leftJoystick.getRawButton(5)) {
       Robot.driveTrain.trajectoryFollow(new Pose2d(Robot.driveTrain.getXPosition(), Robot.driveTrain.getYPosition() + 1 , new Rotation2d()), 1);
     }
 
     // The left throttle button (moves in clockwise direction)
-    else if (RobotContainer.leftJoystickButtons[7].get()) {
+    else if (RobotContainer.leftJoystick.getRawButton(8)) {
       Robot.driveTrain.trajectoryFollow(new Pose2d(Robot.driveTrain.getXPosition(), Robot.driveTrain.getYPosition(), Rotation2d.fromDegrees(Robot.driveTrain.getThetaPosition().getDegrees() - 90)), 1);
     }
 
     // The right throttle button (moves in the counterclockwise direction)
-    else if (RobotContainer.leftJoystickButtons[8].get()) {
+    else if (RobotContainer.leftJoystick.getRawButton(9)) {
       Robot.driveTrain.trajectoryFollow(new Pose2d(Robot.driveTrain.getXPosition(), Robot.driveTrain.getYPosition(), Rotation2d.fromDegrees(Robot.driveTrain.getThetaPosition().getDegrees() + 90)), 1);
     }
 
     // Publishes velocity and angle to network tables
     Robot.driveTrain.publishPerformanceData();
-  */}
+  }
 
 
   // Called once the command ends or is interrupted.
@@ -80,6 +79,6 @@ public class TestMovementPID extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true; //RobotContainer.rightJoystickButtons[0].get();
+    return RobotContainer.rightJoystick.getRawButton(1);
   }
 }

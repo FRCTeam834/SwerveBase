@@ -85,7 +85,8 @@ public final class Parameters {
     // All of the drivetrain parameters
     public static final class driveTrain {
 
-        public static final double steerTolerance = 2;
+        public static final double angleTolerance = 2; // deg
+        public static final double speedTolerance = 0.1; // m/s
 
         // All of the CAN IDs
         public static final class can {
