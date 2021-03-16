@@ -19,12 +19,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class LetsRoll2Joysticks extends CommandBase {
 
-  DriveTrain driveTrain;
-
   public LetsRoll2Joysticks() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(Robot.driveTrain);
-    driveTrain = Robot.driveTrain;
   }
 
   // Called when the command is initially scheduled.
@@ -41,15 +38,18 @@ public class LetsRoll2Joysticks extends CommandBase {
     double rightX = constrainJoystick(RobotContainer.rightJoystick.getX());
     double rightY =  constrainJoystick(RobotContainer.rightJoystick.getY());
 
-    // If any of the sticks are out of range, then we need to move. Otherwise, lock up the drivetrain (if specified)
+    // If any of the sticks are out of range, then we need to move. Otherwise, lock up the drivetrain (if specified) or just halt the modules
     if (leftX != 0 || rightX != 0 || rightY != 0) {
 
-      // Move the drivetrain with the desired values
-      driveTrain.drive((rightY * Parameters.driver.CURRENT_PROFILE.MAX_SPEED), (rightX * Parameters.driver.CURRENT_PROFILE.MAX_SPEED),
+      // Move the drivetrain with the desired values (left right values are flipped from the logical way, thanks WPI)
+      Robot.driveTrain.drive((rightY * Parameters.driver.CURRENT_PROFILE.MAX_SPEED), (-rightX * Parameters.driver.CURRENT_PROFILE.MAX_SPEED),
                         Math.toRadians(leftX * Parameters.driver.CURRENT_PROFILE.MAX_STEER_SPEED), Parameters.driver.CURRENT_PROFILE.FIELD_CENTRIC);
     }
     else if (Parameters.driver.CURRENT_PROFILE.LOCKEM_UP) {
-      driveTrain.lockemUp();
+      Robot.driveTrain.lockemUp();
+    }
+    else {
+      Robot.driveTrain.haltAllModules();
     }
 
     // Update driver profile if available
@@ -60,7 +60,7 @@ public class LetsRoll2Joysticks extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    driveTrain.lockemUp();
+    Robot.driveTrain.haltAllModules();
   }
 
   // Returns true when the command should end.
@@ -72,7 +72,7 @@ public class LetsRoll2Joysticks extends CommandBase {
   // Return a constrained Joystick value
   private double constrainJoystick(double rawValue) {
 
-    // If the value is out of tolerance, then zero it. Otherwise 
+    // If the value is out of tolerance, then zero it. Otherwise return it
     if (Math.abs(rawValue) < Parameters.driver.CURRENT_PROFILE.JOYSTICK_DEADZONE) {
       return 0;
     }

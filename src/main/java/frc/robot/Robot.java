@@ -41,12 +41,12 @@ public class Robot extends TimedRobot {
   public static UltrasonicSensor ultrasonicSensor;
 
   // Commands
-  public static LetsRoll2Joysticks letsRoll2Joysticks;
-  public static LetsRoll1Joystick letsRoll1Joystick;
-  public static ZeroCanCoders zeroCanCoders;
-  public static PullNTSwerveParams pullNTSwerveParams;
-  public static TestModulePID testPID;
-  public static SaveSwerveParameters saveSwerveParameters;
+  //public static LetsRoll2Joysticks letsRoll2Joysticks;
+  //public static LetsRoll1Joystick letsRoll1Joystick;
+  //public static ZeroCanCoders zeroCanCoders;
+  //public static PullNTSwerveParams pullNTSwerveParams;
+  //public static TestModulePID testPID;
+  //public static SaveSwerveParameters saveSwerveParameters;
 
   private RobotContainer m_robotContainer;
 
@@ -64,12 +64,12 @@ public class Robot extends TimedRobot {
     ultrasonicSensor = new UltrasonicSensor();
 
     // Commands
-    letsRoll2Joysticks = new LetsRoll2Joysticks();
-    letsRoll1Joystick = new LetsRoll1Joystick();
-    zeroCanCoders = new ZeroCanCoders();
-    pullNTSwerveParams = new PullNTSwerveParams();
-    testPID = new TestModulePID();
-    saveSwerveParameters = new SaveSwerveParameters();
+    //letsRoll2Joysticks = new LetsRoll2Joysticks();
+    //letsRoll1Joystick = new LetsRoll1Joystick();
+    //zeroCanCoders = new ZeroCanCoders();
+    //pullNTSwerveParams = new PullNTSwerveParams();
+    //testPID = new TestModulePID();
+    //saveSwerveParameters = new SaveSwerveParameters();
 
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.

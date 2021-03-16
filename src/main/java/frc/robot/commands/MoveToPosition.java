@@ -15,7 +15,6 @@ import frc.robot.swerve.DriveTrain;
 public class MoveToPosition extends CommandBase {
   /** Moves the robot to the desired position */
 
-  DriveTrain driveTrain;
   Pose2d desiredPosition;
   double linearVel;
 
@@ -23,9 +22,8 @@ public class MoveToPosition extends CommandBase {
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(Robot.driveTrain);
-    driveTrain = Robot.driveTrain;
-    desiredPosition = desiredPose;
-    linearVel = linearVelocity;
+    this.desiredPosition = desiredPose;
+    this.linearVel = linearVelocity;
   }
 
   // Default to 2 m/s for the linear speed
@@ -33,9 +31,8 @@ public class MoveToPosition extends CommandBase {
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(Robot.driveTrain);
-    driveTrain = Robot.driveTrain;
-    desiredPosition = desiredPose;
-    linearVel = 2;
+    this.desiredPosition = desiredPose;
+    this.linearVel = 2;
   }
 
   // Called when the command is initially scheduled.
@@ -49,7 +46,7 @@ public class MoveToPosition extends CommandBase {
   public void execute() {
 
     // Set the drivetrain to run to the position
-    driveTrain.trajectoryFollow(desiredPosition, linearVel);
+    Robot.driveTrain.trajectoryFollow(desiredPosition, linearVel);
   }
 
   // Called once the command ends or is interrupted.
@@ -63,6 +60,6 @@ public class MoveToPosition extends CommandBase {
   public boolean isFinished() {
 
     // Check if the trajectory is complete
-    return driveTrain.atTrajectoryReference();
+    return Robot.driveTrain.atTrajectoryReference();
   }
 }

@@ -21,12 +21,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 
 public class LetsRoll1Joystick extends CommandBase {
 
-  DriveTrain driveTrain;
-
   public LetsRoll1Joystick() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(Robot.driveTrain);
-    driveTrain = Robot.driveTrain;
   }
 
   // Called when the command is initially scheduled.
@@ -66,22 +63,24 @@ public class LetsRoll1Joystick extends CommandBase {
     if (leftX != 0 || leftY != 0 || turning != 0) {
 
       // Move the drivetrain with the desired values
-      driveTrain.drive((leftX * Parameters.driver.CURRENT_PROFILE.MAX_SPEED), (leftY * Parameters.driver.CURRENT_PROFILE.MAX_SPEED),
+      Robot.driveTrain.drive((leftX * Parameters.driver.CURRENT_PROFILE.MAX_SPEED), (leftY * Parameters.driver.CURRENT_PROFILE.MAX_SPEED),
                         Math.toRadians(turning * Parameters.driver.CURRENT_PROFILE.MAX_STEER_SPEED), Parameters.driver.CURRENT_PROFILE.FIELD_CENTRIC);
     }
     else if (Parameters.driver.CURRENT_PROFILE.LOCKEM_UP) {
-      driveTrain.lockemUp();
+      Robot.driveTrain.lockemUp();
+    }
+    else {
+      Robot.driveTrain.haltAllModules();
     }
 
     // Update driver profile if available
     Robot.profilingManagement.checkForUpdate();
-
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    driveTrain.lockemUp();
+    Robot.driveTrain.haltAllModules();
   }
 
   // Returns true when the command should end.
