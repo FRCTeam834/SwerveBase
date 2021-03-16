@@ -24,10 +24,7 @@ public class TestModulePID extends CommandBase {
     RobotContainer.timer.delay(.5);
 
     // Move each of the wheels to 0
-    Robot.driveTrain.frontLeft.moveToAngle(0);
-    Robot.driveTrain.frontRight.moveToAngle(0);
-    Robot.driveTrain.backLeft.moveToAngle(0);
-    Robot.driveTrain.backRight.moveToAngle(0);
+    Robot.driveTrain.moveToAngles(0, 0, 0, 0);
   }
 
 

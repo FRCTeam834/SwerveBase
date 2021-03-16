@@ -200,7 +200,7 @@ public class SwerveModule {
 
 
   // Sets the direction of the wheel, in degrees
-  public void setDesiredAngle(double targetAngle) {
+  public boolean setDesiredAngle(double targetAngle) {
 
     // Check to see if the module is enabled
     if (enabled) {
@@ -214,29 +214,26 @@ public class SwerveModule {
 
       // Set the motor to the correct values
       steerMotor.setVoltage(steerOutput /* + steerFeedforward */);
-    }
 
-    System.out.println(name + ": " + targetAngle + " : " + getAngle());
+      // Print out info (for debugging)
+      System.out.println(name + ": " + targetAngle + " : " + getAngle());
+
+      // Return if the module has reached the desired angle
+      return (getAngle() < (targetAngle + Parameters.driveTrain.angleTolerance) && (getAngle() > (targetAngle - Parameters.driveTrain.angleTolerance)));
+    }
+    else {
+
+      // Just return true if the module isn't enabled
+      return true;
+    }
   }
 
 
   // Moves the module to the desired angle
   public void moveToAngle(double angle) {
 
-    int maxCount = 10000;
-    int counter = 0;
-
     // Continuously move the motor at the calculated speeds until it reaches the angle
-    while (!(getAngle() < (angle + Parameters.driveTrain.angleTolerance) && (getAngle() > (angle - Parameters.driveTrain.angleTolerance)))) {
-      if (counter < maxCount) {
-        counter++;
-      }
-      else {
-        break;
-      }
-      setDesiredAngle(angle);
-      publishPerformanceData();
-    }
+    while (!setDesiredAngle(angle));
 
     // Shut off the motor once done
     steerMotor.set(0);
@@ -255,7 +252,7 @@ public class SwerveModule {
 
 
   // Set the speed in m/s
-  public void setDesiredVelocity(double speed) {
+  public boolean setDesiredVelocity(double speed) {
 
     // Check to see if the module is enabled
     if (enabled) {
@@ -269,7 +266,13 @@ public class SwerveModule {
 
       // Set the motor to the calculated values
       driveMotor.setVoltage(driveOutput /* + driveFeedforward */);
+
+      // Return if the velocity is within tolerance
+      return ((getVelocity() < (speed + Parameters.driveTrain.speedTolerance)) && (getVelocity() > (speed - Parameters.driveTrain.speedTolerance)));
     }
+
+    // Return a true, module is disabled
+    return true;
   }
 
 
@@ -277,9 +280,7 @@ public class SwerveModule {
   public void reachVelocity(double speed) {
 
     // Continuously move the motor at the calculated speeds until it reaches the angle
-    while (!(getVelocity() < (speed + Parameters.driveTrain.speedTolerance) && (getVelocity() > (speed - Parameters.driveTrain.speedTolerance)))) {
-      setDesiredVelocity(speed);
-    }
+    while (!setDesiredVelocity(speed));
 
     // Shut off the motor once done
     driveMotor.set(0);

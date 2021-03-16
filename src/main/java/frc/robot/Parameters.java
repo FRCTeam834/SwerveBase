@@ -33,12 +33,12 @@ import edu.wpi.first.wpilibj.Preferences;
 /**
  * The Parameters class provides a convenient place for teams to hold robot-wide
  * numerical or boolean constants. This class should not be used for any other
- * purpose. All constants should be declared globally (i.e. public static). Do
+ * purpose. All parameters should be declared globally (i.e. public static). Do
  * not put anything functional in this class.
  *
  * <p>
  * It is advised to statically import this class (or one of its inner classes)
- * wherever the constants are needed, to reduce verbosity.
+ * wherever the parameters are needed, to reduce verbosity.
  */
 public final class Parameters {
 
@@ -54,7 +54,7 @@ public final class Parameters {
         public static final int SHRIMP_ON_THE_BARBIE = 3; // Number of shrimp on the barbecue
         public static final int ANDREWS_PROGRESS_WHEN_AROUND_SAFETY_TEAM = -10; // What happens when Andrew is around
                                                                                 // the safety team... backwards progress
-        public static final int CHRISTIAN_FORTNITE_WINS = 38;
+        public static final int CHRISTIAN_FORTNITE_WINS = 38; // The number of the lead programmer's Fortnite wins
     }
 
     // All of the driver parameters
@@ -70,7 +70,7 @@ public final class Parameters {
                 new DriverProfile("Test", 0.15, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake) };
 
         // Default profile (must be kept!)
-        public static DriverProfile DEFAULT_DRIVER_PROFILE = new DriverProfile("Default", 0.15, 1.0, 0.5, true, true,
+        public static DriverProfile DEFAULT_DRIVER_PROFILE = new DriverProfile("Default", 0.15, 180, 0.5, true, true,
                 1.0, IdleMode.kBrake, IdleMode.kBrake);
 
         // Current Driver Profile being used
@@ -112,9 +112,8 @@ public final class Parameters {
         public static final class dimensions {
 
             // Swerve calculation parameters (in meters)
-            public static final double DRIVE_LENGTH = 0.4;
-            public static final double DRIVE_WIDTH = 0.3;
-            public static final double DRIVE_RADIUS = Math.sqrt( (Math.pow(DRIVE_LENGTH, 2) + Math.pow(DRIVE_WIDTH, 2)) / 2);
+            public static final double DRIVE_LENGTH = Units.inchesToMeters(22.4);
+            public static final double DRIVE_WIDTH = Units.inchesToMeters(22.4);
             public static final double MODULE_WHEEL_DIA_IN = 4; // Inches
             public static final double MODULE_WHEEL_DIA_M = Units.inchesToMeters(MODULE_WHEEL_DIA_IN); // Meters (for odometry calculations)
         }
@@ -138,7 +137,7 @@ public final class Parameters {
             public static PID_PARAMS FL_STEER_PID = new PID_PARAMS(0.075, 0.0, 0.00, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
             public static PID_PARAMS FR_STEER_PID = new PID_PARAMS(0.075, 0.0, 0.00, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
             public static PID_PARAMS BL_STEER_PID = new PID_PARAMS(0.075, 0.0, 0.00, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
-            public static PID_PARAMS BR_STEER_PID = new PID_PARAMS(0.001, 0.0, 0.00, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS BR_STEER_PID = new PID_PARAMS(0.075, 0.0, 0.00, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
 
             public static PID_PARAMS FL_DRIVE_PID = new PID_PARAMS(0.15, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
             public static PID_PARAMS FR_DRIVE_PID = new PID_PARAMS(0.15, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
@@ -154,6 +153,9 @@ public final class Parameters {
 
         // All of the movement control parameters
         public static final class movement {
+
+            // Timeout for all movements (break if position not reached in time)
+            public static final double TIMEOUT = 10; // seconds
 
             // Pose estimator parameters (units are m, m, radians)
             public static Matrix<N3,N1> POSE_STD_DEV = new MatBuilder<>(Nat.N3(), Nat.N1()).fill(0.02, 0.02, Math.toRadians(0.125));

@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.controller.HolonomicDriveController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
@@ -217,21 +218,53 @@ public class DriveTrain extends SubsystemBase {
   }
 
 
+  // Halts all of the modules
+  public void haltAllModules() {
+
+    // Steering motors
+    frontLeft.getSteerMotor().set(0);
+    frontRight.getSteerMotor().set(0);
+    backLeft.getSteerMotor().set(0);
+    backRight.getSteerMotor().set(0);
+
+    // Drive motors
+    frontLeft.getDriveMotor().set(0);
+    frontRight.getDriveMotor().set(0);
+    backLeft.getDriveMotor().set(0);
+    backRight.getDriveMotor().set(0);
+  }
+
+
+  // Moves all of the swerve modules repeatedly till they reach the desired position
+  public void moveToAngles(double FLAngle, double FRAngle, double BLAngle, double BRAngle) {
+
+    // Create a new timer (for timeout)
+    Timer timer = new Timer();
+
+    // Continuously loop, checking to see the current time in seconds. If we've exceeded the timeout, end the loop early
+    while(!(frontLeft.setDesiredAngle(FLAngle) && frontRight.setDesiredAngle(FRAngle) && backLeft.setDesiredAngle(BLAngle) && backRight.setDesiredAngle(BRAngle))) {
+      if (timer.get() > Parameters.driveTrain.movement.TIMEOUT) {
+        break;
+      }
+    }
+
+    // Turn off all of the modules just in case they are still running
+    haltAllModules();
+  }
+
+
   // Locks the modules of the robot to prevent movement
   public void lockemUp() {
 
+    // Halt all of the motors
+    frontLeft.getDriveMotor().set(0);
+    frontRight.getDriveMotor().set(0);
+    backLeft.getDriveMotor().set(0);
+    backRight.getDriveMotor().set(0);
+
     // Makes an X pattern with the swerve base
     // Set the modules to 45 degree angles
-    frontLeft.setDesiredAngle(-45);
-    frontRight.setDesiredAngle(45);
-    backLeft.setDesiredAngle(45);
-    backRight.setDesiredAngle(-45);
-
-    // Halt all the motors and hold them there
-    frontLeft.setDesiredVelocity(0);
-    frontRight.setDesiredVelocity(0);
-    backRight.setDesiredVelocity(0);
-    backLeft.setDesiredVelocity(0);
+    moveToAngles(-45, 45, 45, -45);
   }
 
 

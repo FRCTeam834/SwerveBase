@@ -73,7 +73,7 @@ public class LetsRoll2Joysticks extends CommandBase {
   private double constrainJoystick(double rawValue) {
 
     // If the value is out of tolerance, then zero it. Otherwise 
-    if (rawValue < Parameters.driver.CURRENT_PROFILE.JOYSTICK_DEADZONE) {
+    if (Math.abs(rawValue) < Parameters.driver.CURRENT_PROFILE.JOYSTICK_DEADZONE) {
       return 0;
     }
     else {
