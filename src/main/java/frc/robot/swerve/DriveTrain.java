@@ -75,7 +75,7 @@ public class DriveTrain extends SubsystemBase {
   SwerveDriveKinematics kinematics = new SwerveDriveKinematics(FL_POS, FR_POS, BL_POS, BR_POS);
 
   // Pose estimator
-  private SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(Robot.navX.getFusedRotation2d(), Parameters.positions.STARTING_POS, kinematics, Parameters.driveTrain.movement.POSE_STD_DEV, Parameters.driveTrain.movement.ENCODER_GYRO_DEV, Parameters.driveTrain.movement.VISION_DEVIATION);
+  private SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(Robot.navX.getRotation2d(), Parameters.positions.STARTING_POS, kinematics, Parameters.driveTrain.movement.POSE_STD_DEV, Parameters.driveTrain.movement.ENCODER_GYRO_DEV, Parameters.driveTrain.movement.VISION_DEVIATION);
 
   // Holomonic drive controller
   private HolonomicDriveController driveController = new HolonomicDriveController(X_MOVE_PID, Y_MOVE_PID, ROTATION_PID);
@@ -135,7 +135,7 @@ public class DriveTrain extends SubsystemBase {
 
     // Set up the modules
     if (fieldRelative) {
-      setModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Robot.navX.getFusedRotation2d()));
+      setModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Robot.navX.getRotation2d()));
     }
     else {
       setModuleStates(new ChassisSpeeds(xSpeed, ySpeed, rot));
@@ -148,7 +148,7 @@ public class DriveTrain extends SubsystemBase {
 
     // Drive with selected mode
     if (fieldRelative) {
-      setModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Robot.navX.getFusedRotation2d()), relativeCenter);
+      setModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Robot.navX.getRotation2d()), relativeCenter);
     }
     else {
       setModuleStates(new ChassisSpeeds(xSpeed, ySpeed, rot), relativeCenter);
@@ -170,7 +170,7 @@ public class DriveTrain extends SubsystemBase {
 
     // Set up the modules
     if (fieldRelative) {
-      setModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Robot.navX.getFusedRotation2d()), centerOfRotation);
+      setModuleStates(ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Robot.navX.getRotation2d()), centerOfRotation);
     }
     else {
       setModuleStates(new ChassisSpeeds(xSpeed, ySpeed, rot), centerOfRotation);
@@ -271,7 +271,7 @@ public class DriveTrain extends SubsystemBase {
   // Updates the field relative position of the robot.
   public void updateOdometry() {
     poseEstimator.update(
-      Robot.navX.getFusedRotation2d(),
+      Robot.navX.getRotation2d(),
       frontLeft.getState(),
       frontRight.getState(),
       backLeft.getState(),
@@ -282,7 +282,7 @@ public class DriveTrain extends SubsystemBase {
 
   // Resets the odometry of the robot
   public void resetOdometry(Pose2d currentPosition) {
-    poseEstimator.resetPosition(currentPosition, Robot.navX.getFusedRotation2d());
+    poseEstimator.resetPosition(currentPosition, Robot.navX.getRotation2d());
   }
 
 
