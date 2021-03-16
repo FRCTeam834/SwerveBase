@@ -13,7 +13,7 @@ import frc.robot.Robot;
 import frc.robot.commands.MoveToPosition;
 
 // Parameters class
-import frc.robot.Parameters;
+//import frc.robot.Parameters;
 
 //This is the auton for the Infinite Recharge at Home Auton Challenge; Part B
 

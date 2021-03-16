@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj.controller.HolonomicDriveController;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.estimator.SwerveDrivePoseEstimator;
-import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -30,7 +29,6 @@ import frc.robot.Parameters;
 
 // Import robot
 import frc.robot.Robot;
-import frc.robot.Parameters.driveTrain.movement;
 
 
 public class DriveTrain extends SubsystemBase {

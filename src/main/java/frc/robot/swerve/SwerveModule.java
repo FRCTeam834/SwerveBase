@@ -23,14 +23,13 @@ import com.revrobotics.CANPIDController;
 
 // WPI Libraries
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
-import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 
 
 public class SwerveModule {
@@ -40,7 +39,7 @@ public class SwerveModule {
   private CANSparkMax driveMotor;
   private ProfiledPIDController steerMotorPID;
   //private CANPIDController steerMotorPID;
-  private CANPIDController driveMotorPID;
+  private PIDController driveMotorPID;
   //private SimpleMotorFeedforward driveMotorFF;
   //private SimpleMotorFeedforward steerMotorFF;
   private CANCoder steerCANCoder;
@@ -107,7 +106,10 @@ public class SwerveModule {
     driveMotor.setIdleMode(Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
 
     // Drive motor PID controller (from motor)
-    driveMotorPID = driveMotor.getPIDController();
+    driveMotorPID = new PIDController(drivePIDParams.P, drivePIDParams.I, drivePIDParams.D);//driveMotor.getPIDController();
+    //driveMotorPID.setP(drivePIDParams.P);
+    //driveMotorPID.setI(drivePIDParams.I);
+    //driveMotorPID.setD(drivePIDParams.D);
 
     // Drive motor feed forward
     //driveMotorFF = new SimpleMotorFeedforward(drivePIDParams.SFF, drivePIDParams.VFF);
@@ -213,6 +215,8 @@ public class SwerveModule {
       // Set the motor to the correct values
       steerMotor.setVoltage(steerOutput /* + steerFeedforward */);
     }
+
+    System.out.println(name + ": " + targetAngle + " : " + getAngle());
   }
 
 
@@ -257,14 +261,14 @@ public class SwerveModule {
     if (enabled) {
 
       // Calculate the output of the drive
-      //final double driveOutput = driveMotorPID.calculate(driveMotorEncoder.getVelocity(), speed);
-      driveMotorPID.setReference(speed, ControlType.kVelocity);
+      final double driveOutput = driveMotorPID.calculate(driveMotorEncoder.getVelocity(), speed);
+      //driveMotorPID.setReference(speed, ControlType.kVelocity);
 
       // Calculate the feed forward for the motor
       //final double driveFeedforward = driveMotorFF.calculate(speed);
 
       // Set the motor to the calculated values
-      //driveMotor.setVoltage(driveOutput /* + driveFeedforward */);
+      driveMotor.setVoltage(driveOutput /* + driveFeedforward */);
     }
   }
 

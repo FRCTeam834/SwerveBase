@@ -20,14 +20,13 @@ import edu.wpi.first.wpiutil.math.MatBuilder;
 import edu.wpi.first.wpiutil.math.Matrix;
 import edu.wpi.first.wpiutil.math.Nat;
 import edu.wpi.first.wpiutil.math.numbers.*;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
+//import edu.wpi.first.networktables.NetworkTable;
+//import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.controller.PIDController;
 import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.Preferences;
 
@@ -86,7 +85,7 @@ public final class Parameters {
     public static final class driveTrain {
 
         public static final double angleTolerance = 2; // deg
-        public static final double speedTolerance = 0.1; // m/s
+        public static final double speedTolerance = 0.01; // m/s
 
         // All of the CAN IDs
         public static final class can {
@@ -139,7 +138,7 @@ public final class Parameters {
             public static PID_PARAMS FL_STEER_PID = new PID_PARAMS(0.075, 0.0, 0.00, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
             public static PID_PARAMS FR_STEER_PID = new PID_PARAMS(0.075, 0.0, 0.00, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
             public static PID_PARAMS BL_STEER_PID = new PID_PARAMS(0.075, 0.0, 0.00, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
-            public static PID_PARAMS BR_STEER_PID = new PID_PARAMS(0.075, 0.0, 0.00, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS BR_STEER_PID = new PID_PARAMS(0.001, 0.0, 0.00, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
 
             public static PID_PARAMS FL_DRIVE_PID = new PID_PARAMS(0.15, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
             public static PID_PARAMS FR_DRIVE_PID = new PID_PARAMS(0.15, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
