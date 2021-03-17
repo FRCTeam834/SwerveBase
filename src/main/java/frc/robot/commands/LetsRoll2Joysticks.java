@@ -11,7 +11,6 @@ package frc.robot.commands;
 import frc.robot.Parameters;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
-import frc.robot.swerve.DriveTrain;
 
 // WPI libraries
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -36,7 +35,7 @@ public class LetsRoll2Joysticks extends CommandBase {
     // Get all of the current joystick inputs
     double leftX =  constrainJoystick(RobotContainer.leftJoystick.getX());
     double rightX = constrainJoystick(RobotContainer.rightJoystick.getX());
-    double rightY =  constrainJoystick(RobotContainer.rightJoystick.getY());
+    double rightY = constrainJoystick(RobotContainer.rightJoystick.getY());
 
     // If any of the sticks are out of range, then we need to move. Otherwise, lock up the drivetrain (if specified) or just halt the modules
     if (leftX != 0 || rightX != 0 || rightY != 0) {

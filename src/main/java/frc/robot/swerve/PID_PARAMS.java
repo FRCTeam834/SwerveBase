@@ -9,18 +9,16 @@ public class PID_PARAMS {
     public double P;
     public double I;
     public double D;
-    public double SFF;
-    public double VFF;
-    public int I_ZONE;
+    public double FF;
+    public double I_ZONE;
     public double PEAK_OUTPUT;
     
     // Creating a new set of PID Parameters
-    public PID_PARAMS(double P, double I, double D, double SFF, double VFF, int I_ZONE, double PEAK_OUTPUT){
+    public PID_PARAMS(double P, double I, double D, double FF, double I_ZONE, double PEAK_OUTPUT){
         this.P = P;
         this.I = I;
         this.D = D;
-        this.SFF = SFF;
-        this.VFF = VFF;
+        this.FF = FF;
         this.I_ZONE = I_ZONE;
         this.PEAK_OUTPUT = PEAK_OUTPUT;
     }
@@ -30,8 +28,7 @@ public class PID_PARAMS {
         this.P = params.P;
         this.I = params.I;
         this.D = params.D;
-        this.SFF = params.SFF;
-        this.VFF = params.VFF;
+        this.FF = params.FF;
         this.I_ZONE = params.I_ZONE;
         this.PEAK_OUTPUT = params.PEAK_OUTPUT;
     }

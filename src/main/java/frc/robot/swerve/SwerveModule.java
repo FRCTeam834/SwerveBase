@@ -14,6 +14,7 @@ import frc.robot.Parameters;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import com.revrobotics.EncoderType;
+import com.revrobotics.CANPIDController.AccelStrategy;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
@@ -37,14 +38,16 @@ public class SwerveModule {
   // Define all of the variables in the global scope
   private CANSparkMax steerMotor;
   private CANSparkMax driveMotor;
-  private ProfiledPIDController steerMotorPID;
-  //private CANPIDController steerMotorPID;
-  private PIDController driveMotorPID;
+  //private ProfiledPIDController steerMotorPID;
+  private CANPIDController steerMotorPID;
+  private CANPIDController driveMotorPID;
   //private SimpleMotorFeedforward driveMotorFF;
   //private SimpleMotorFeedforward steerMotorFF;
   private CANCoder steerCANCoder;
+  private CANEncoder steerMotorEncoder;
   private CANEncoder driveMotorEncoder;
   private double cancoderOffset;
+  private double startupOffset;
   private String name;
   private boolean enabled = true;
 
@@ -76,6 +79,7 @@ public class SwerveModule {
     steerCANCoder.setPositionToAbsolute();
     steerCANCoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
     steerCANCoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
+    startupOffset = steerCANCoder.getAbsolutePosition();
 
     // Steering motor
     steerMotor = new CANSparkMax(steerMID, CANSparkMax.MotorType.kBrushless);
@@ -83,22 +87,31 @@ public class SwerveModule {
     steerMotor.setIdleMode(Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
 
     // Steering PID controller
-    Constraints constraints = new Constraints(Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_VELOCITY, Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_ACCEL);
-    steerMotorPID = new ProfiledPIDController(steerPIDParams.P, steerPIDParams.I, steerPIDParams.D, constraints);
+    //Constraints constraints = new Constraints(Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_VELOCITY, Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_ACCEL);
+    //steerMotorPID = new ProfiledPIDController(steerPIDParams.P, steerPIDParams.I, steerPIDParams.D, constraints);
     // Steering PID controller (from motor)
-    //steerMotorPID = steerMotor.getPIDController();
+    steerMotorPID = steerMotor.getPIDController();
     steerMotorPID.setP(steerPIDParams.P);
     steerMotorPID.setI(steerPIDParams.I);
     steerMotorPID.setD(steerPIDParams.D);
+    steerMotorPID.setIZone(steerPIDParams.I_ZONE);
+    steerMotorPID.setFF(Parameters.driveTrain.pid.MODULE_S_FF);
+    steerMotorPID.setOutputRange(-1, 1);
 
     // Convert the angular velocity and acceleration to RPM values
-    //steerMotorPID.setSmartMotionMaxAccel((Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_ACCEL / 360), 0);
-    //steerMotorPID.setSmartMotionMaxVelocity((Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_VELOCITY / 360), 0);
-    steerMotorPID.enableContinuousInput(-180, 180);
+    steerMotorPID.setSmartMotionMaxAccel((Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_ACCEL / 360), 0);
+    steerMotorPID.setSmartMotionMaxVelocity((Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_VELOCITY / 360), 0);
+    steerMotorPID.setSmartMotionAccelStrategy(AccelStrategy.kSCurve, 0);
+    //steerMotorPID.setSmartMotionMinOutputVelocity(2, 0);
+    //steerMotorPID.enableContinuousInput(-180, 180);
     //steerMotorPID.setIntegratorRange(-steerPIDParams.I_ZONE, steerPIDParams.I_ZONE);
 
     // Steering motor feed forward
     //steerMotorFF = new SimpleMotorFeedforward(steerPIDParams.SFF, steerPIDParams.VFF);
+
+    // Steer motor encoder
+    steerMotorEncoder = steerMotor.getEncoder();
+    steerMotorEncoder.setPositionConversionFactor((1/Parameters.driveTrain.movement.STEER_GEAR_RATIO)/360);
 
     // Drive motor
     driveMotor = new CANSparkMax(driveMID, CANSparkMax.MotorType.kBrushless);
@@ -106,16 +119,19 @@ public class SwerveModule {
     driveMotor.setIdleMode(Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
 
     // Drive motor PID controller (from motor)
-    driveMotorPID = new PIDController(drivePIDParams.P, drivePIDParams.I, drivePIDParams.D);//driveMotor.getPIDController();
-    //driveMotorPID.setP(drivePIDParams.P);
-    //driveMotorPID.setI(drivePIDParams.I);
-    //driveMotorPID.setD(drivePIDParams.D);
+    driveMotorPID = driveMotor.getPIDController(); // new PIDController(drivePIDParams.P, drivePIDParams.I, drivePIDParams.D);
+    driveMotorPID.setP(drivePIDParams.P);
+    driveMotorPID.setI(drivePIDParams.I);
+    driveMotorPID.setD(drivePIDParams.D);
+    driveMotorPID.setIZone(drivePIDParams.I_ZONE);
+    driveMotorPID.setFF(Parameters.driveTrain.pid.MODULE_D_FF);
+    driveMotorPID.setOutputRange(-1, 1);
 
     // Drive motor feed forward
     //driveMotorFF = new SimpleMotorFeedforward(drivePIDParams.SFF, drivePIDParams.VFF);
 
     // Drive motor encoder
-    driveMotorEncoder = driveMotor.getEncoder(EncoderType.kHallSensor, 42);
+    driveMotorEncoder = driveMotor.getEncoder();
     driveMotorEncoder.setVelocityConversionFactor(Math.PI * Parameters.driveTrain.dimensions.MODULE_WHEEL_DIA_M / 60);
 
     // Set up the module's table on NetworkTables
@@ -206,14 +222,16 @@ public class SwerveModule {
     if (enabled) {
 
       // Calculate the turning motor output from the turning PID controller.
-      final double steerOutput = steerMotorPID.calculate(getAngle(), targetAngle);
-      //steerMotorPID.setReference(targetAngle, ControlType.kPosition);
+      //final double steerOutput = steerMotorPID.calculate(getAngle(), targetAngle);
+
+      // Set the PID reference (needs to be corrected as it thinks that the position is 0 at it's startup location)
+      steerMotorPID.setReference(targetAngle - startupOffset, ControlType.kSmartMotion);
 
       // Calculate the feedforward for the motor
       //final double steerFeedforward = steerMotorFF.calculate(steerMotorPID.getSetpoint().velocity);
 
       // Set the motor to the correct values
-      steerMotor.setVoltage(steerOutput /* + steerFeedforward */);
+      //steerMotor.setVoltage(steerOutput /* + steerFeedforward */);
 
       // Print out info (for debugging)
       System.out.println(name + ": " + targetAngle + " : " + getAngle());
@@ -258,14 +276,14 @@ public class SwerveModule {
     if (enabled) {
 
       // Calculate the output of the drive
-      final double driveOutput = driveMotorPID.calculate(driveMotorEncoder.getVelocity(), speed);
-      //driveMotorPID.setReference(speed, ControlType.kVelocity);
+      //final double driveOutput = driveMotorPID.calculate(driveMotorEncoder.getVelocity(), speed);
+      driveMotorPID.setReference(speed, ControlType.kVelocity);
 
       // Calculate the feed forward for the motor
       //final double driveFeedforward = driveMotorFF.calculate(speed);
 
       // Set the motor to the calculated values
-      driveMotor.setVoltage(driveOutput /* + driveFeedforward */);
+      //driveMotor.setVoltage(driveOutput /* + driveFeedforward */);
 
       // Return if the velocity is within tolerance
       return ((getVelocity() < (speed + Parameters.driveTrain.speedTolerance)) && (getVelocity() > (speed - Parameters.driveTrain.speedTolerance)));

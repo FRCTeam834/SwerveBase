@@ -134,20 +134,18 @@ public final class Parameters {
              * Gains used in each module's steering motor, to be adjusted accordingly
              * Gains(kp, ki, kd, static ff, velocity ff, iZone, peak output);
              */
-            public static PID_PARAMS FL_STEER_PID = new PID_PARAMS(0.075, 0.0, 0.00, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
-            public static PID_PARAMS FR_STEER_PID = new PID_PARAMS(0.075, 0.0, 0.00, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
-            public static PID_PARAMS BL_STEER_PID = new PID_PARAMS(0.075, 0.0, 0.00, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
-            public static PID_PARAMS BR_STEER_PID = new PID_PARAMS(0.075, 0.0, 0.00, driveTrain.pid.MODULE_S_STATIC_FF, driveTrain.pid.MODULE_S_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS FL_STEER_PID = new PID_PARAMS(0.075, 0.0, 0.00, driveTrain.pid.MODULE_S_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS FR_STEER_PID = new PID_PARAMS(0.075, 0.0, 0.00, driveTrain.pid.MODULE_S_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS BL_STEER_PID = new PID_PARAMS(0.075, 0.0, 0.00, driveTrain.pid.MODULE_S_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS BR_STEER_PID = new PID_PARAMS(0.075, 0.0, 0.00, driveTrain.pid.MODULE_S_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
 
-            public static PID_PARAMS FL_DRIVE_PID = new PID_PARAMS(0.15, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
-            public static PID_PARAMS FR_DRIVE_PID = new PID_PARAMS(0.15, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
-            public static PID_PARAMS BL_DRIVE_PID = new PID_PARAMS(0.15, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
-            public static PID_PARAMS BR_DRIVE_PID = new PID_PARAMS(0.15, 0.0, 0, driveTrain.pid.MODULE_D_STATIC_FF, driveTrain.pid.MODULE_D_VELOCITY_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS FL_DRIVE_PID = new PID_PARAMS(0.150, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS FR_DRIVE_PID = new PID_PARAMS(0.150, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS BL_DRIVE_PID = new PID_PARAMS(0.150, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS BR_DRIVE_PID = new PID_PARAMS(0.150, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
 
-            public static final double MODULE_S_STATIC_FF = 0.5; // Must be tuned for the modules!
-            public static final double MODULE_S_VELOCITY_FF = 0.025;
-            public static final double MODULE_D_STATIC_FF = 1;
-            public static final double MODULE_D_VELOCITY_FF = 3;
+            public static final double MODULE_S_FF = 0.000015; // Must be tuned for the modules!
+            public static final double MODULE_D_FF = 0.000015;
         }
 
 
@@ -166,6 +164,9 @@ public final class Parameters {
             public static PIDController MOVEMENT_PID = new PIDController(1, 0, 0);
             public static Constraints ROTATION_CONSTRAINTS = new Constraints(Math.toRadians(360), Math.toRadians(180));
             public static ProfiledPIDController ROTATION_PID = new ProfiledPIDController(1, 0, 0, ROTATION_CONSTRAINTS);
+
+            // For converting CANCoder data to steer motor data
+            public static double STEER_GEAR_RATIO = 12.8;
         }
     }
 
