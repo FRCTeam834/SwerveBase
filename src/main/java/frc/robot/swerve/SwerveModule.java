@@ -13,7 +13,7 @@ import frc.robot.Parameters;
 // Vendor Libs
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
-import com.revrobotics.EncoderType;
+//import com.revrobotics.EncoderType;
 import com.revrobotics.CANPIDController.AccelStrategy;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
@@ -21,16 +21,17 @@ import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
+//import com.revrobotics.CANSensor;
 
 // WPI Libraries
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile.Constraints;
+//import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.controller.PIDController;
-import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
+//import edu.wpi.first.wpilibj.controller.PIDController;
+//import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 
 
 public class SwerveModule {
@@ -55,13 +56,13 @@ public class SwerveModule {
   private NetworkTableEntry steerPEntry;
   private NetworkTableEntry steerIEntry;
   private NetworkTableEntry steerDEntry;
-  //private NetworkTableEntry steerSFFEntry;
+  private NetworkTableEntry steerFFEntry;
   //private NetworkTableEntry steerVFFEntry;
 
   private NetworkTableEntry drivePEntry;
   private NetworkTableEntry driveIEntry;
   private NetworkTableEntry driveDEntry;
-  //private NetworkTableEntry driveSFFEntry;
+  private NetworkTableEntry driveFFEntry;
   //private NetworkTableEntry driveVFFEntry;
 
   private NetworkTableEntry velocity;
@@ -109,7 +110,7 @@ public class SwerveModule {
     // Steering motor feed forward
     //steerMotorFF = new SimpleMotorFeedforward(steerPIDParams.SFF, steerPIDParams.VFF);
 
-    // Steer motor encoder
+    // Steer motor encoder (position is converted from rotations to degrees)
     steerMotorEncoder = steerMotor.getEncoder();
     steerMotorEncoder.setPositionConversionFactor((1/Parameters.driveTrain.movement.STEER_GEAR_RATIO)/360);
 
@@ -143,14 +144,14 @@ public class SwerveModule {
     steerPEntry = moduleTable.getEntry("STEER_P");
     steerIEntry = moduleTable.getEntry("STEER_I");
     steerDEntry = moduleTable.getEntry("STEER_D");
-    //steerSFFEntry = moduleTable.getEntry("STEER_SFF");
+    steerFFEntry = moduleTable.getEntry("STEER_FF");
     //steerVFFEntry = moduleTable.getEntry("STEER_VFF");
 
     // Drive PID
     drivePEntry = moduleTable.getEntry("DRIVE_P");
     driveIEntry = moduleTable.getEntry("DRIVE_I");
     driveDEntry = moduleTable.getEntry("DRIVE_D");
-    //driveSFFEntry = moduleTable.getEntry("DRIVE_SFF");
+    driveFFEntry = moduleTable.getEntry("DRIVE_FF");
     //driveVFFEntry = moduleTable.getEntry("DRIVE_VFF");
 
     // Performance data
@@ -168,7 +169,7 @@ public class SwerveModule {
     steerMotorPID.setD(pidParams.D);
 
     // Feedforward
-    //steerMotorFF = new SimpleMotorFeedforward(pidParams.SFF, pidParams.VFF);
+    steerMotorPID.setFF(pidParams.FF);
 
     // Ramp rate
     steerMotor.setOpenLoopRampRate(Parameters.driver.CURRENT_PROFILE.DRIVE_RAMP_RATE);
@@ -187,7 +188,7 @@ public class SwerveModule {
     driveMotorPID.setD(pidParams.D);
 
     // Feedforward
-    //driveMotorFF = new SimpleMotorFeedforward(pidParams.SFF, pidParams.VFF);
+    driveMotorPID.setFF(pidParams.FF);
 
     // Ramp rate
     driveMotor.setOpenLoopRampRate(Parameters.driver.CURRENT_PROFILE.DRIVE_RAMP_RATE);
@@ -234,7 +235,7 @@ public class SwerveModule {
       //steerMotor.setVoltage(steerOutput /* + steerFeedforward */);
 
       // Print out info (for debugging)
-      System.out.println(name + ": " + targetAngle + " : " + getAngle());
+      System.out.println(name + ": " + targetAngle + " : " + getAngle() + " : " + getSteerMotorAngle());
 
       // Return if the module has reached the desired angle
       return (getAngle() < (targetAngle + Parameters.driveTrain.angleTolerance) && (getAngle() > (targetAngle - Parameters.driveTrain.angleTolerance)));
@@ -294,7 +295,7 @@ public class SwerveModule {
   }
 
 
-  // Moves the wheel to a desired speed 
+  // Moves the wheel to a desired speed
   public void reachVelocity(double speed) {
 
     // Continuously move the motor at the calculated speeds until it reaches the angle
@@ -326,6 +327,12 @@ public class SwerveModule {
   // Gets the position of the encoder (in deg)
   public double getAngle() {
     return steerCANCoder.getAbsolutePosition();
+  }
+
+
+  // Gets the steer motor's angle
+  public double getSteerMotorAngle() {
+    return steerMotorEncoder.getPosition();
   }
 
 
@@ -381,11 +388,11 @@ public class SwerveModule {
     Parameters.SAVED_PARAMS.putDouble(name + "_ENCODER_OFFSET", cancoderOffset);
 
     // Steer motor feedforward
-    //Parameters.SAVED_PARAMS.putDouble(name + "_STEER_SFF", steerMotorFF.ks);
+    Parameters.SAVED_PARAMS.putDouble(name + "_STEER_FF", steerMotorPID.getFF());
     //Parameters.SAVED_PARAMS.putDouble(name + "_STEER_VFF", steerMotorFF.kv);
 
     // Drive motor feedforward
-    //Parameters.SAVED_PARAMS.putDouble(name + "_DRIVE_SFF", driveMotorFF.ks);
+    Parameters.SAVED_PARAMS.putDouble(name + "_DRIVE_FF", driveMotorPID.getFF());
     //Parameters.SAVED_PARAMS.putDouble(name + "_DRIVE_VFF", driveMotorFF.kv);
 
   }
@@ -409,11 +416,13 @@ public class SwerveModule {
     steerCANCoder.configMagnetOffset(Parameters.SAVED_PARAMS.getDouble(name + "_ENCODER_OFFSET", cancoderOffset));
 
     // Steer motor feedforward
+    steerMotorPID.setFF(Parameters.SAVED_PARAMS.getDouble(name + "_STEER_FF", steerMotorPID.getFF()));
     //double newSteerKS = Parameters.SAVED_PARAMS.getDouble(name + "_STEER_SFF", steerMotorFF.ks);
     //double newSteerKV = Parameters.SAVED_PARAMS.getDouble(name + "_STEER_VFF", steerMotorFF.kv);
     //steerMotorFF = new SimpleMotorFeedforward(newSteerKS, newSteerKV);
 
     // Drive motor feedforward
+    driveMotorPID.setFF(Parameters.SAVED_PARAMS.getDouble(name + "_DRIVE_FF", driveMotorPID.getFF()));
     //double newDriveKS = Parameters.SAVED_PARAMS.getDouble(name + "_DRIVE_SFF", driveMotorFF.ks);
     //double newDriveKV = Parameters.SAVED_PARAMS.getDouble(name + "_DRIVE_VFF", driveMotorFF.kv);
     //driveMotorFF = new SimpleMotorFeedforward(newDriveKS, newDriveKV);
@@ -430,6 +439,7 @@ public class SwerveModule {
     steerPEntry.setDouble(steerMotorPID.getP());
     steerIEntry.setDouble(steerMotorPID.getI());
     steerDEntry.setDouble(steerMotorPID.getD());
+    steerFFEntry.setDouble(steerMotorPID.getFF());
     //steerSFFEntry.setDouble(steerMotorFF.ks);
     //steerVFFEntry.setDouble(steerMotorFF.kv);
 
@@ -437,6 +447,7 @@ public class SwerveModule {
     drivePEntry.setDouble(driveMotorPID.getP());
     driveIEntry.setDouble(driveMotorPID.getI());
     driveDEntry.setDouble(driveMotorPID.getD());
+    driveFFEntry.setDouble(driveMotorPID.getFF());
     //driveSFFEntry.setDouble(driveMotorFF.ks);
     //driveVFFEntry.setDouble(driveMotorFF.kv);
   }
@@ -449,12 +460,14 @@ public class SwerveModule {
     steerMotorPID.setP(steerPEntry.getDouble(steerMotorPID.getP()));
     steerMotorPID.setI(steerIEntry.getDouble(steerMotorPID.getI()));
     steerMotorPID.setD(steerDEntry.getDouble(steerMotorPID.getD()));
+    steerMotorPID.setFF(steerFFEntry.getDouble(steerMotorPID.getFF()));
     //steerMotorFF = new SimpleMotorFeedforward(steerSFFEntry.getDouble(steerMotorFF.ks), steerVFFEntry.getDouble(steerMotorFF.kv));
 
     // Drive PIDs
     driveMotorPID.setP(drivePEntry.getDouble(driveMotorPID.getP()));
     driveMotorPID.setI(driveIEntry.getDouble(driveMotorPID.getI()));
     driveMotorPID.setD(driveDEntry.getDouble(driveMotorPID.getD()));
+    driveMotorPID.setFF(driveFFEntry.getDouble(driveMotorPID.getFF()));
     //driveMotorFF = new SimpleMotorFeedforward(driveSFFEntry.getDouble(driveMotorFF.ks), driveVFFEntry.getDouble(driveMotorFF.kv));
   }
 
