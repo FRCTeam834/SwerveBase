@@ -11,7 +11,7 @@ package frc.robot.commands;
 import frc.robot.Parameters;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
-
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 // WPI libraries
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
@@ -36,6 +36,9 @@ public class LetsRoll2Joysticks extends CommandBase {
     double leftX =  constrainJoystick(RobotContainer.leftJoystick.getX());
     double rightX = constrainJoystick(RobotContainer.rightJoystick.getX());
     double rightY = constrainJoystick(RobotContainer.rightJoystick.getY());
+    //double leftX =  constrainJoystick(RobotContainer.xbox.getX(Hand.kLeft));
+    //double rightX = constrainJoystick(RobotContainer.xbox.getX(Hand.kRight));
+    //double rightY = constrainJoystick(RobotContainer.xbox.getY(Hand.kRight));
 
     // If any of the sticks are out of range, then we need to move. Otherwise, lock up the drivetrain (if specified) or just halt the modules
     if (leftX != 0 || rightX != 0 || rightY != 0) {

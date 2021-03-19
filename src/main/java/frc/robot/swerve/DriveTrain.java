@@ -226,12 +226,22 @@ public class DriveTrain extends SubsystemBase {
     frontRight.getSteerMotor().set(0);
     backLeft.getSteerMotor().set(0);
     backRight.getSteerMotor().set(0);
+    
+    /*frontLeft.getSteerMotor().stopMotor();
+    frontRight.getSteerMotor().stopMotor();
+    backLeft.getSteerMotor().stopMotor();
+    backRight.getSteerMotor().stopMotor();*/
 
     // Drive motors
     frontLeft.getDriveMotor().set(0);
     frontRight.getDriveMotor().set(0);
     backLeft.getDriveMotor().set(0);
     backRight.getDriveMotor().set(0);
+/*
+    frontLeft.getDriveMotor().stopMotor();
+    frontRight.getDriveMotor().stopMotor();
+    backLeft.getDriveMotor().stopMotor();
+    backRight.getDriveMotor().stopMotor();*/
   }
 
 
@@ -264,7 +274,10 @@ public class DriveTrain extends SubsystemBase {
 
     // Makes an X pattern with the swerve base
     // Set the modules to 45 degree angles
-    moveToAngles(-45, 45, 45, -45);
+    frontLeft.setDesiredAngle(-45);
+    frontRight.setDesiredAngle(45);
+    backLeft.setDesiredAngle(45);
+    backRight.setDesiredAngle(-45);
   }
 
 

@@ -87,6 +87,10 @@ public class SwerveModule {
     steerMotor.setOpenLoopRampRate(Parameters.driver.CURRENT_PROFILE.DRIVE_RAMP_RATE);
     steerMotor.setIdleMode(Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
 
+    // Steer motor encoder (position is converted from rotations to degrees)
+    steerMotorEncoder = steerMotor.getEncoder();
+    steerMotorEncoder.setPositionConversionFactor(1);
+
     // Steering PID controller
     //Constraints constraints = new Constraints(Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_VELOCITY, Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_ACCEL);
     //steerMotorPID = new ProfiledPIDController(steerPIDParams.P, steerPIDParams.I, steerPIDParams.D, constraints);
@@ -109,10 +113,6 @@ public class SwerveModule {
 
     // Steering motor feed forward
     //steerMotorFF = new SimpleMotorFeedforward(steerPIDParams.SFF, steerPIDParams.VFF);
-
-    // Steer motor encoder (position is converted from rotations to degrees)
-    steerMotorEncoder = steerMotor.getEncoder();
-    steerMotorEncoder.setPositionConversionFactor((1/Parameters.driveTrain.movement.STEER_GEAR_RATIO)/360);
 
     // Drive motor
     driveMotor = new CANSparkMax(driveMID, CANSparkMax.MotorType.kBrushless);
@@ -222,11 +222,19 @@ public class SwerveModule {
     // Check to see if the module is enabled
     if (enabled) {
 
+      /*
+      if((getSteerMotorAngle() - targetAngle) > 180){
+        startupOffset += 360;
+      }
+      else if ((getSteerMotorAngle() - targetAngle) < -180){
+        startupOffset -= 360;
+      }*/
+      
       // Calculate the turning motor output from the turning PID controller.
       //final double steerOutput = steerMotorPID.calculate(getAngle(), targetAngle);
 
       // Set the PID reference (needs to be corrected as it thinks that the position is 0 at it's startup location)
-      steerMotorPID.setReference(targetAngle - startupOffset, ControlType.kSmartMotion);
+      steerMotorPID.setReference(((targetAngle - startupOffset) * (Parameters.driveTrain.movement.STEER_GEAR_RATIO/360)), ControlType.kPosition);
 
       // Calculate the feedforward for the motor
       //final double steerFeedforward = steerMotorFF.calculate(steerMotorPID.getSetpoint().velocity);
@@ -235,7 +243,7 @@ public class SwerveModule {
       //steerMotor.setVoltage(steerOutput /* + steerFeedforward */);
 
       // Print out info (for debugging)
-      System.out.println(name + ": " + targetAngle + " : " + getAngle() + " : " + getSteerMotorAngle());
+      //System.out.println(name + ": " + targetAngle + " : " + getAngle() + " : " + getSteerMotorAngle() + " : " + (targetAngle - startupOffset));
 
       // Return if the module has reached the desired angle
       return (getAngle() < (targetAngle + Parameters.driveTrain.angleTolerance) && (getAngle() > (targetAngle - Parameters.driveTrain.angleTolerance)));
@@ -252,7 +260,9 @@ public class SwerveModule {
   public void moveToAngle(double angle) {
 
     // Continuously move the motor at the calculated speeds until it reaches the angle
-    while (!setDesiredAngle(angle));
+    while (!setDesiredAngle(angle)) {
+      publishPerformanceData();
+    }
 
     // Shut off the motor once done
     steerMotor.set(0);
@@ -332,7 +342,11 @@ public class SwerveModule {
 
   // Gets the steer motor's angle
   public double getSteerMotorAngle() {
-    return steerMotorEncoder.getPosition();
+    double steerMotorAngle = (steerMotorEncoder.getPosition() * (360/Parameters.driveTrain.movement.STEER_GEAR_RATIO));
+    //if(steerMotorAngle > 180){
+    //  steerMotorAngle-=360;
+    //}
+    return steerMotorAngle;
   }
 
 

@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
@@ -56,6 +57,7 @@ public class RobotContainer {
   // Define the joysticks (need to be public so commands can access axes)
   public static Joystick leftJoystick = new Joystick(0);
   public static Joystick rightJoystick = new Joystick(1);
+  //public static XboxController xbox = new XboxController(2);
 
   // Left Joystick button array
   //public static JoystickButton leftJoystickButtons[];
@@ -109,7 +111,7 @@ public class RobotContainer {
 
 // Xbox Buttons
 /*
-private final JoystickButton xboxStart = new JoystickButton(xbox, Button.kStart.value), xboxBack = new JoystickButton(xbox, Button.kBack.value),
+  private final JoystickButton xboxStart = new JoystickButton(xbox, Button.kStart.value), xboxBack = new JoystickButton(xbox, Button.kBack.value),
   xboxB = new JoystickButton(xbox, Button.kB.value), xboxA = new JoystickButton(xbox, Button.kA.value), xboxY = new JoystickButton(xbox, Button.kY.value),
   xboxX = new JoystickButton(xbox, Button.kX.value), xboxLB = new JoystickButton(xbox, Button.kBumperLeft.value), xboxRB = new JoystickButton(xbox, Button.kBumperRight.value),
   xboxLJB = new JoystickButton(xbox, 9); */
@@ -130,7 +132,7 @@ private final JoystickButton xboxStart = new JoystickButton(xbox, Button.kStart.
    */
   private void configureButtonBindings() {
 
-    lJoystick1.whenPressed(letsRoll2Joysticks);
+    lJoystick1.toggleWhenPressed(letsRoll2Joysticks);
     lJoystick2.whenPressed(saveSwerveParameters);
     lJoystick3.whenPressed(pullNtSwerveParams);
     lJoystick4.whenPressed(testModulePID);

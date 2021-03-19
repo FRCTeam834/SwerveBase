@@ -36,15 +36,15 @@ public class LetsRoll1Joystick extends CommandBase {
   public void execute() {
 
     // Get all of the current joystick inputs
-    double leftX =  constrainJoystick(RobotContainer.leftJoystick.getX());
-    double leftY =  constrainJoystick(RobotContainer.leftJoystick.getY());
+    double leftX = 0; // constrainJoystick(RobotContainer.leftJoystick.getX());
+    double leftY = 0; // constrainJoystick(RobotContainer.leftJoystick.getY());
 
     // Declare here so the value is in scope
     double turning = 0;
 
     // Check the values of the buttons
-    boolean counterClockwiseButton = RobotContainer.leftJoystick.getRawButton(6);
-    boolean clockwiseButton = RobotContainer.leftJoystick.getRawButton(7);
+    boolean counterClockwiseButton = false; //RobotContainer.leftJoystick.getRawButton(6);
+    boolean clockwiseButton = false; //RobotContainer.leftJoystick.getRawButton(7);
 
     // Determine the correct amount of turning based on the button inputs
     if (!(clockwiseButton && counterClockwiseButton)) {
