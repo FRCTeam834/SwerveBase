@@ -13,7 +13,6 @@ import frc.robot.Parameters;
 // Vendor Libs
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
-//import com.revrobotics.EncoderType;
 import com.revrobotics.CANPIDController.AccelStrategy;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
@@ -21,17 +20,13 @@ import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.CANPIDController;
-//import com.revrobotics.CANSensor;
 
 // WPI Libraries
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
-//import edu.wpi.first.wpilibj.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-//import edu.wpi.first.wpilibj.controller.PIDController;
-//import edu.wpi.first.wpilibj.controller.ProfiledPIDController;
 
 
 public class SwerveModule {
@@ -39,16 +34,13 @@ public class SwerveModule {
   // Define all of the variables in the global scope
   private CANSparkMax steerMotor;
   private CANSparkMax driveMotor;
-  //private ProfiledPIDController steerMotorPID;
   private CANPIDController steerMotorPID;
   private CANPIDController driveMotorPID;
-  //private SimpleMotorFeedforward driveMotorFF;
-  //private SimpleMotorFeedforward steerMotorFF;
   private CANCoder steerCANCoder;
   private CANEncoder steerMotorEncoder;
   private CANEncoder driveMotorEncoder;
   private double cancoderOffset;
-  private double startupOffset;
+  private double angularOffset;
   private String name;
   private boolean enabled = true;
 
@@ -57,13 +49,11 @@ public class SwerveModule {
   private NetworkTableEntry steerIEntry;
   private NetworkTableEntry steerDEntry;
   private NetworkTableEntry steerFFEntry;
-  //private NetworkTableEntry steerVFFEntry;
 
   private NetworkTableEntry drivePEntry;
   private NetworkTableEntry driveIEntry;
   private NetworkTableEntry driveDEntry;
   private NetworkTableEntry driveFFEntry;
-  //private NetworkTableEntry driveVFFEntry;
 
   private NetworkTableEntry velocity;
   private NetworkTableEntry angle;
@@ -80,7 +70,7 @@ public class SwerveModule {
     steerCANCoder.setPositionToAbsolute();
     steerCANCoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
     steerCANCoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
-    startupOffset = steerCANCoder.getAbsolutePosition();
+    angularOffset = steerCANCoder.getAbsolutePosition();
 
     // Steering motor
     steerMotor = new CANSparkMax(steerMID, CANSparkMax.MotorType.kBrushless);
@@ -89,11 +79,8 @@ public class SwerveModule {
 
     // Steer motor encoder (position is converted from rotations to degrees)
     steerMotorEncoder = steerMotor.getEncoder();
-    steerMotorEncoder.setPositionConversionFactor(1);
+    steerMotorEncoder.setPositionConversionFactor(360/Parameters.driveTrain.movement.STEER_GEAR_RATIO);
 
-    // Steering PID controller
-    //Constraints constraints = new Constraints(Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_VELOCITY, Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_ACCEL);
-    //steerMotorPID = new ProfiledPIDController(steerPIDParams.P, steerPIDParams.I, steerPIDParams.D, constraints);
     // Steering PID controller (from motor)
     steerMotorPID = steerMotor.getPIDController();
     steerMotorPID.setP(steerPIDParams.P);
@@ -104,15 +91,11 @@ public class SwerveModule {
     steerMotorPID.setOutputRange(-1, 1);
 
     // Convert the angular velocity and acceleration to RPM values
-    steerMotorPID.setSmartMotionMaxAccel((Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_ACCEL / 360), 0);
-    steerMotorPID.setSmartMotionMaxVelocity((Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_VELOCITY / 360), 0);
-    steerMotorPID.setSmartMotionAccelStrategy(AccelStrategy.kSCurve, 0);
+    //steerMotorPID.setSmartMotionMaxAccel((Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_ACCEL / 360), 0);
+    //steerMotorPID.setSmartMotionMaxVelocity((Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_VELOCITY / 360), 0);
+    //steerMotorPID.setSmartMotionAccelStrategy(AccelStrategy.kSCurve, 0);
     //steerMotorPID.setSmartMotionMinOutputVelocity(2, 0);
     //steerMotorPID.enableContinuousInput(-180, 180);
-    //steerMotorPID.setIntegratorRange(-steerPIDParams.I_ZONE, steerPIDParams.I_ZONE);
-
-    // Steering motor feed forward
-    //steerMotorFF = new SimpleMotorFeedforward(steerPIDParams.SFF, steerPIDParams.VFF);
 
     // Drive motor
     driveMotor = new CANSparkMax(driveMID, CANSparkMax.MotorType.kBrushless);
@@ -120,7 +103,7 @@ public class SwerveModule {
     driveMotor.setIdleMode(Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
 
     // Drive motor PID controller (from motor)
-    driveMotorPID = driveMotor.getPIDController(); // new PIDController(drivePIDParams.P, drivePIDParams.I, drivePIDParams.D);
+    driveMotorPID = driveMotor.getPIDController();
     driveMotorPID.setP(drivePIDParams.P);
     driveMotorPID.setI(drivePIDParams.I);
     driveMotorPID.setD(drivePIDParams.D);
@@ -128,12 +111,9 @@ public class SwerveModule {
     driveMotorPID.setFF(Parameters.driveTrain.pid.MODULE_D_FF);
     driveMotorPID.setOutputRange(-1, 1);
 
-    // Drive motor feed forward
-    //driveMotorFF = new SimpleMotorFeedforward(drivePIDParams.SFF, drivePIDParams.VFF);
-
     // Drive motor encoder
     driveMotorEncoder = driveMotor.getEncoder();
-    driveMotorEncoder.setVelocityConversionFactor(Math.PI * Parameters.driveTrain.dimensions.MODULE_WHEEL_DIA_M / 60);
+    driveMotorEncoder.setVelocityConversionFactor((Math.PI * Parameters.driveTrain.dimensions.MODULE_WHEEL_DIA_M) / 60);
 
     // Set up the module's table on NetworkTables
     NetworkTable swerveTable = NetworkTableInstance.getDefault().getTable("Swerve");
@@ -145,14 +125,12 @@ public class SwerveModule {
     steerIEntry = moduleTable.getEntry("STEER_I");
     steerDEntry = moduleTable.getEntry("STEER_D");
     steerFFEntry = moduleTable.getEntry("STEER_FF");
-    //steerVFFEntry = moduleTable.getEntry("STEER_VFF");
 
     // Drive PID
     drivePEntry = moduleTable.getEntry("DRIVE_P");
     driveIEntry = moduleTable.getEntry("DRIVE_I");
     driveDEntry = moduleTable.getEntry("DRIVE_D");
     driveFFEntry = moduleTable.getEntry("DRIVE_FF");
-    //driveVFFEntry = moduleTable.getEntry("DRIVE_VFF");
 
     // Performance data
     velocity = moduleTable.getEntry("CURRENT_VELOCITY");
@@ -222,25 +200,19 @@ public class SwerveModule {
     // Check to see if the module is enabled
     if (enabled) {
 
-      /*
-      if((getSteerMotorAngle() - targetAngle) > 180){
-        startupOffset += 360;
+      // Motor angle optimization code (makes sure that the motor doesn't go all the way around)
+      if(((getSteerMotorAngle() % 360) - targetAngle) > 180) {
+        angularOffset += 360;
       }
-      else if ((getSteerMotorAngle() - targetAngle) < -180){
-        startupOffset -= 360;
-      }*/
-      
-      // Calculate the turning motor output from the turning PID controller.
-      //final double steerOutput = steerMotorPID.calculate(getAngle(), targetAngle);
+      else if (((getSteerMotorAngle() % 360) - targetAngle) < -180) {
+        angularOffset -= 360;
+      }
 
-      // Set the PID reference (needs to be corrected as it thinks that the position is 0 at it's startup location)
-      steerMotorPID.setReference(((targetAngle - startupOffset) * (Parameters.driveTrain.movement.STEER_GEAR_RATIO/360)), ControlType.kPosition);
+      // Calculate the optimal angle for the motor (needs to be corrected as it thinks that the position is 0 at it's startup location)
+      double desiredAngle = targetAngle + angularOffset;
 
-      // Calculate the feedforward for the motor
-      //final double steerFeedforward = steerMotorFF.calculate(steerMotorPID.getSetpoint().velocity);
-
-      // Set the motor to the correct values
-      //steerMotor.setVoltage(steerOutput /* + steerFeedforward */);
+      // Set the PID reference
+      steerMotorPID.setReference(desiredAngle, ControlType.kPosition);
 
       // Print out info (for debugging)
       //System.out.println(name + ": " + targetAngle + " : " + getAngle() + " : " + getSteerMotorAngle() + " : " + (targetAngle - startupOffset));
@@ -276,7 +248,6 @@ public class SwerveModule {
     if (enabled) {
       driveMotor.set(speed);
     }
-
   }
 
 
@@ -289,12 +260,6 @@ public class SwerveModule {
       // Calculate the output of the drive
       //final double driveOutput = driveMotorPID.calculate(driveMotorEncoder.getVelocity(), speed);
       driveMotorPID.setReference(speed, ControlType.kVelocity);
-
-      // Calculate the feed forward for the motor
-      //final double driveFeedforward = driveMotorFF.calculate(speed);
-
-      // Set the motor to the calculated values
-      //driveMotor.setVoltage(driveOutput /* + driveFeedforward */);
 
       // Return if the velocity is within tolerance
       return ((getVelocity() < (speed + Parameters.driveTrain.speedTolerance)) && (getVelocity() > (speed - Parameters.driveTrain.speedTolerance)));
@@ -342,11 +307,7 @@ public class SwerveModule {
 
   // Gets the steer motor's angle
   public double getSteerMotorAngle() {
-    double steerMotorAngle = (steerMotorEncoder.getPosition() * (360/Parameters.driveTrain.movement.STEER_GEAR_RATIO));
-    //if(steerMotorAngle > 180){
-    //  steerMotorAngle-=360;
-    //}
-    return steerMotorAngle;
+    return steerMotorEncoder.getPosition();
   }
 
 
@@ -403,12 +364,9 @@ public class SwerveModule {
 
     // Steer motor feedforward
     Parameters.SAVED_PARAMS.putDouble(name + "_STEER_FF", steerMotorPID.getFF());
-    //Parameters.SAVED_PARAMS.putDouble(name + "_STEER_VFF", steerMotorFF.kv);
 
     // Drive motor feedforward
     Parameters.SAVED_PARAMS.putDouble(name + "_DRIVE_FF", driveMotorPID.getFF());
-    //Parameters.SAVED_PARAMS.putDouble(name + "_DRIVE_VFF", driveMotorFF.kv);
-
   }
 
 
@@ -431,15 +389,9 @@ public class SwerveModule {
 
     // Steer motor feedforward
     steerMotorPID.setFF(Parameters.SAVED_PARAMS.getDouble(name + "_STEER_FF", steerMotorPID.getFF()));
-    //double newSteerKS = Parameters.SAVED_PARAMS.getDouble(name + "_STEER_SFF", steerMotorFF.ks);
-    //double newSteerKV = Parameters.SAVED_PARAMS.getDouble(name + "_STEER_VFF", steerMotorFF.kv);
-    //steerMotorFF = new SimpleMotorFeedforward(newSteerKS, newSteerKV);
 
     // Drive motor feedforward
     driveMotorPID.setFF(Parameters.SAVED_PARAMS.getDouble(name + "_DRIVE_FF", driveMotorPID.getFF()));
-    //double newDriveKS = Parameters.SAVED_PARAMS.getDouble(name + "_DRIVE_SFF", driveMotorFF.ks);
-    //double newDriveKV = Parameters.SAVED_PARAMS.getDouble(name + "_DRIVE_VFF", driveMotorFF.kv);
-    //driveMotorFF = new SimpleMotorFeedforward(newDriveKS, newDriveKV);
 
     // Push the new values to the table
     publishTuningValues();
@@ -475,14 +427,12 @@ public class SwerveModule {
     steerMotorPID.setI(steerIEntry.getDouble(steerMotorPID.getI()));
     steerMotorPID.setD(steerDEntry.getDouble(steerMotorPID.getD()));
     steerMotorPID.setFF(steerFFEntry.getDouble(steerMotorPID.getFF()));
-    //steerMotorFF = new SimpleMotorFeedforward(steerSFFEntry.getDouble(steerMotorFF.ks), steerVFFEntry.getDouble(steerMotorFF.kv));
 
     // Drive PIDs
     driveMotorPID.setP(drivePEntry.getDouble(driveMotorPID.getP()));
     driveMotorPID.setI(driveIEntry.getDouble(driveMotorPID.getI()));
     driveMotorPID.setD(driveDEntry.getDouble(driveMotorPID.getD()));
     driveMotorPID.setFF(driveFFEntry.getDouble(driveMotorPID.getFF()));
-    //driveMotorFF = new SimpleMotorFeedforward(driveSFFEntry.getDouble(driveMotorFF.ks), driveVFFEntry.getDouble(driveMotorFF.kv));
   }
 
 
