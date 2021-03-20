@@ -201,10 +201,10 @@ public class SwerveModule {
     if (enabled) {
 
       // Motor angle optimization code (makes sure that the motor doesn't go all the way around)
-      if(((getSteerMotorAngle() % 360) - targetAngle) > 180) {
+      if(((getSteerMotorAngle() - angularOffset) - targetAngle) > 180) {
         angularOffset += 360;
       }
-      else if (((getSteerMotorAngle() % 360) - targetAngle) < -180) {
+      else if (((getSteerMotorAngle() - angularOffset) - targetAngle) < -180) {
         angularOffset -= 360;
       }
 
