@@ -36,8 +36,8 @@ public class LetsRoll1Joystick extends CommandBase {
   public void execute() {
 
     // Get all of the current joystick inputs
-    double leftX = 0; // constrainJoystick(RobotContainer.leftJoystick.getX());
-    double leftY = 0; // constrainJoystick(RobotContainer.leftJoystick.getY());
+    double leftX = RobotContainer.constrainJoystick(RobotContainer.leftJoystick.getX());
+    double leftY = RobotContainer.constrainJoystick(RobotContainer.leftJoystick.getY());
 
     // Declare here so the value is in scope
     double turning = 0;
@@ -87,17 +87,5 @@ public class LetsRoll1Joystick extends CommandBase {
   @Override
   public boolean isFinished() {
     return false;
-  }
-
-  // Return a constrained Joystick value
-  private double constrainJoystick(double rawValue) {
-
-    // If the value is out of tolerance, then zero it. Otherwise return the value of the joystick
-    if (Math.abs(rawValue) < Parameters.driver.CURRENT_PROFILE.JOYSTICK_DEADZONE) {
-      return 0;
-    }
-    else {
-      return rawValue;
-    }
   }
 }

@@ -12,6 +12,7 @@ import frc.robot.commands.LetsRoll1Joystick;
 import frc.robot.commands.LetsRoll2Joysticks;
 import frc.robot.commands.PullNTSwerveParams;
 import frc.robot.commands.TestModulePID;
+import frc.robot.commands.TestModulePositioning;
 import frc.robot.commands.TestMovementPID;
 import frc.robot.commands.ZeroCanCoders;
 import frc.robot.Parameters;
@@ -49,6 +50,7 @@ public class RobotContainer {
   private final PullNTSwerveParams pullNtSwerveParams = new PullNTSwerveParams();
   private final TestModulePID testModulePID = new TestModulePID();
   private final TestMovementPID testMovementPID = new TestMovementPID();
+  private final TestModulePositioning testModulePositioning = new TestModulePositioning();
   private final SaveSwerveParameters saveSwerveParameters = new SaveSwerveParameters();
 
   // Timer (for delays)
@@ -137,6 +139,7 @@ public class RobotContainer {
     lJoystick3.whenPressed(pullNtSwerveParams);
     lJoystick4.whenPressed(testModulePID);
     lJoystick5.whenPressed(testMovementPID);
+    lJoystick6.toggleWhenPressed(testModulePositioning);
     lJoystick8.whenPressed(zeroCanCoders);
 
     /*
@@ -207,6 +210,34 @@ public class RobotContainer {
     }
     */
 
+  }
+
+  // Joystick value array, in form (LX, LY, RX, RY)
+  public static double[] getJoystickValues() {
+
+    // Create a new array to return
+    double[] joystickValues = new double[4];
+
+    // Populate the fields of the array
+    joystickValues[0] = constrainJoystick(leftJoystick.getX());
+    joystickValues[1] = constrainJoystick(leftJoystick.getY());
+    joystickValues[2] = constrainJoystick(rightJoystick.getX());
+    joystickValues[3] = constrainJoystick(rightJoystick.getY());
+
+    // Return the array
+    return joystickValues;
+  }
+
+  // Return a constrained Joystick value
+  public static double constrainJoystick(double rawValue) {
+
+    // If the value is out of tolerance, then zero it. Otherwise return the value of the joystick
+    if (Math.abs(rawValue) < Parameters.driver.CURRENT_PROFILE.JOYSTICK_DEADZONE) {
+      return 0;
+    }
+    else {
+      return rawValue;
+    }
   }
 
 

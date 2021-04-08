@@ -264,6 +264,12 @@ public class DriveTrain extends SubsystemBase {
   }
 
 
+  // Move to angles, but with an array instead
+  public void moveToAngles(double[] angleArray) {
+    moveToAngles(angleArray[0], angleArray[1], angleArray[2], angleArray[3]);
+  }
+
+
   // Locks the modules of the robot to prevent movement
   public void lockemUp() {
 

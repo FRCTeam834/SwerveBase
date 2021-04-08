@@ -200,10 +200,10 @@ public class SwerveModule {
     if (enabled) {
 
       // Motor angle optimization code (makes sure that the motor doesn't go all the way around)
-      if(((getSteerMotorAngle() - angularOffset) - targetAngle) > 180) {
+      if(((getSteerMotorAngle() - angularOffset) - targetAngle) >= 180) {
         angularOffset += 360;
       }
-      else if (((getSteerMotorAngle() - angularOffset) - targetAngle) < -180) {
+      else if (((getSteerMotorAngle() - angularOffset) - targetAngle) <= -180) {
         angularOffset -= 360;
       }
 
@@ -214,7 +214,7 @@ public class SwerveModule {
       steerMotorPID.setReference(desiredAngle, ControlType.kPosition);
 
       // Print out info (for debugging)
-      //System.out.println(name + ": " + targetAngle + " : " + getAngle() + " : " + getSteerMotorAngle() + " : " + (targetAngle - startupOffset));
+      System.out.println(name + ": " + Math.round(targetAngle) + " : " + Math.round(getAngle()) + " : " + Math.round(getSteerMotorAngle() - angularOffset) + " : " + Math.round(getSteerMotorAngle()) + " : " + Math.round(angularOffset));
 
       // Return if the module has reached the desired angle
       return (getAngle() < (targetAngle + Parameters.driveTrain.angleTolerance) && (getAngle() > (targetAngle - Parameters.driveTrain.angleTolerance)));
