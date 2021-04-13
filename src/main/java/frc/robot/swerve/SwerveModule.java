@@ -13,6 +13,7 @@ import frc.robot.Parameters;
 // Vendor Libs
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
+import com.revrobotics.CANPIDController.AccelStrategy;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
@@ -90,10 +91,11 @@ public class SwerveModule {
     steerMotorPID.setOutputRange(-1, 1);
 
     // Convert the angular velocity and acceleration to RPM values
-    //steerMotorPID.setSmartMotionMaxAccel((Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_ACCEL / 360), 0);
-    //steerMotorPID.setSmartMotionMaxVelocity((Parameters.driveTrain.maximums.MAX_MODULE_ANGULAR_VELOCITY / 360), 0);
-    //steerMotorPID.setSmartMotionAccelStrategy(AccelStrategy.kSCurve, 0);
-    //steerMotorPID.setSmartMotionMinOutputVelocity(2, 0);
+    steerMotorPID.setSmartMotionMaxAccel(Parameters.driveTrain.maximums.MAX_ACCEL, 0);
+    steerMotorPID.setSmartMotionMaxVelocity(Parameters.driveTrain.maximums.MAX_VELOCITY, 0);
+    steerMotorPID.setSmartMotionAccelStrategy(AccelStrategy.kSCurve, 0);
+    //steerMotorPID.setSmartMotionMinOutputVelocity(Parameters.driveTrain.maximums.MIN_VELOCITY, 0);
+    //steerMotorPID.setSmartMotionAllowedClosedLoopError(Parameters.driveTrain.maximums.ALLOWABLE_ERROR, 0);
     //steerMotorPID.enableContinuousInput(-180, 180);
 
     // Drive motor
@@ -196,25 +198,37 @@ public class SwerveModule {
   // Sets the direction of the wheel, in degrees
   public boolean setDesiredAngle(double targetAngle) {
 
+    // Make sure that the angle isn't larger than 180 or -180
+    while (Math.abs(targetAngle) > 180) {
+      if (targetAngle > 180) {
+        targetAngle -= 360;
+      }
+      else if (targetAngle < -180) {
+        targetAngle += 360;
+      }
+    }
+
     // Check to see if the module is enabled
     if (enabled) {
 
       // Motor angle optimization code (makes sure that the motor doesn't go all the way around)
       if(((getSteerMotorAngle() - angularOffset) - targetAngle) >= 180) {
         angularOffset += 360;
+        //driveMotor.setInverted(!driveMotor.getInverted());
       }
       else if (((getSteerMotorAngle() - angularOffset) - targetAngle) <= -180) {
         angularOffset -= 360;
+        //driveMotor.setInverted(!driveMotor.getInverted());
       }
 
       // Calculate the optimal angle for the motor (needs to be corrected as it thinks that the position is 0 at it's startup location)
       double desiredAngle = targetAngle + angularOffset;
 
       // Set the PID reference
-      steerMotorPID.setReference(desiredAngle, ControlType.kPosition);
+      steerMotorPID.setReference(desiredAngle, ControlType.kSmartMotion);
 
       // Print out info (for debugging)
-      System.out.println(name + ": " + Math.round(targetAngle) + " : " + Math.round(getAngle()) + " : " + Math.round(getSteerMotorAngle() - angularOffset) + " : " + Math.round(getSteerMotorAngle()) + " : " + Math.round(angularOffset));
+      printDebugString(targetAngle);
 
       // Return if the module has reached the desired angle
       return (getAngle() < (targetAngle + Parameters.driveTrain.angleTolerance) && (getAngle() > (targetAngle - Parameters.driveTrain.angleTolerance)));
@@ -439,5 +453,10 @@ public class SwerveModule {
   public void publishPerformanceData() {
     velocity.setDouble(getVelocity());
     angle.setDouble(getAngle());
+  }
+
+  // Print out a debug string
+  public void printDebugString(double targetAngle) {
+    System.out.println(name + ": TAR: " + Math.round(targetAngle) + " ACT: " + Math.round(getAngle()) + " ADJ: " + Math.round(getSteerMotorAngle() - angularOffset) + " STR: " + Math.round(getSteerMotorAngle()) + " OFF: " + Math.round(angularOffset));
   }
 }
