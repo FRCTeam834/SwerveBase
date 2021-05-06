@@ -22,10 +22,10 @@ public class TestModulePositioning extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //Robot.driveTrain.frontLeft.setDesiredAngle(0);
-    //Robot.driveTrain.frontRight.setDesiredAngle(0);
+    Robot.driveTrain.frontLeft.setDesiredAngle(0);
+    Robot.driveTrain.frontRight.setDesiredAngle(0);
     Robot.driveTrain.backLeft.setDesiredAngle(0);
-    //Robot.driveTrain.backRight.setDesiredAngle(0);
+    Robot.driveTrain.backRight.setDesiredAngle(0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -41,10 +41,10 @@ public class TestModulePositioning extends CommandBase {
     }
 
     // Move the modules to those positions
-    //Robot.driveTrain.frontLeft.setDesiredAngle(joystickValues[0]);
-    //Robot.driveTrain.frontRight.setDesiredAngle(joystickValues[1]);
+    Robot.driveTrain.frontLeft.setDesiredAngle(joystickValues[0]);
+    Robot.driveTrain.frontRight.setDesiredAngle(joystickValues[1]);
     Robot.driveTrain.backLeft.setDesiredAngle(joystickValues[2]);
-    //Robot.driveTrain.backRight.setDesiredAngle(joystickValues[3]);
+    Robot.driveTrain.backRight.setDesiredAngle(joystickValues[3]);
   }
 
   // Called once the command ends or is interrupted.

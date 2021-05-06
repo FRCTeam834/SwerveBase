@@ -139,8 +139,9 @@ public class RobotContainer {
     lJoystick3.whenPressed(pullNtSwerveParams);
     lJoystick4.whenPressed(testModulePID);
     lJoystick5.whenPressed(testMovementPID);
-    rJoystick1.toggleWhenPressed(testModulePositioning);
     lJoystick8.whenPressed(zeroCanCoders);
+
+    rJoystick1.toggleWhenPressed(testModulePositioning);
 
     /*
     // Try to assign the left joystick

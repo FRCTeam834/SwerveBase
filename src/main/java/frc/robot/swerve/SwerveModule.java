@@ -70,7 +70,7 @@ public class SwerveModule {
     steerCANCoder.setPositionToAbsolute();
     steerCANCoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
     steerCANCoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
-    angularOffset = steerCANCoder.getAbsolutePosition();
+
 
     // Steering motor
     steerMotor = new CANSparkMax(steerMID, CANSparkMax.MotorType.kBrushless);
@@ -80,6 +80,7 @@ public class SwerveModule {
     // Steer motor encoder (position is converted from rotations to degrees)
     steerMotorEncoder = steerMotor.getEncoder();
     steerMotorEncoder.setPositionConversionFactor(360/Parameters.driveTrain.movement.STEER_GEAR_RATIO);
+    steerMotorEncoder.setPosition(getAngle());
 
     // Steering PID controller (from motor)
     steerMotorPID = steerMotor.getPIDController();
@@ -199,14 +200,14 @@ public class SwerveModule {
   public boolean setDesiredAngle(double targetAngle) {
 
     // Make sure that the angle isn't larger than 180 or -180
-    while (Math.abs(targetAngle) > 180) {
-      if (targetAngle > 180) {
-        targetAngle -= 360;
-      }
-      else if (targetAngle < -180) {
-        targetAngle += 360;
-      }
-    }
+    //while (Math.abs(targetAngle) > 180) {
+    //  if (targetAngle > 180) {
+    //    targetAngle -= 360;
+    //  }
+    //  else if (targetAngle < -180) {
+    //    targetAngle += 360;
+    //  }
+    //}
 
     // Check to see if the module is enabled
     if (enabled) {
@@ -298,11 +299,11 @@ public class SwerveModule {
   public void setDesiredState(SwerveModuleState setState) {
 
     // Optimize the state of the module
-    SwerveModuleState optimizedState = SwerveModuleState.optimize(setState, Rotation2d.fromDegrees(getAngle()));
+    // ! SwerveModuleState optimizedState = SwerveModuleState.optimize(setState, Rotation2d.fromDegrees(getAngle()));
 
     // Set module to the right angles and speeds
-    setDesiredAngle(optimizedState.angle.getDegrees());
-    setDesiredVelocity(optimizedState.speedMetersPerSecond);
+    setDesiredAngle(setState.angle.getDegrees());
+    //setDesiredVelocity(optimizedState.speedMetersPerSecond);
   }
 
 
@@ -338,6 +339,12 @@ public class SwerveModule {
 
     // Set the offset on the encoder
     steerCANCoder.configMagnetOffset(cancoderOffset);
+
+    // Update the steer motor's angle
+    angularOffset = getAngle();
+
+    // Set the encoder's position to zero
+    steerMotorEncoder.setPosition(0);
   }
 
 

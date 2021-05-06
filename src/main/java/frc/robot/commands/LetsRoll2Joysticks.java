@@ -45,7 +45,7 @@ public class LetsRoll2Joysticks extends CommandBase {
     if (leftX != 0 || rightX != 0 || rightY != 0) {
 
       // Move the drivetrain with the desired values (left right values are flipped from the logical way, thanks WPI)
-      Robot.driveTrain.drive((rightY * Parameters.driver.CURRENT_PROFILE.MAX_SPEED), (-rightX * Parameters.driver.CURRENT_PROFILE.MAX_SPEED),
+      Robot.driveTrain.drive((rightY * Parameters.driver.CURRENT_PROFILE.MAX_SPEED), (rightX * Parameters.driver.CURRENT_PROFILE.MAX_SPEED),
                         Math.toRadians(leftX * Parameters.driver.CURRENT_PROFILE.MAX_STEER_SPEED), Parameters.driver.CURRENT_PROFILE.FIELD_CENTRIC);
     }
     else if (Parameters.driver.CURRENT_PROFILE.LOCKEM_UP) {
