@@ -70,7 +70,7 @@ public final class Parameters {
                 new DriverProfile("Test", 0.15, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake) };
 
         // Default profile (must be kept!)
-        public static DriverProfile DEFAULT_DRIVER_PROFILE = new DriverProfile("Default", 0.15, 180, 0.5, true, true,
+        public static DriverProfile DEFAULT_DRIVER_PROFILE = new DriverProfile("Default", 0.15, 45.0, 0.5, true, true,
                 1.0, IdleMode.kBrake, IdleMode.kBrake);
 
         // Current Driver Profile being used
@@ -139,7 +139,7 @@ public final class Parameters {
             public static PID_PARAMS BL_STEER_PID = new PID_PARAMS(0.00000009, 0.0, 0.000, driveTrain.pid.MODULE_S_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
             public static PID_PARAMS BR_STEER_PID = new PID_PARAMS(0.00000009, 0.0, 0.000, driveTrain.pid.MODULE_S_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
 
-            public static PID_PARAMS FL_DRIVE_PID = new PID_PARAMS(0.150, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS FL_DRIVE_PID = new PID_PARAMS(0.00005, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
             public static PID_PARAMS FR_DRIVE_PID = new PID_PARAMS(0.150, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
             public static PID_PARAMS BL_DRIVE_PID = new PID_PARAMS(0.150, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
             public static PID_PARAMS BR_DRIVE_PID = new PID_PARAMS(0.150, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
@@ -164,9 +164,14 @@ public final class Parameters {
             public static PIDController MOVEMENT_PID = new PIDController(1, 0, 0);
             public static Constraints ROTATION_CONSTRAINTS = new Constraints(Math.toRadians(360), Math.toRadians(180));
             public static ProfiledPIDController ROTATION_PID = new ProfiledPIDController(1, 0, 0, ROTATION_CONSTRAINTS);
+        }
+
+        // The gear ratios of the module
+        public static final class ratios {
 
             // For converting CANCoder data to steer motor data
             public static double STEER_GEAR_RATIO = 12.8;
+            public static double DRIVE_GEAR_RATIO = 8.16;
         }
     }
 

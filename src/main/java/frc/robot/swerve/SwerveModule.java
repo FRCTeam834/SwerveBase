@@ -71,15 +71,14 @@ public class SwerveModule {
     steerCANCoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
     steerCANCoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
 
-
     // Steering motor
     steerMotor = new CANSparkMax(steerMID, CANSparkMax.MotorType.kBrushless);
-    steerMotor.setOpenLoopRampRate(Parameters.driver.CURRENT_PROFILE.DRIVE_RAMP_RATE);
+    //steerMotor.setOpenLoopRampRate(Parameters.driver.CURRENT_PROFILE.DRIVE_RAMP_RATE);
     steerMotor.setIdleMode(Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
 
     // Steer motor encoder (position is converted from rotations to degrees)
     steerMotorEncoder = steerMotor.getEncoder();
-    steerMotorEncoder.setPositionConversionFactor(360/Parameters.driveTrain.movement.STEER_GEAR_RATIO);
+    steerMotorEncoder.setPositionConversionFactor(360/Parameters.driveTrain.ratios.STEER_GEAR_RATIO);
     steerMotorEncoder.setPosition(getAngle());
 
     // Steering PID controller (from motor)
@@ -101,7 +100,7 @@ public class SwerveModule {
 
     // Drive motor
     driveMotor = new CANSparkMax(driveMID, CANSparkMax.MotorType.kBrushless);
-    driveMotor.setOpenLoopRampRate(Parameters.driver.CURRENT_PROFILE.DRIVE_RAMP_RATE);
+    //driveMotor.setOpenLoopRampRate(Parameters.driver.CURRENT_PROFILE.DRIVE_RAMP_RATE);
     driveMotor.setIdleMode(Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
 
     // Drive motor PID controller (from motor)
@@ -111,11 +110,11 @@ public class SwerveModule {
     driveMotorPID.setD(drivePIDParams.D);
     driveMotorPID.setIZone(drivePIDParams.I_ZONE);
     driveMotorPID.setFF(Parameters.driveTrain.pid.MODULE_D_FF);
-    driveMotorPID.setOutputRange(-1, 1);
+    //driveMotorPID.setOutputRange(-1, 1);
 
     // Drive motor encoder
     driveMotorEncoder = driveMotor.getEncoder();
-    driveMotorEncoder.setVelocityConversionFactor((Math.PI * Parameters.driveTrain.dimensions.MODULE_WHEEL_DIA_M) / 60);
+    driveMotorEncoder.setVelocityConversionFactor(1/Parameters.driveTrain.ratios.DRIVE_GEAR_RATIO); // (Math.PI * Parameters.driveTrain.dimensions.MODULE_WHEEL_DIA_M) / (60 * Parameters.driveTrain.ratios.DRIVE_GEAR_RATIO));
 
     // Set up the module's table on NetworkTables
     NetworkTable swerveTable = NetworkTableInstance.getDefault().getTable("Swerve");
@@ -171,7 +170,7 @@ public class SwerveModule {
     driveMotorPID.setFF(pidParams.FF);
 
     // Ramp rate
-    driveMotor.setOpenLoopRampRate(Parameters.driver.CURRENT_PROFILE.DRIVE_RAMP_RATE);
+    //driveMotor.setOpenLoopRampRate(Parameters.driver.CURRENT_PROFILE.DRIVE_RAMP_RATE);
 
     // Idle mode of the motor
     driveMotor.setIdleMode(idleMode);
@@ -229,7 +228,7 @@ public class SwerveModule {
       steerMotorPID.setReference(desiredAngle, ControlType.kSmartMotion);
 
       // Print out info (for debugging)
-      printDebugString(targetAngle);
+      //printDebugString(targetAngle);
 
       // Return if the module has reached the desired angle
       return (getAngle() < (targetAngle + Parameters.driveTrain.angleTolerance) && (getAngle() > (targetAngle - Parameters.driveTrain.angleTolerance)));
@@ -273,7 +272,9 @@ public class SwerveModule {
 
       // Calculate the output of the drive
       //final double driveOutput = driveMotorPID.calculate(driveMotorEncoder.getVelocity(), speed);
-      driveMotorPID.setReference(speed, ControlType.kVelocity);
+      driveMotorPID.setReference(speed * 1558.45, ControlType.kVelocity);
+
+      System.out.println("D_SPD: " + (speed * 1558.45) + " | A_SPD: " + driveMotorEncoder.getVelocity());
 
       // Return if the velocity is within tolerance
       return ((getVelocity() < (speed + Parameters.driveTrain.speedTolerance)) && (getVelocity() > (speed - Parameters.driveTrain.speedTolerance)));
@@ -303,7 +304,7 @@ public class SwerveModule {
 
     // Set module to the right angles and speeds
     setDesiredAngle(setState.angle.getDegrees());
-    //setDesiredVelocity(optimizedState.speedMetersPerSecond);
+    setDesiredVelocity(setState.speedMetersPerSecond);
   }
 
 
@@ -335,16 +336,13 @@ public class SwerveModule {
   public void setEncoderOffset(double correctPosition) {
 
     // Set the cancoder offset variable
-    cancoderOffset = correctPosition - getAngle();
+    cancoderOffset = correctPosition - (getAngle() - steerCANCoder.configGetMagnetOffset());
 
     // Set the offset on the encoder
     steerCANCoder.configMagnetOffset(cancoderOffset);
 
-    // Update the steer motor's angle
-    angularOffset = getAngle();
-
     // Set the encoder's position to zero
-    steerMotorEncoder.setPosition(0);
+    steerMotorEncoder.setPosition(getAngle());
   }
 
 

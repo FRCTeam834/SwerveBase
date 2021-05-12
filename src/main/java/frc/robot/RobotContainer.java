@@ -13,6 +13,7 @@ import frc.robot.commands.LetsRoll2Joysticks;
 import frc.robot.commands.PullNTSwerveParams;
 import frc.robot.commands.TestModulePID;
 import frc.robot.commands.TestModulePositioning;
+import frc.robot.commands.TestModuleVelocity;
 import frc.robot.commands.TestMovementPID;
 import frc.robot.commands.ZeroCanCoders;
 import frc.robot.Parameters;
@@ -50,7 +51,7 @@ public class RobotContainer {
   private final PullNTSwerveParams pullNtSwerveParams = new PullNTSwerveParams();
   private final TestModulePID testModulePID = new TestModulePID();
   private final TestMovementPID testMovementPID = new TestMovementPID();
-  private final TestModulePositioning testModulePositioning = new TestModulePositioning();
+  private final TestModuleVelocity testModuleVelocity = new TestModuleVelocity();
   private final SaveSwerveParameters saveSwerveParameters = new SaveSwerveParameters();
 
   // Timer (for delays)
@@ -141,7 +142,7 @@ public class RobotContainer {
     lJoystick5.whenPressed(testMovementPID);
     lJoystick8.whenPressed(zeroCanCoders);
 
-    rJoystick1.toggleWhenPressed(testModulePositioning);
+    rJoystick1.toggleWhenPressed(testModuleVelocity);
 
     /*
     // Try to assign the left joystick
