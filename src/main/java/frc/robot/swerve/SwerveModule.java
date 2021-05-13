@@ -102,7 +102,11 @@ public class SwerveModule {
     driveMotor = new CANSparkMax(driveMID, CANSparkMax.MotorType.kBrushless);
     //driveMotor.setOpenLoopRampRate(Parameters.driver.CURRENT_PROFILE.DRIVE_RAMP_RATE);
     driveMotor.setIdleMode(Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
-
+    
+    // Drive motor encoder
+    driveMotorEncoder = driveMotor.getEncoder();
+    driveMotorEncoder.setVelocityConversionFactor(1/Parameters.driveTrain.ratios.DRIVE_GEAR_RATIO); // (Math.PI * Parameters.driveTrain.dimensions.MODULE_WHEEL_DIA_M) / (60 * Parameters.driveTrain.ratios.DRIVE_GEAR_RATIO));
+    
     // Drive motor PID controller (from motor)
     driveMotorPID = driveMotor.getPIDController();
     driveMotorPID.setP(drivePIDParams.P);
@@ -110,11 +114,7 @@ public class SwerveModule {
     driveMotorPID.setD(drivePIDParams.D);
     driveMotorPID.setIZone(drivePIDParams.I_ZONE);
     driveMotorPID.setFF(Parameters.driveTrain.pid.MODULE_D_FF);
-    //driveMotorPID.setOutputRange(-1, 1);
-
-    // Drive motor encoder
-    driveMotorEncoder = driveMotor.getEncoder();
-    driveMotorEncoder.setVelocityConversionFactor(1/Parameters.driveTrain.ratios.DRIVE_GEAR_RATIO); // (Math.PI * Parameters.driveTrain.dimensions.MODULE_WHEEL_DIA_M) / (60 * Parameters.driveTrain.ratios.DRIVE_GEAR_RATIO));
+    driveMotorPID.setOutputRange(-1, 1);
 
     // Set up the module's table on NetworkTables
     NetworkTable swerveTable = NetworkTableInstance.getDefault().getTable("Swerve");
