@@ -60,7 +60,7 @@ public class SwerveModule {
 
 
   // Set up the module and address each of the motor controllers
-  public SwerveModule(String moduleName, int steerMID, int driveMID, int CANCoderID, PID_PARAMS steerPIDParams, PID_PARAMS drivePIDParams) {
+  public SwerveModule(String moduleName, int steerMID, int driveMID, int CANCoderID, PID_PARAMS steerPIDParams, PID_PARAMS drivePIDParams, boolean reversedDrive) {
 
     // Set the name
     name = moduleName;
@@ -102,10 +102,13 @@ public class SwerveModule {
     driveMotor = new CANSparkMax(driveMID, CANSparkMax.MotorType.kBrushless);
     //driveMotor.setOpenLoopRampRate(Parameters.driver.CURRENT_PROFILE.DRIVE_RAMP_RATE);
     driveMotor.setIdleMode(Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
+
+    // Reverse the motor direction if specified
+    driveMotor.setInverted(reversedDrive);
     
     // Drive motor encoder
     driveMotorEncoder = driveMotor.getEncoder();
-    driveMotorEncoder.setVelocityConversionFactor(1/Parameters.driveTrain.ratios.DRIVE_GEAR_RATIO); // (Math.PI * Parameters.driveTrain.dimensions.MODULE_WHEEL_DIA_M) / (60 * Parameters.driveTrain.ratios.DRIVE_GEAR_RATIO));
+    driveMotorEncoder.setVelocityConversionFactor((Math.PI * Parameters.driveTrain.dimensions.MODULE_WHEEL_DIA_M) / (60 * Parameters.driveTrain.ratios.DRIVE_GEAR_RATIO)); // (Math.PI * Parameters.driveTrain.dimensions.MODULE_WHEEL_DIA_M) / (60 * Parameters.driveTrain.ratios.DRIVE_GEAR_RATIO));
     
     // Drive motor PID controller (from motor)
     driveMotorPID = driveMotor.getPIDController();
@@ -271,10 +274,9 @@ public class SwerveModule {
     if (enabled) {
 
       // Calculate the output of the drive
-      //final double driveOutput = driveMotorPID.calculate(driveMotorEncoder.getVelocity(), speed);
-      driveMotorPID.setReference(speed * 1558.45, ControlType.kVelocity);
+      driveMotorPID.setReference(speed * 4, ControlType.kVelocity);
 
-      System.out.println("D_SPD: " + (speed * 1558.45) + " | A_SPD: " + driveMotorEncoder.getVelocity());
+      //System.out.println("D_SPD: " + speed + " | A_SPD: " + driveMotorEncoder.getVelocity());
 
       // Return if the velocity is within tolerance
       return ((getVelocity() < (speed + Parameters.driveTrain.speedTolerance)) && (getVelocity() > (speed - Parameters.driveTrain.speedTolerance)));

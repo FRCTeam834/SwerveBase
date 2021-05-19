@@ -85,10 +85,10 @@ public class DriveTrain extends SubsystemBase {
   public DriveTrain() {
 
     // Create each swerve module instance
-    frontLeft  = new SwerveModule("FL", Parameters.driveTrain.can.FL_STEER_ID,  Parameters.driveTrain.can.FL_DRIVE_ID,  Parameters.driveTrain.can.FL_CODER_ID,  Parameters.driveTrain.pid.FL_STEER_PID, Parameters.driveTrain.pid.FL_DRIVE_PID);
-    frontRight = new SwerveModule("FR", Parameters.driveTrain.can.FR_STEER_ID, Parameters.driveTrain.can.FR_DRIVE_ID, Parameters.driveTrain.can.FR_CODER_ID, Parameters.driveTrain.pid.FR_STEER_PID, Parameters.driveTrain.pid.FR_DRIVE_PID);
-    backLeft   = new SwerveModule("BL", Parameters.driveTrain.can.BL_STEER_ID,   Parameters.driveTrain.can.BL_DRIVE_ID,   Parameters.driveTrain.can.BL_CODER_ID,   Parameters.driveTrain.pid.BL_STEER_PID, Parameters.driveTrain.pid.BL_DRIVE_PID);
-    backRight  = new SwerveModule("BR", Parameters.driveTrain.can.BR_STEER_ID,  Parameters.driveTrain.can.BR_DRIVE_ID,  Parameters.driveTrain.can.BR_CODER_ID,  Parameters.driveTrain.pid.BR_STEER_PID, Parameters.driveTrain.pid.BR_DRIVE_PID);
+    frontLeft  = new SwerveModule("FL", Parameters.driveTrain.can.FL_STEER_ID,  Parameters.driveTrain.can.FL_DRIVE_ID,  Parameters.driveTrain.can.FL_CODER_ID,  Parameters.driveTrain.pid.FL_STEER_PID, Parameters.driveTrain.pid.FL_DRIVE_PID, false);
+    frontRight = new SwerveModule("FR", Parameters.driveTrain.can.FR_STEER_ID, Parameters.driveTrain.can.FR_DRIVE_ID, Parameters.driveTrain.can.FR_CODER_ID, Parameters.driveTrain.pid.FR_STEER_PID, Parameters.driveTrain.pid.FR_DRIVE_PID, true);
+    backLeft   = new SwerveModule("BL", Parameters.driveTrain.can.BL_STEER_ID,   Parameters.driveTrain.can.BL_DRIVE_ID,   Parameters.driveTrain.can.BL_CODER_ID,   Parameters.driveTrain.pid.BL_STEER_PID, Parameters.driveTrain.pid.BL_DRIVE_PID, false);
+    backRight  = new SwerveModule("BR", Parameters.driveTrain.can.BR_STEER_ID,  Parameters.driveTrain.can.BR_DRIVE_ID,  Parameters.driveTrain.can.BR_CODER_ID,  Parameters.driveTrain.pid.BR_STEER_PID, Parameters.driveTrain.pid.BR_DRIVE_PID, true);
 
     // Set up the module's table on NetworkTables
     NetworkTable swerveTable = NetworkTableInstance.getDefault().getTable("Swerve");

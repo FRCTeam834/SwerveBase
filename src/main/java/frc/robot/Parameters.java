@@ -65,7 +65,7 @@ public final class Parameters {
                 // DriverProfile NAME, double JOYSTICK_DEADZONE, double MAX_STEER_SPEED (deg/s),
                 // double DRIVE_RAMP_RATE, boolean LOCKEM_UP, boolean FIELD_CENTRIC, double
                 // MAX_SPEED (m/s), IdleMode DRIVE_IDLE_MODE)
-                new DriverProfile("CAP1Sup", 0.05, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake),
+                new DriverProfile("CAP1Sup", 0.05, 90.0, 0.5, true, false, 4.0, IdleMode.kBrake, IdleMode.kBrake),
                 new DriverProfile("Christian Velez", 0.15, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake),
                 new DriverProfile("Test", 0.15, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake) };
 
@@ -121,7 +121,7 @@ public final class Parameters {
 
         // All of the maximums
         public static final class maximums {
-            public static final double MAX_MODULE_SPEED = 2; // (m/s)
+            public static final double MAX_MODULE_SPEED = 4; // (m/s)
             public static final double MAX_VELOCITY = 10000; // (RPM)
             public static final double MAX_ACCEL = 500000000; // (RPMM)
         }
@@ -139,13 +139,13 @@ public final class Parameters {
             public static PID_PARAMS BL_STEER_PID = new PID_PARAMS(0.00000009, 0.0, 0.000, driveTrain.pid.MODULE_S_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
             public static PID_PARAMS BR_STEER_PID = new PID_PARAMS(0.00000009, 0.0, 0.000, driveTrain.pid.MODULE_S_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
 
-            public static PID_PARAMS FL_DRIVE_PID = new PID_PARAMS(0.00005, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
-            public static PID_PARAMS FR_DRIVE_PID = new PID_PARAMS(0.150, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
-            public static PID_PARAMS BL_DRIVE_PID = new PID_PARAMS(0.150, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
-            public static PID_PARAMS BR_DRIVE_PID = new PID_PARAMS(0.150, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS FL_DRIVE_PID = new PID_PARAMS(0.500, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS FR_DRIVE_PID = new PID_PARAMS(0.500, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS BL_DRIVE_PID = new PID_PARAMS(0.500, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
+            public static PID_PARAMS BR_DRIVE_PID = new PID_PARAMS(0.500, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, 0, driver.CURRENT_PROFILE.MAX_SPEED);
 
             public static final double MODULE_S_FF = 0.000000; // Must be tuned for the modules!
-            public static final double MODULE_D_FF = 0.000000;
+            public static final double MODULE_D_FF = 0.000000; // Maybe: 0.000156;
         }
 
 
