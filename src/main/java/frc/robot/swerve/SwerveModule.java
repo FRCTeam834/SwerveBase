@@ -274,7 +274,7 @@ public class SwerveModule {
     if (enabled) {
 
       // Calculate the output of the drive
-      driveMotorPID.setReference(speed * 4, ControlType.kVelocity);
+      driveMotorPID.setReference(speed, ControlType.kVelocity);
 
       //System.out.println("D_SPD: " + speed + " | A_SPD: " + driveMotorEncoder.getVelocity());
 
