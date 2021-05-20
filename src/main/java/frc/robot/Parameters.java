@@ -42,6 +42,9 @@ import edu.wpi.first.wpilibj.Preferences;
  */
 public final class Parameters {
 
+    // Enables all debug statements
+    public static final boolean debug = false;
+
     // All of the fun parameters
     public static final class funParameters {
 
@@ -66,13 +69,11 @@ public final class Parameters {
             // double DRIVE_RAMP_RATE, boolean LOCKEM_UP, boolean FIELD_CENTRIC, double
             // MAX_SPEED (m/s), IdleMode DRIVE_IDLE_MODE)
             new DriverProfile("CAP1Sup", 0.05, 90.0, 0.5, true, false, 4.0, IdleMode.kBrake, IdleMode.kBrake),
-            new DriverProfile("Christian Velez", 0.15, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake),
             new DriverProfile("Test", 0.15, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake)
         };
 
         // Default profile (must be kept!)
-        public static DriverProfile DEFAULT_DRIVER_PROFILE = new DriverProfile("Default", 0.15, 45.0, 0.5, true, true,
-                1.0, IdleMode.kBrake, IdleMode.kBrake);
+        public static DriverProfile DEFAULT_DRIVER_PROFILE = DRIVER_PROFILES[0]; //new DriverProfile("Default", 0.15, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake);
 
         // Current Driver Profile being used
         public static DriverProfile CURRENT_PROFILE = DRIVER_PROFILES[0];

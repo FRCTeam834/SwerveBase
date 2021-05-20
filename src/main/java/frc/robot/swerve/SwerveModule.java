@@ -201,27 +201,26 @@ public class SwerveModule {
   // Sets the direction of the wheel, in degrees
   public boolean setDesiredAngle(double targetAngle) {
 
-    // Make sure that the angle isn't larger than 180 or -180
-    //while (Math.abs(targetAngle) > 180) {
-    //  if (targetAngle > 180) {
-    //    targetAngle -= 360;
-    //  }
-    //  else if (targetAngle < -180) {
-    //    targetAngle += 360;
-    //  }
-    //}
-
     // Check to see if the module is enabled
     if (enabled) {
 
       // Motor angle optimization code (makes sure that the motor doesn't go all the way around)
+      // Full rotation optimizations
       if(((getSteerMotorAngle() - angularOffset) - targetAngle) >= 180) {
         angularOffset += 360;
-        //driveMotor.setInverted(!driveMotor.getInverted());
       }
       else if (((getSteerMotorAngle() - angularOffset) - targetAngle) <= -180) {
         angularOffset -= 360;
-        //driveMotor.setInverted(!driveMotor.getInverted());
+      }
+
+      // Half rotation optimizations (full are prioritized first)
+      else if (((getSteerMotorAngle() - angularOffset) - targetAngle) >= 90) {
+        angularOffset -= 180;
+        driveMotor.setInverted(!driveMotor.getInverted());
+      }
+      else if (((getSteerMotorAngle() - angularOffset) - targetAngle) <= -90) {
+        angularOffset -= 180;
+        driveMotor.setInverted(!driveMotor.getInverted());
       }
 
       // Calculate the optimal angle for the motor (needs to be corrected as it thinks that the position is 0 at it's startup location)
@@ -231,7 +230,9 @@ public class SwerveModule {
       steerMotorPID.setReference(desiredAngle, ControlType.kSmartMotion);
 
       // Print out info (for debugging)
-      //printDebugString(targetAngle);
+      if (Parameters.debug) {
+        printDebugString(targetAngle);
+      }
 
       // Return if the module has reached the desired angle
       return (getAngle() < (targetAngle + Parameters.driveTrain.angleTolerance) && (getAngle() > (targetAngle - Parameters.driveTrain.angleTolerance)));
@@ -276,7 +277,9 @@ public class SwerveModule {
       // Calculate the output of the drive
       driveMotorPID.setReference(speed, ControlType.kVelocity);
 
-      //System.out.println("D_SPD: " + speed + " | A_SPD: " + driveMotorEncoder.getVelocity());
+      if (Parameters.debug) {
+        System.out.println("D_SPD: " + speed + " | A_SPD: " + driveMotorEncoder.getVelocity());
+      }
 
       // Return if the velocity is within tolerance
       return ((getVelocity() < (speed + Parameters.driveTrain.speedTolerance)) && (getVelocity() > (speed - Parameters.driveTrain.speedTolerance)));
@@ -464,6 +467,6 @@ public class SwerveModule {
 
   // Print out a debug string
   public void printDebugString(double targetAngle) {
-    System.out.println(name + ": TAR: " + Math.round(targetAngle) + " ACT: " + Math.round(getAngle()) + " ADJ: " + Math.round(getSteerMotorAngle() - angularOffset) + " STR: " + Math.round(getSteerMotorAngle()) + " OFF: " + Math.round(angularOffset));
+    System.out.println(name + ": TAR_A: " + Math.round(targetAngle) + " ACT_A: " + Math.round(getAngle()) + " ADJ_A: " + Math.round(getSteerMotorAngle() - angularOffset) + " STR_A: " + Math.round(getSteerMotorAngle()) + " OFF_A: " + Math.round(angularOffset));
   }
 }
