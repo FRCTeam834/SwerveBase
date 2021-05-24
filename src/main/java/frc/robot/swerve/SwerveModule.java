@@ -206,19 +206,19 @@ public class SwerveModule {
 
       // Motor angle optimization code (makes sure that the motor doesn't go all the way around)
       // Full rotation optimizations
-      if(((getSteerMotorAngle() - angularOffset) - targetAngle) >= 180) {
+      if((getAdjustedSteerMotorAngle() - targetAngle) >= 180) {
         angularOffset += 360;
       }
-      else if (((getSteerMotorAngle() - angularOffset) - targetAngle) <= -180) {
+      else if ((getAdjustedSteerMotorAngle() - targetAngle) <= -180) {
         angularOffset -= 360;
       }
 
       // Half rotation optimizations (full are prioritized first)
-      else if (((getSteerMotorAngle() - angularOffset) - targetAngle) >= 90) {
+      else if ((getAdjustedSteerMotorAngle() - targetAngle) >= 90) {
         angularOffset -= 180;
         driveMotor.setInverted(!driveMotor.getInverted());
       }
-      else if (((getSteerMotorAngle() - angularOffset) - targetAngle) <= -90) {
+      else if ((getAdjustedSteerMotorAngle() - targetAngle) <= -90) {
         angularOffset -= 180;
         driveMotor.setInverted(!driveMotor.getInverted());
       }
@@ -290,6 +290,31 @@ public class SwerveModule {
   }
 
 
+  // Sets the speed in m/s (proportional to the error of the angle)
+  public boolean setDesiredVelocity(double speed, double desiredAngle) {
+
+    // Check to make sure that the value is within 90 degrees (no movement until within 90)
+    if (Math.abs((desiredAngle + angularOffset) - getActualSteerMotorAngle()) <= 90) {
+
+      // Compute the error factor (based on how close the actual angle is to the desired)
+      double percentError = 1 - Math.abs(((desiredAngle + angularOffset) - getActualSteerMotorAngle()) / 90);
+
+      // Print the percent error if debugging is enabled
+      if (Parameters.debug) {
+        System.out.println("% E: " + percentError);
+      }
+
+      // Set the adjusted speed
+      return setDesiredVelocity(speed * percentError);
+
+    }
+    else {
+      // We're not within range, therefore the speed should be set to zero
+      return setDesiredVelocity(0);
+    }
+  }
+
+
   // Moves the wheel to a desired speed
   public void reachVelocity(double speed) {
 
@@ -304,12 +329,9 @@ public class SwerveModule {
   // Sets the desired state of the module
   public void setDesiredState(SwerveModuleState setState) {
 
-    // Optimize the state of the module
-    // ! SwerveModuleState optimizedState = SwerveModuleState.optimize(setState, Rotation2d.fromDegrees(getAngle()));
-
     // Set module to the right angles and speeds
     setDesiredAngle(setState.angle.getDegrees());
-    setDesiredVelocity(setState.speedMetersPerSecond);
+    setDesiredVelocity(setState.speedMetersPerSecond, setState.angle.getDegrees());
   }
 
 
@@ -325,8 +347,14 @@ public class SwerveModule {
   }
 
 
-  // Gets the steer motor's angle
-  public double getSteerMotorAngle() {
+  // Gets the adjusted steer motor's angle
+  public double getAdjustedSteerMotorAngle() {
+    return (getActualSteerMotorAngle() - angularOffset);
+  }
+
+
+  // Gets the actual steer motor's angle
+  public double getActualSteerMotorAngle() {
     return steerMotorEncoder.getPosition();
   }
 
@@ -467,6 +495,6 @@ public class SwerveModule {
 
   // Print out a debug string
   public void printDebugString(double targetAngle) {
-    System.out.println(name + ": TAR_A: " + Math.round(targetAngle) + " ACT_A: " + Math.round(getAngle()) + " ADJ_A: " + Math.round(getSteerMotorAngle() - angularOffset) + " STR_A: " + Math.round(getSteerMotorAngle()) + " OFF_A: " + Math.round(angularOffset));
+    System.out.println(name + ": TAR_A: " + Math.round(targetAngle) + " ACT_A: " + Math.round(getAngle()) + " ADJ_A: " + Math.round(getAdjustedSteerMotorAngle()) + " STR_A: " + Math.round(getActualSteerMotorAngle()) + " OFF_A: " + Math.round(angularOffset));
   }
 }
