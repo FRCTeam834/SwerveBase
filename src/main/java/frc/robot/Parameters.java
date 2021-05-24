@@ -192,14 +192,6 @@ public final class Parameters {
         public static Pose2d STARTING_POS = Parameters.positions.POSSIBLE_STARTING_POSITIONS[Parameters.driverStation.getLocation() - 1];
     }
 
-    //Ultrasonic DIO(Not the JoJo reference (Nathan: "I highly doubt that.")) ports
-    //US_PING: Ultrasonic Ping
-    //US_ECHO: Ultrasonic Echo
-    public static final class ultrasonic {
-        public static final int US_PING = 1;
-        public static final int US_ECHO = 2;
-    }
-
 
     // All of the joystick variables
     public static final class joysticks {

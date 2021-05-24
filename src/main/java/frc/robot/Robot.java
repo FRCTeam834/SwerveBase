@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 // Subsystems
 import frc.robot.subsystems.NavX;
-import frc.robot.subsystems.UltrasonicSensor;
 import frc.robot.swerve.DriveTrain;
 import frc.robot.DriverProfiles.ProfilingManagement;
 
@@ -38,7 +37,6 @@ public class Robot extends TimedRobot {
   public static ProfilingManagement profilingManagement;
   public static NavX navX;
   public static DriveTrain driveTrain;
-  public static UltrasonicSensor ultrasonicSensor;
 
   // Commands
   //public static LetsRoll2Joysticks letsRoll2Joysticks;
@@ -61,7 +59,6 @@ public class Robot extends TimedRobot {
     profilingManagement = new ProfilingManagement();
     navX = new NavX();
     driveTrain = new DriveTrain();
-    ultrasonicSensor = new UltrasonicSensor();
 
     // Commands
     //letsRoll2Joysticks = new LetsRoll2Joysticks();
