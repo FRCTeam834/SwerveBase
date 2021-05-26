@@ -7,22 +7,21 @@
 
 package frc.robot;
 
+// WPI libraries
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 // Subsystems
 import frc.robot.subsystems.NavX;
-import frc.robot.swerve.DriveTrain;
+import frc.robot.subsystems.swerve.DriveTrain;
 import frc.robot.DriverProfiles.ProfilingManagement;
-
-// Commands
-import frc.robot.commands.LetsRoll1Joystick;
-import frc.robot.commands.LetsRoll2Joysticks;
-import frc.robot.commands.ZeroCanCoders;
-import frc.robot.commands.PullNTSwerveParams;
-import frc.robot.commands.SaveSwerveParameters;
-import frc.robot.commands.TestModulePID;
+import frc.robot.commands.swerve.LetsRoll1Joystick;
+import frc.robot.commands.swerve.LetsRoll2Joysticks;
+import frc.robot.commands.swerve.PullNTSwerveParams;
+import frc.robot.commands.swerve.SaveSwerveParameters;
+import frc.robot.commands.swerve.TestModulePID;
+import frc.robot.commands.swerve.ZeroCanCoders;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -72,7 +71,7 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    navX.resetGyro();
+    navX.resetYaw();
   }
 
   /**

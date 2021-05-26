@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.swerve;
 
 import frc.robot.Robot;
 
@@ -20,7 +20,7 @@ public class ZeroCanCoders extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    // Home each of the modules
+    // Zero each of the modules
     Robot.driveTrain.zeroEncoders();
     System.out.println("All modules zeroed");
   }

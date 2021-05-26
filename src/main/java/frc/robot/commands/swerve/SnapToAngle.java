@@ -2,43 +2,47 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.swerve;
 
-// WPI libraries
-import edu.wpi.first.wpilibj.geometry.Pose2d;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+// Parameters
+import frc.robot.Parameters;
 
+// Robot
 import frc.robot.Robot;
 
-import frc.robot.swerve.DriveTrain;
+// WPI libraries
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 
-public class MoveToPosition extends CommandBase {
-  /** Moves the robot to the desired position */
+public class SnapToAngle extends CommandBase {
+  /** Creates a new SnapToAngle. */
 
+  // Main defines
+  double desiredAngle;
   Pose2d desiredPosition;
   double linearVel;
 
-  public MoveToPosition(Pose2d desiredPose, double linearVelocity) {
-
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(Robot.driveTrain);
-    this.desiredPosition = desiredPose;
-    this.linearVel = linearVelocity;
-  }
-
   // Default to 2 m/s for the linear speed
-  public MoveToPosition(Pose2d desiredPose) {
+  public SnapToAngle(double desiredAngle) {
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(Robot.driveTrain);
-    this.desiredPosition = desiredPose;
-    this.linearVel = 2;
+
+    // Save the desired angle
+    this.desiredAngle = desiredAngle;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
 
+    // Get the current position
+    Pose2d currentPose = Robot.driveTrain.getPose2D();
+
+    // Set the variables for the function
+    this.desiredPosition = new Pose2d(currentPose.getX(), currentPose.getY(), Rotation2d.fromDegrees(this.desiredAngle));
+    this.linearVel = Parameters.driver.CURRENT_PROFILE.MAX_SPEED;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -62,4 +66,4 @@ public class MoveToPosition extends CommandBase {
     // Check if the trajectory is complete
     return Robot.driveTrain.atTrajectoryReference();
   }
-}
+}  

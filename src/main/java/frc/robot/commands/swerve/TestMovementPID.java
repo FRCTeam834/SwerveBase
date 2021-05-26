@@ -2,10 +2,15 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.swerve;
+
+// Robot, RobotContainer
 import frc.robot.Robot;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.RobotContainer;
+
+// WPI libraries
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 
@@ -22,7 +27,7 @@ public class TestMovementPID extends CommandBase {
   public void initialize() {
 
     // Wait for half a second
-    RobotContainer.timer.delay(.5);
+    Timer.delay(.5);
 
     // Move each of the wheels to 0
     Robot.driveTrain.resetOdometry(new Pose2d(0, 0, new Rotation2d()));

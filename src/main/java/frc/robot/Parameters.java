@@ -9,7 +9,7 @@ package frc.robot;
 
 // Internal libraries
 import frc.robot.DriverProfiles.DriverProfile;
-import frc.robot.swerve.PID_PARAMS;
+import frc.robot.subsystems.swerve.PID_PARAMS;
 
 // Vendor libraries
 import com.revrobotics.CANSparkMax.IdleMode;

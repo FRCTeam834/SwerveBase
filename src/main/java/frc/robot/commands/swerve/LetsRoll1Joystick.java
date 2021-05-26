@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.swerve;
 
 import java.lang.Math;
 
@@ -13,7 +13,6 @@ import java.lang.Math;
 import frc.robot.Parameters;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
-import frc.robot.swerve.DriveTrain;
 
 // WPI libraries
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -57,8 +56,7 @@ public class LetsRoll1Joystick extends CommandBase {
         turning = -1;
       }
     }
-    
-
+  
     // If any of the sticks are out of range, then we need to move. Otherwise, lock up the drivetrain (if specified)
     if (leftX != 0 || leftY != 0 || turning != 0) {
 
@@ -70,7 +68,7 @@ public class LetsRoll1Joystick extends CommandBase {
       Robot.driveTrain.lockemUp();
     }
     else {
-      Robot.driveTrain.haltAllModules();
+      Robot.driveTrain.stopModules();
     }
 
     // Update driver profile if available
@@ -80,7 +78,7 @@ public class LetsRoll1Joystick extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Robot.driveTrain.haltAllModules();
+    Robot.driveTrain.stopModules();
   }
 
   // Returns true when the command should end.

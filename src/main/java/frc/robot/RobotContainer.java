@@ -7,19 +7,17 @@
 
 package frc.robot;
 
-// User files
-import frc.robot.commands.LetsRoll1Joystick;
-import frc.robot.commands.LetsRoll2Joysticks;
-import frc.robot.commands.PullNTSwerveParams;
-import frc.robot.commands.TestModulePID;
-import frc.robot.commands.TestModulePositioning;
-import frc.robot.commands.TestModuleVelocity;
-import frc.robot.commands.TestMovementPID;
-import frc.robot.commands.ZeroCanCoders;
 import frc.robot.Parameters;
+import frc.robot.commands.swerve.LetsRoll1Joystick;
+import frc.robot.commands.swerve.LetsRoll2Joysticks;
+import frc.robot.commands.swerve.PullNTSwerveParams;
+import frc.robot.commands.swerve.SaveSwerveParameters;
+import frc.robot.commands.swerve.TestModulePID;
+import frc.robot.commands.swerve.TestModulePositioning;
+import frc.robot.commands.swerve.TestModuleVelocity;
+import frc.robot.commands.swerve.TestMovementPID;
+import frc.robot.commands.swerve.ZeroCanCoders;
 import frc.robot.enums.ROBOT_STATE;
-import frc.robot.commands.SaveSwerveParameters;
-
 // WPI Libraries
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.GenericHID;

@@ -5,13 +5,12 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.swerve;
 
 // Robot libraries
 import frc.robot.Parameters;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 // WPI libraries
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -52,7 +51,7 @@ public class LetsRoll2Joysticks extends CommandBase {
       Robot.driveTrain.lockemUp();
     }
     else {
-      Robot.driveTrain.haltAllModules();
+      Robot.driveTrain.stopModules();
     }
 
     // Update driver profile if available
@@ -63,7 +62,7 @@ public class LetsRoll2Joysticks extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    Robot.driveTrain.haltAllModules();
+    Robot.driveTrain.stopModules();
   }
 
   // Returns true when the command should end.

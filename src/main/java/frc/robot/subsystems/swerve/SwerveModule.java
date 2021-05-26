@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.swerve;
+package frc.robot.subsystems.swerve;
 
 // Parameters
 import frc.robot.Parameters;
@@ -205,22 +205,25 @@ public class SwerveModule {
     if (enabled) {
 
       // Motor angle optimization code (makes sure that the motor doesn't go all the way around)
-      // Full rotation optimizations
-      if((getAdjustedSteerMotorAngle() - targetAngle) >= 180) {
-        angularOffset += 360;
-      }
-      else if ((getAdjustedSteerMotorAngle() - targetAngle) <= -180) {
-        angularOffset -= 360;
-      }
+      while (Math.abs(getAdjustedSteerMotorAngle() - targetAngle) >= 90) {
 
-      // Half rotation optimizations (full are prioritized first)
-      else if ((getAdjustedSteerMotorAngle() - targetAngle) >= 90) {
-        angularOffset -= 180;
-        driveMotor.setInverted(!driveMotor.getInverted());
-      }
-      else if ((getAdjustedSteerMotorAngle() - targetAngle) <= -90) {
-        angularOffset -= 180;
-        driveMotor.setInverted(!driveMotor.getInverted());
+        // Full rotation optimizations
+        if((getAdjustedSteerMotorAngle() - targetAngle) >= 180) {
+          angularOffset += 360;
+        }
+        else if ((getAdjustedSteerMotorAngle() - targetAngle) <= -180) {
+          angularOffset -= 360;
+        }
+
+        // Half rotation optimizations (full are prioritized first)
+        else if ((getAdjustedSteerMotorAngle() - targetAngle) >= 90) {
+          angularOffset -= 180;
+          driveMotor.setInverted(!driveMotor.getInverted());
+        }
+        else if ((getAdjustedSteerMotorAngle() - targetAngle) <= -90) {
+          angularOffset -= 180;
+          driveMotor.setInverted(!driveMotor.getInverted());
+        }
       }
 
       // Calculate the optimal angle for the motor (needs to be corrected as it thinks that the position is 0 at it's startup location)

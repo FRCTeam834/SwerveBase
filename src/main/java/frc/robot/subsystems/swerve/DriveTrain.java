@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.swerve;
+package frc.robot.subsystems.swerve;
 
 // WPI libraries
 import edu.wpi.first.wpilibj.geometry.Translation2d;
@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 // Import Parameters
 import frc.robot.Parameters;
 
-// Import robot
+// Import Robot
 import frc.robot.Robot;
 
 
@@ -227,46 +227,81 @@ public class DriveTrain extends SubsystemBase {
     frontRight.getSteerMotor().set(0);
     backLeft.getSteerMotor().set(0);
     backRight.getSteerMotor().set(0);
-    
-    /*frontLeft.getSteerMotor().stopMotor();
-    frontRight.getSteerMotor().stopMotor();
-    backLeft.getSteerMotor().stopMotor();
-    backRight.getSteerMotor().stopMotor();*/
 
     // Drive motors
     frontLeft.getDriveMotor().set(0);
     frontRight.getDriveMotor().set(0);
     backLeft.getDriveMotor().set(0);
     backRight.getDriveMotor().set(0);
-    
-    /*frontLeft.getDriveMotor().stopMotor();
-    frontRight.getDriveMotor().stopMotor();
-    backLeft.getDriveMotor().stopMotor();
-    backRight.getDriveMotor().stopMotor();*/
   }
 
 
   // Moves all of the swerve modules repeatedly till they reach the desired position
-  public void moveToAngles(double FLAngle, double FRAngle, double BLAngle, double BRAngle) {
+  public void setDesiredAngles(double FLAngle, double FRAngle, double BLAngle, double BRAngle, boolean wait) {
 
-    // Create a new timer (for timeout)
-    Timer timer = new Timer();
+    // Check to see if we need to wait
+    if (wait) {
 
-    // Continuously loop, checking to see the current time in seconds. If we've exceeded the timeout, end the loop early
-    while(!(frontLeft.setDesiredAngle(FLAngle) && frontRight.setDesiredAngle(FRAngle) && backLeft.setDesiredAngle(BLAngle) && backRight.setDesiredAngle(BRAngle))) {
-      if (timer.get() > Parameters.driveTrain.movement.TIMEOUT) {
-        break;
+      // Create a new timer (for timeout)
+      Timer timer = new Timer();
+
+      // Continuously loop, checking to see the current time in seconds. If we've exceeded the timeout, end the loop early
+      while(!(frontLeft.setDesiredAngle(FLAngle) && frontRight.setDesiredAngle(FRAngle) && backLeft.setDesiredAngle(BLAngle) && backRight.setDesiredAngle(BRAngle))) {
+        if (timer.hasElapsed(Parameters.driveTrain.movement.TIMEOUT)) {
+          break;
+        }
       }
     }
-
-    // Turn off all of the modules just in case they are still running
-    haltAllModules();
+    else {
+      // Just set the angles, then finish
+      frontLeft.setDesiredAngle(FLAngle);
+      frontRight.setDesiredAngle(FRAngle);
+      backLeft.setDesiredAngle(BLAngle);
+      backRight.setDesiredAngle(BRAngle);
+    }
   }
 
 
   // Move to angles, but with an array instead
-  public void moveToAngles(double[] angleArray) {
-    moveToAngles(angleArray[0], angleArray[1], angleArray[2], angleArray[3]);
+  public void setDesiredAngles(double[] angleArray, boolean wait) {
+    setDesiredAngles(angleArray[0], angleArray[1], angleArray[2], angleArray[3], wait);
+  }
+
+
+  // Moves all of the swerve modules repeatedly till they reach the desired position
+  public void setDesiredVelocities(double FLSpeed, double FRSpeed, double BLSpeed, double BRSpeed, boolean wait) {
+
+    // Check to see if we need to wait
+    if (wait) {
+
+      // Create a new timer (for timeout)
+      Timer timer = new Timer();
+
+      // Continuously loop, checking to see the current time in seconds. If we've exceeded the timeout, end the loop early
+      while(!(frontLeft.setDesiredVelocity(FLSpeed) && frontRight.setDesiredVelocity(FRSpeed) && backLeft.setDesiredVelocity(BLSpeed) && backRight.setDesiredVelocity(BRSpeed))) {
+        if (timer.hasElapsed(Parameters.driveTrain.movement.TIMEOUT)) {
+          break;
+        }
+      }
+    }
+    else {
+      // Just set the angles, then finish
+      frontLeft.setDesiredVelocity(FLSpeed);
+      frontRight.setDesiredVelocity(FRSpeed);
+      backLeft.setDesiredVelocity(BLSpeed);
+      backRight.setDesiredVelocity(BRSpeed);
+    }
+  }
+
+
+  // Set speeds, but with an array instead
+  public void setDesiredVelocities(double[] speedArray, boolean wait) {
+    setDesiredVelocities(speedArray[0], speedArray[1], speedArray[2], speedArray[3], wait);
+  }
+
+  // Stop the modules (holds position)
+  public void stopModules() {
+    setDesiredVelocities(0, 0, 0, 0, false);
   }
 
 
@@ -338,6 +373,12 @@ public class DriveTrain extends SubsystemBase {
   // Gets the angle of the robot
   public Rotation2d getThetaPosition() {
     return poseEstimator.getEstimatedPosition().getRotation();
+  }
+
+
+  // Gets a Pose2D of the robot
+  public Pose2d getPose2D() {
+    return poseEstimator.getEstimatedPosition();
   }
 
 

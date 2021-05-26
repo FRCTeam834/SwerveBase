@@ -73,8 +73,8 @@ public class NavX extends SubsystemBase {
     return navX.getCompassHeading();
   }
 
-  // Resets the NavX
-  public void resetGyro() {
+  // Resets the NavX's yaw axis to zero
+  public void resetYaw() {
     navX.reset();
   }
 

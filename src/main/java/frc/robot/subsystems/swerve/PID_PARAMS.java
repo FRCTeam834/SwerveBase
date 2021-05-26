@@ -1,7 +1,7 @@
 /**
  *  Class that organizes gains used when assigning values to slots
  */
-package frc.robot.swerve;
+package frc.robot.subsystems.swerve;
 
 public class PID_PARAMS {
 
