@@ -75,6 +75,11 @@ public class SwerveModule {
     steerMotor = new CANSparkMax(steerMID, CANSparkMax.MotorType.kBrushless);
     //steerMotor.setOpenLoopRampRate(Parameters.driver.CURRENT_PROFILE.DRIVE_RAMP_RATE);
     steerMotor.setIdleMode(Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
+    steerMotor.setInverted(false);
+
+    // For later?
+    //steerMotor.enableVoltageCompensation(nominalVoltage);
+    //driveMotor.enableVoltageCompensation(nominalVoltage);
 
     // Steer motor encoder (position is converted from rotations to degrees)
     steerMotorEncoder = steerMotor.getEncoder();
@@ -105,11 +110,12 @@ public class SwerveModule {
 
     // Reverse the motor direction if specified
     driveMotor.setInverted(reversedDrive);
-    
+
     // Drive motor encoder
     driveMotorEncoder = driveMotor.getEncoder();
     driveMotorEncoder.setVelocityConversionFactor((Math.PI * Parameters.driveTrain.dimensions.MODULE_WHEEL_DIA_M) / (60 * Parameters.driveTrain.ratios.DRIVE_GEAR_RATIO)); // (Math.PI * Parameters.driveTrain.dimensions.MODULE_WHEEL_DIA_M) / (60 * Parameters.driveTrain.ratios.DRIVE_GEAR_RATIO));
-    
+    driveMotorEncoder.setInverted(false);
+
     // Drive motor PID controller (from motor)
     driveMotorPID = driveMotor.getPIDController();
     driveMotorPID.setP(drivePIDParams.P);
@@ -256,8 +262,8 @@ public class SwerveModule {
       publishPerformanceData();
     }
 
-    // Shut off the motor once done
-    steerMotor.set(0);
+    // Shut off the motor once done (probably shouldn't be done to ensure position is held)
+    //steerMotor.set(0);
   }
 
 
@@ -325,7 +331,7 @@ public class SwerveModule {
     while (!setDesiredVelocity(speed));
 
     // Shut off the motor once done
-    driveMotor.set(0);
+    driveMotor.stopMotor();
   }
 
 
@@ -382,12 +388,20 @@ public class SwerveModule {
   }
 
 
+  // Stop both of the motors
+  public void stopMotors() {
+
+    // Shut off all of the motors
+    steerMotor.stopMotor();
+    driveMotor.stopMotor();
+  }
+
+
   // Command for disable
   public void disable() {
 
-    // Shut off all of the motors
-    steerMotor.set(0);
-    driveMotor.set(0);
+    // Stop the motors
+    stopMotors();
 
     enabled = false;
   }

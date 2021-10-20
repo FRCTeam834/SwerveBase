@@ -5,6 +5,11 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
+/**
+ * @author Christian Piper (@CAP1Sup), Mohammed Durrani (@mdurrani808)
+ * @since 5/8/21
+ */
+
 package frc.robot.subsystems.swerve;
 
 // WPI libraries
@@ -131,7 +136,13 @@ public class DriveTrain extends SubsystemBase {
   }
 
 
-  // Less complicated version, runs with the robot's actual center
+  /**
+   * Moves the entire drivetrain with the specified X and Y speed with rotation
+   * @param xSpeed X speed, in m/s
+   * @param ySpeed Y speed, in m/s
+   * @param rot Rotation speed in rad/s
+   * @param fieldRelative If true, robot will use field as X and Y reference, regardless of angle. If false, robot will move in respect to itself
+   */
   public void drive(double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
 
     // Set up the modules
@@ -144,7 +155,14 @@ public class DriveTrain extends SubsystemBase {
   }
 
 
-  // More complicated, runs with a custom center relative to robot
+  /**
+   * Moves the entire drivetrain with specified X and Y speed with rotation around a specified relative center
+   * @param xSpeed X speed, in m/s
+   * @param ySpeed Y speed, in m/s
+   * @param rot Rotation speed in rad/s
+   * @param fieldRelative If true, robot will use field as X and Y reference, regardless of angle. If false, robot will move in respect to itself
+   * @param relativeCenter A Translation2d of the point that the robot is supposed to move around. This point is relative to the frame of the robot
+   */
   public void driveRelativeCenter(double xSpeed, double ySpeed, double rot, boolean fieldRelative, Translation2d relativeCenter) {
 
     // Drive with selected mode
@@ -157,7 +175,14 @@ public class DriveTrain extends SubsystemBase {
   }
 
 
-  // More complicated, runs with a custom center relative to field
+  /**
+   * Moves the entire drivetrain with specified X and Y speed with rotation around a specified absolute center
+   * @param xSpeed X speed, in m/s
+   * @param ySpeed Y speed, in m/s
+   * @param rot Rotation speed in rad/s
+   * @param fieldRelative If true, robot will use field as X and Y reference, regardless of angle. If false, robot will move in respect to itself
+   * @param relativeCenter A Translation2d of the point that the robot is supposed to move around. This point is relative to the field
+   */
   public void driveAbsoluteCenter(double xSpeed, double ySpeed, double rot, boolean fieldRelative, Translation2d absoluteCenter) {
 
     // Get the current position of the robot on the field
@@ -179,7 +204,11 @@ public class DriveTrain extends SubsystemBase {
   }
 
 
-  // Sets all of the states of the modules and updates the odometry of the robot
+  /**
+   * Sets all of the states of the modules and updates the odometry of the robot
+   * @param chassisSpeeds The desired velocities of the movement of the entire drivetrain
+   * @param centerOfRotation The center of rotation that should be used. This is relative to the robot
+   */
   private void setModuleStates(ChassisSpeeds chassisSpeeds, Translation2d centerOfRotation) {
 
     // Get the module states
@@ -199,7 +228,10 @@ public class DriveTrain extends SubsystemBase {
   }
 
 
-  // Sets all of the states of the modules and updates the odometry of the robot
+  /**
+   * Sets all of the states of the modules and updates the odometry of the robot
+   * @param chassisSpeeds The desired velocities of the movement of the entire drivetrain
+   */
   private void setModuleStates(ChassisSpeeds chassisSpeeds) {
 
     // Get the module states
@@ -219,24 +251,27 @@ public class DriveTrain extends SubsystemBase {
   }
 
 
-  // Halts all of the modules
+  /**
+   * Halts all of the modules (sets all the motors to 0%)
+   */
   public void haltAllModules() {
 
-    // Steering motors
-    frontLeft.getSteerMotor().set(0);
-    frontRight.getSteerMotor().set(0);
-    backLeft.getSteerMotor().set(0);
-    backRight.getSteerMotor().set(0);
-
-    // Drive motors
-    frontLeft.getDriveMotor().set(0);
-    frontRight.getDriveMotor().set(0);
-    backLeft.getDriveMotor().set(0);
-    backRight.getDriveMotor().set(0);
+    // Stop the motors of each of the modules
+    frontLeft.stopMotors();
+    frontRight.stopMotors();
+    backLeft.stopMotors();
+    backRight.stopMotors();
   }
 
 
-  // Moves all of the swerve modules repeatedly till they reach the desired position
+  /**
+   * Moves all of the swerve modules. If wait is specified, then the function will wait until the modules reach their desired angles.
+   * @param FLAngle Angle of the front left module
+   * @param FRAngle Angle of the front right module
+   * @param BLAngle Angle of the back left module
+   * @param BRAngle Angle of the back right module
+   * @param wait If true, then this function will block execution until the movement has been completed
+   */
   public void setDesiredAngles(double FLAngle, double FRAngle, double BLAngle, double BRAngle, boolean wait) {
 
     // Check to see if we need to wait
@@ -262,13 +297,24 @@ public class DriveTrain extends SubsystemBase {
   }
 
 
-  // Move to angles, but with an array instead
+  /**
+   * Moves the modules to the desired angles, just with an array of angles instead of individual parameters
+   * @param angleArray An array of module angles in form [Front Left, Front Right, Back Left, Back Right]
+   * @param wait If true, then this function will block execution until the movement has been completed
+   */
   public void setDesiredAngles(double[] angleArray, boolean wait) {
     setDesiredAngles(angleArray[0], angleArray[1], angleArray[2], angleArray[3], wait);
   }
 
 
-  // Moves all of the swerve modules repeatedly till they reach the desired position
+  /**
+   * Moves all of the swerve modules. If wait is specified, then the function will wait until the modules reach their desired velocities.
+   * @param FLAngle Velocity of the front left module
+   * @param FRAngle Velocity of the front right module
+   * @param BLAngle Velocity of the back left module
+   * @param BRAngle Velocity of the back right module
+   * @param wait If true, then this function will block execution until the velocity has been reached
+   */
   public void setDesiredVelocities(double FLSpeed, double FRSpeed, double BLSpeed, double BRSpeed, boolean wait) {
 
     // Check to see if we need to wait
@@ -294,25 +340,34 @@ public class DriveTrain extends SubsystemBase {
   }
 
 
-  // Set speeds, but with an array instead
+  /**
+   * Moves the modules to the desired velocities, just with an array of velocities instead of individual parameters
+   * @param speedArray An array of module velocities in form [Front Left, Front Right, Back Left, Back Right]
+   * @param wait If true, then this function will block execution until the velocity has been reached
+   */
   public void setDesiredVelocities(double[] speedArray, boolean wait) {
     setDesiredVelocities(speedArray[0], speedArray[1], speedArray[2], speedArray[3], wait);
   }
 
-  // Stop the modules (holds position)
+
+  /**
+   * Stops the drive wheel of the modules and sets it to hold stopped
+   */
   public void stopModules() {
     setDesiredVelocities(0, 0, 0, 0, false);
   }
 
 
-  // Locks the modules of the robot to prevent movement
+  /**
+   * Locks the drivetrain up by halting the modules and moving them in an "X" pattern. Useful for when someone is bullying us
+   */
   public void lockemUp() {
 
     // Halt all of the motors
-    frontLeft.getDriveMotor().set(0);
-    frontRight.getDriveMotor().set(0);
-    backLeft.getDriveMotor().set(0);
-    backRight.getDriveMotor().set(0);
+    frontLeft.getDriveMotor().stopMotor();
+    frontRight.getDriveMotor().stopMotor();
+    backLeft.getDriveMotor().stopMotor();
+    backRight.getDriveMotor().stopMotor();
 
     // Makes an X pattern with the swerve base
     // Set the modules to 45 degree angles
@@ -323,7 +378,9 @@ public class DriveTrain extends SubsystemBase {
   }
 
 
-  // Updates the field relative position of the robot.
+  /**
+   * Updates the odometry. Should be called as frequently as possible to reduce error.
+   */
   public void updateOdometry() {
     poseEstimator.update(
       Robot.navX.getRotation2d(),
@@ -335,19 +392,28 @@ public class DriveTrain extends SubsystemBase {
   }
 
 
-  // Resets the odometry of the robot
+  /**
+   * Reset the odometry measurements. This is kind of like "homing" the robot
+   * @param currentPosition The robot's current position
+   */
   public void resetOdometry(Pose2d currentPosition) {
     poseEstimator.resetPosition(currentPosition, Robot.navX.getRotation2d());
   }
 
 
-  // Updates the pose estimator with a vision position
-  public void visionPositionMeasurement(Pose2d visionRobotPoseMeters, double timestampSeconds) {
-    poseEstimator.addVisionMeasurement(visionRobotPoseMeters, timestampSeconds);
+  /**
+   * Adds a vision position measurement
+   */
+  public void visionPositionMeasurement(Pose2d visionRobotPose, double timestampSeconds) {
+    poseEstimator.addVisionMeasurement(visionRobotPose, timestampSeconds);
   }
 
 
-  // Function to have the drivetrain follow a set trajectory
+  /**
+   * Moves the robot to follow a trajectory
+   * @param desiredPosition The desired position of the robot
+   * @param linearVelocity The linear velocity, in m/s, to make the robot at max speed
+   */
   public void trajectoryFollow(Pose2d desiredPosition, double linearVelocity) {
 
     // Calculate the speeds for the chassis
@@ -358,34 +424,49 @@ public class DriveTrain extends SubsystemBase {
   }
 
 
-  // Gets the X position of the drivetrain
+  /**
+   * Gets the estimated X position of the drivetrain on the field
+   * @return Estimated X position (m)
+   */
   public double getXPosition() {
     return poseEstimator.getEstimatedPosition().getX();
   }
 
 
-  // Gets the Y position of the drivetrain
+  /**
+   * Gets the estimated Y position of the drivetrain on the field
+   * @return Estimated Y position (m)
+   */
   public double getYPosition() {
     return poseEstimator.getEstimatedPosition().getY();
   }
 
 
-  // Gets the angle of the robot
+  /**
+   * Gets the estimated angle of the drivetrain on the field
+   * @return Estimated angle (Rotation2d)
+   */
   public Rotation2d getThetaPosition() {
     return poseEstimator.getEstimatedPosition().getRotation();
   }
 
 
-  // Gets a Pose2D of the robot
+  /**
+   * Gets the orientation of the robot on the field
+   * @return The orientation of the robot (Pose2d) (units in m)
+   */
   public Pose2d getPose2D() {
     return poseEstimator.getEstimatedPosition();
   }
 
 
-  // Check if the robot is at the reference point of the trajectory
-  public boolean atTrajectoryReference() {
+  /**
+   * Check if the robot is at the reference point of the planned movement
+   * @return Is the movement finished?
+   */
+  public boolean finishedMovement() {
 
-    // Return if the trajectory is complete
+    // Return if the movement is complete
     return driveController.atReference();
   }
 
