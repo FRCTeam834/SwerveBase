@@ -64,6 +64,6 @@ public class SnapToAngle extends CommandBase {
   public boolean isFinished() {
 
     // Check if the trajectory is complete
-    return Robot.driveTrain.atTrajectoryReference();
+    return Robot.driveTrain.finishedMovement();
   }
-}  
+}

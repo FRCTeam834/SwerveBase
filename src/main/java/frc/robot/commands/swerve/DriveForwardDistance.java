@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 public class DriveForwardDistance extends CommandBase {
   /** Moves the robot to the desired position */
 
-  // Main carrier variables 
+  // Main carrier variables
   Pose2d desiredPose2d;
   double linearVel;
 
@@ -38,7 +38,7 @@ public class DriveForwardDistance extends CommandBase {
 
   // Default to current driver profile for the linear speed
   public DriveForwardDistance(double distance) {
-    
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(Robot.driveTrain);
 
@@ -73,6 +73,6 @@ public class DriveForwardDistance extends CommandBase {
   public boolean isFinished() {
 
     // Check if the trajectory is complete
-    return Robot.driveTrain.atTrajectoryReference();
+    return Robot.driveTrain.finishedMovement();
   }
 }
