@@ -17,7 +17,9 @@ import frc.robot.commands.swerve.TestModulePositioning;
 import frc.robot.commands.swerve.TestModuleVelocity;
 import frc.robot.commands.swerve.TestMovementPID;
 import frc.robot.commands.swerve.ZeroCanCoders;
+import frc.robot.commands.swerve.ZeroNavX;
 import frc.robot.enums.ROBOT_STATE;
+
 // WPI Libraries
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -51,6 +53,7 @@ public class RobotContainer {
   private final TestMovementPID testMovementPID = new TestMovementPID();
   private final TestModuleVelocity testModuleVelocity = new TestModuleVelocity();
   private final SaveSwerveParameters saveSwerveParameters = new SaveSwerveParameters();
+  private final ZeroNavX zeroNavX = new ZeroNavX();
 
   // Timer (for delays)
   public static Timer timer = new Timer();
@@ -96,7 +99,7 @@ public class RobotContainer {
   TR = Top Right
   ML = Middle Left
   MM = Middle Middle
-  MR = Middle RIght
+  MR = Middle Right
   BL = Bottom Left
   BM = Bottom Middle
   BR = Bottom Right
@@ -133,14 +136,16 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
+    // Left joystick
     lJoystick1.toggleWhenPressed(letsRoll2Joysticks);
-    lJoystick2.whenPressed(saveSwerveParameters);
-    lJoystick3.whenPressed(pullNtSwerveParams);
-    lJoystick4.whenPressed(testModulePID);
-    lJoystick5.whenPressed(testMovementPID);
+    //lJoystick2.whenPressed(saveSwerveParameters);
+    //lJoystick3.whenPressed(pullNtSwerveParams);
+    //lJoystick4.whenPressed(testModulePID);
+    //lJoystick5.whenPressed(testMovementPID);
     lJoystick8.whenPressed(zeroCanCoders);
 
-    rJoystick1.toggleWhenPressed(testModuleVelocity);
+    // Right joystick
+    rJoystick1.toggleWhenPressed(zeroNavX);
 
     /*
     // Try to assign the left joystick
