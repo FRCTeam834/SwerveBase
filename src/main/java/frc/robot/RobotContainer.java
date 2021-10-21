@@ -248,7 +248,7 @@ public class RobotContainer {
       // Define t as a variable between 0 and 1
       // This equation allows the output to start at 0 when leaving the threshold,
       // then scales it so that the maximum output of the joysticks is always 1
-      return (Math.abs(rawValue) / rawValue) * ((Math.abs(rawValue) - Parameters.driver.CURRENT_PROFILE.JOYSTICK_DEADZONE) / (1 - Parameters.driver.CURRENT_PROFILE.JOYSTICK_DEADZONE));
+      return (rawValue / Math.abs(rawValue)) * ((Math.abs(rawValue) - Parameters.driver.CURRENT_PROFILE.JOYSTICK_DEADZONE) / (1 - Parameters.driver.CURRENT_PROFILE.JOYSTICK_DEADZONE));
     }
   }
 
