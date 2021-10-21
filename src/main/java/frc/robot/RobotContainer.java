@@ -243,12 +243,12 @@ public class RobotContainer {
     else { 
       // Implements the equation: output = (x - t) / (1 - t)
       // Unfortunately, we need to deal with negative values, so we need to take the abs value, then 
-      // multiply by x/abs(x) (comes out to 1 or -1 based on the sign of the number)
+      // multiply by the sign of the number
       // Pop this into Desmos, you can see a visual output: y=\frac{x-t}{1-t}\left\{0\le y\le1\right\}
       // Define t as a variable between 0 and 1
       // This equation allows the output to start at 0 when leaving the threshold,
       // then scales it so that the maximum output of the joysticks is always 1
-      return (rawValue / Math.abs(rawValue)) * ((Math.abs(rawValue) - Parameters.driver.CURRENT_PROFILE.JOYSTICK_DEADZONE) / (1 - Parameters.driver.CURRENT_PROFILE.JOYSTICK_DEADZONE));
+      return Math.signum(rawValue) * ((Math.abs(rawValue) - Parameters.driver.CURRENT_PROFILE.JOYSTICK_DEADZONE) / (1 - Parameters.driver.CURRENT_PROFILE.JOYSTICK_DEADZONE));
     }
   }
 
