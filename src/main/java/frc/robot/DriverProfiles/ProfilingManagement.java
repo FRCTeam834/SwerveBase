@@ -12,6 +12,7 @@ import frc.robot.Parameters;
 
 // Robot instance
 import frc.robot.Robot;
+import frc.robot.enums.JOYSTICK_OUTPUT_TYPES;
 
 // Vendor Libraries
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -49,7 +50,7 @@ public class ProfilingManagement extends SubsystemBase {
 
     // Check to make sure that the profile isn't the same as the previous one
     if(selectedProfile != Parameters.driver.CURRENT_PROFILE) {
-      
+
       // Update the current profile with the new one
       updateCurrentProfile(selectedProfile);
     }
@@ -77,11 +78,13 @@ public class ProfilingManagement extends SubsystemBase {
     // Strings
     Parameters.SAVED_PARAMS.putString("NAME",              profile.NAME);
 
-    // Doubles
-    Parameters.SAVED_PARAMS.putDouble("JOYSTICK_DEADZONE", profile.JOYSTICK_DEADZONE);
-    Parameters.SAVED_PARAMS.putDouble("MAX_STEER_SPEED",   profile.MAX_STEER_SPEED);
-    Parameters.SAVED_PARAMS.putDouble("DRIVE_RAMP_RATE",   profile.DRIVE_RAMP_RATE);
-    Parameters.SAVED_PARAMS.putDouble("MAX_SPEED",         profile.MAX_SPEED);
+    // Ints / Doubles
+    Parameters.SAVED_PARAMS.putDouble("JOYSTICK_DEADZONE",   profile.JOYSTICK_PARAMS.getDeadzone());
+    Parameters.SAVED_PARAMS.putDouble("JOYSTICK_RAMP_CONST", profile.JOYSTICK_PARAMS.getRampRate());
+    Parameters.SAVED_PARAMS.putInt("JOYSTICK_OUTPUT_TYPE",   profile.JOYSTICK_PARAMS.getOutputType().getInt());
+    Parameters.SAVED_PARAMS.putDouble("MAX_STEER_SPEED",     profile.MAX_STEER_SPEED);
+    Parameters.SAVED_PARAMS.putDouble("DRIVE_RAMP_RATE",     profile.DRIVE_RAMP_RATE);
+    Parameters.SAVED_PARAMS.putDouble("MAX_SPEED",           profile.MAX_SPEED);
 
     // Booleans
     Parameters.SAVED_PARAMS.putBoolean("LOCKEM_UP",        profile.LOCKEM_UP);
@@ -95,12 +98,12 @@ public class ProfilingManagement extends SubsystemBase {
       Parameters.SAVED_PARAMS.putBoolean("BRAKE", true);
     }
     else {
-      // Coast 
+      // Coast
       Parameters.SAVED_PARAMS.putBoolean("BRAKE", false);
     }
   }
 
-  
+
   public void loadSavedProfile() {
     // Loads the saved settings
 
@@ -110,8 +113,11 @@ public class ProfilingManagement extends SubsystemBase {
     // Strings
     profile.NAME              = Parameters.SAVED_PARAMS.getString("NAME",              Parameters.driver.DEFAULT_DRIVER_PROFILE.NAME);
 
-    // Doubles
-    profile.JOYSTICK_DEADZONE = Parameters.SAVED_PARAMS.getDouble("JOYSTICK_DEADZONE", Parameters.driver.DEFAULT_DRIVER_PROFILE.JOYSTICK_DEADZONE);
+    // Ints / Doubles
+    double deadzone                  = Parameters.SAVED_PARAMS.getDouble("JOYSTICK_DEADZONE", Parameters.driver.DEFAULT_DRIVER_PROFILE.JOYSTICK_PARAMS.getDeadzone());
+    double rampRate                  = Parameters.SAVED_PARAMS.getDouble("JOYSTICK_RAMP_RATE", Parameters.driver.DEFAULT_DRIVER_PROFILE.JOYSTICK_PARAMS.getRampRate());
+    JOYSTICK_OUTPUT_TYPES outputType = JOYSTICK_OUTPUT_TYPES.lookupInt(Parameters.SAVED_PARAMS.getInt("JOYSTICK_OUTPUT_TYPE", Parameters.driver.DEFAULT_DRIVER_PROFILE.JOYSTICK_PARAMS.getOutputType().getInt()));
+    profile.JOYSTICK_PARAMS   = new JoystickParams(deadzone, outputType, rampRate);
     profile.MAX_STEER_SPEED   = Parameters.SAVED_PARAMS.getDouble("MAX_STEER_SPEED",   Parameters.driver.DEFAULT_DRIVER_PROFILE.MAX_STEER_SPEED);
     profile.DRIVE_RAMP_RATE   = Parameters.SAVED_PARAMS.getDouble("DRIVE_RAMP_RATE",   Parameters.driver.DEFAULT_DRIVER_PROFILE.DRIVE_RAMP_RATE);
     profile.MAX_SPEED         = Parameters.SAVED_PARAMS.getDouble("MAX_SPEED",         Parameters.driver.DEFAULT_DRIVER_PROFILE.MAX_SPEED);
@@ -130,7 +136,7 @@ public class ProfilingManagement extends SubsystemBase {
       defaultBrakeMode = true;
     }
     else {
-      // Coast 
+      // Coast
       defaultBrakeMode = false;
     }
 
@@ -139,7 +145,7 @@ public class ProfilingManagement extends SubsystemBase {
       profile.DRIVE_IDLE_MODE = IdleMode.kBrake;
     }
     else {
-      // Coast 
+      // Coast
       profile.DRIVE_IDLE_MODE = IdleMode.kCoast;
     }
 

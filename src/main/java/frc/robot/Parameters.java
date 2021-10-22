@@ -9,6 +9,8 @@ package frc.robot;
 
 // Internal libraries
 import frc.robot.DriverProfiles.DriverProfile;
+import frc.robot.DriverProfiles.JoystickParams;
+import frc.robot.enums.JOYSTICK_OUTPUT_TYPES;
 import frc.robot.subsystems.swerve.PID_PARAMS;
 
 // Vendor libraries
@@ -63,13 +65,22 @@ public final class Parameters {
     // All of the driver parameters
     public static final class driver {
 
-        // Driver Profiles
+        /**
+         * A quick way of referencing driver parameters
+         *
+         * @param NAME                 The name of the driver
+         * @param JOYSTICK_PARAMS      The joystick parameters to use
+         * @param MAX_STEER_SPEED      Maximum deg/s of rotational speed
+         * @param DRIVE_RAMP_RATE      The speed at which the drivetrain ramps to full speed. Prevents sudden jerks. Maybe something to override?
+         * @param LOCKEM_UP            If the swerve should lock the modules at 45 degrees, effectively hitting the brakes. Hard on the modules, but worth it in competition
+         * @param FIELD_CENTRIC        If the robot should treat itself as forward or if the field's forward should be forward
+         * @param MAX_SPEED            Maximum speed of modules in m/s
+         * @param DRIVE_IDLE_MODE      If the drive motors should coast or brake after they exceed the current set speed. Coasting makes the driving smoother, but braking makes it more aggressive
+         * @param STEER_IDLE_MODE      If the steering motor should coast of brake after they exceed the current set speed. Modules will most likely only work with braking enabled
+        */
         public static DriverProfile[] DRIVER_PROFILES = {
-            // DriverProfile NAME, double JOYSTICK_DEADZONE, double MAX_STEER_SPEED (deg/s),
-            // double DRIVE_RAMP_RATE, boolean LOCKEM_UP, boolean FIELD_CENTRIC, double
-            // MAX_SPEED (m/s), IdleMode DRIVE_IDLE_MODE)
-            new DriverProfile("CAP1Sup", 0.05, 180.0, 0.5, true, false, 8.0, IdleMode.kBrake, IdleMode.kBrake),
-            new DriverProfile("Test", 0.05, 45.0, 0.5, true, false, 1.0, IdleMode.kBrake, IdleMode.kBrake)
+            new DriverProfile("CAP1Sup", new JoystickParams(0.075, JOYSTICK_OUTPUT_TYPES.ZEROED_QUAD_LINEAR, 2), 180.0, 0.5, true, false, 8.0, IdleMode.kBrake, IdleMode.kBrake),
+            new DriverProfile("Test", new JoystickParams(0.1, JOYSTICK_OUTPUT_TYPES.ZEROED_LINEAR), 45.0, 0.5, true, false, 1.0, IdleMode.kBrake, IdleMode.kBrake)
         };
 
         // Default profile (must be kept!)

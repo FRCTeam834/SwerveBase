@@ -18,6 +18,7 @@ import frc.robot.commands.swerve.TestModuleVelocity;
 import frc.robot.commands.swerve.TestMovementPID;
 import frc.robot.commands.swerve.ZeroCanCoders;
 import frc.robot.commands.swerve.ZeroNavX;
+import frc.robot.enums.JOYSTICK_OUTPUT_TYPES;
 import frc.robot.enums.ROBOT_STATE;
 
 // WPI Libraries
@@ -237,18 +238,40 @@ public class RobotContainer {
   public static double constrainJoystick(double rawValue) {
 
     // If the value is out of tolerance, then zero it. Otherwise return the value of the joystick
-    if (Math.abs(rawValue) < Parameters.driver.CURRENT_PROFILE.JOYSTICK_DEADZONE) {
+    if (Math.abs(rawValue) < Parameters.driver.CURRENT_PROFILE.JOYSTICK_PARAMS.getDeadzone()) {
       return 0;
     }
-    else { 
-      // Implements the equation: output = (x - t) / (1 - t)
-      // Unfortunately, we need to deal with negative values, so we need to take the abs value, then 
-      // multiply by the sign of the number
-      // Pop this into Desmos, you can see a visual output: y=\frac{x-t}{1-t}\left\{0\le y\le1\right\}
-      // Define t as a variable between 0 and 1
-      // This equation allows the output to start at 0 when leaving the threshold,
-      // then scales it so that the maximum output of the joysticks is always 1
-      return Math.signum(rawValue) * ((Math.abs(rawValue) - Parameters.driver.CURRENT_PROFILE.JOYSTICK_DEADZONE) / (1 - Parameters.driver.CURRENT_PROFILE.JOYSTICK_DEADZONE));
+    else {
+      switch (Parameters.driver.CURRENT_PROFILE.JOYSTICK_PARAMS.getOutputType()) {
+        case LINEAR: {
+          return rawValue;
+        }
+        case ZEROED_LINEAR: {
+          /**
+           * Implements the equation: output = (x - t) / (1 - t)
+           * Unfortunately, we need to deal with negative values, so we need to take the abs value, then
+           * multiply by the sign of the number
+           * Pop this into Desmos, you can see a visual output: y=\frac{x-t}{1-t}\left\{0\le y\le1\right\}
+           * Define t as a variable between 0 and 1
+           * This equation allows the output to start at 0 when leaving the threshold,
+           * then scales it so that the maximum output of the joysticks is always 1
+           */
+          return Math.signum(rawValue) * ((Math.abs(rawValue) - Parameters.driver.CURRENT_PROFILE.JOYSTICK_PARAMS.getDeadzone()) / (1 - Parameters.driver.CURRENT_PROFILE.JOYSTICK_PARAMS.getDeadzone()));
+        }
+        case ZEROED_QUAD_LINEAR: {
+          /**
+           * Implements an output for the joysticks that uses a quadratic on the lower end and a linear slope up to 1.
+           * I'm not going to bother explaining it, here's the graph: https://www.desmos.com/calculator/5lqgnstb1k
+           *
+           *
+           */
+          // TODO: Implement quadratic and linear equations
+          return 0;
+        }
+        default:
+          // This will never be reached, but a default case is needed (0 for no output)
+          return 0;
+      }
     }
   }
 
