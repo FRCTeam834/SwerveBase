@@ -5,6 +5,11 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
+/**
+ * @author Christian Piper (@CAP1Sup), Mohammed Durrani (@mdurrani808), Krishna Dihora (@kjdih2)
+ * @since 5/8/20
+ */
+
 package frc.robot;
 
 // WPI libraries
@@ -16,12 +21,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.NavX;
 import frc.robot.subsystems.swerve.DriveTrain;
 import frc.robot.DriverProfiles.ProfilingManagement;
-//import frc.robot.commands.swerve.LetsRoll1Joystick;
-//import frc.robot.commands.swerve.LetsRoll2Joysticks;
-//import frc.robot.commands.swerve.PullNTSwerveParams;
-//import frc.robot.commands.swerve.SaveSwerveParameters;
-//import frc.robot.commands.swerve.TestModulePID;
-//import frc.robot.commands.swerve.ZeroCanCoders;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to

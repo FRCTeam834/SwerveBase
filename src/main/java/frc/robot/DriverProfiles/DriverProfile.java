@@ -5,10 +5,14 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
+/**
+ * @author Christian Piper (@CAP1Sup)
+ * @since 6/3/20
+ */
+
 package frc.robot.DriverProfiles;
 
 import com.revrobotics.CANSparkMax.IdleMode;
-
 
 /**
  * A quick way of referencing driver parameters

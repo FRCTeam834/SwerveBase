@@ -1,8 +1,13 @@
 /**
- *  Class that organizes gains used when assigning values to slots
+ * @author Christian Piper (@CAP1Sup)
+ * @since 5/22/20
  */
+
 package frc.robot.subsystems.swerve;
 
+/**
+ *  Class that organizes gains used when assigning values to slots
+ */
 public class PID_PARAMS {
 
     // The values of the PID loop
@@ -12,7 +17,7 @@ public class PID_PARAMS {
     public double FF;
     public double I_ZONE;
     public double PEAK_OUTPUT;
-    
+
     // Creating a new set of PID Parameters
     public PID_PARAMS(double P, double I, double D, double FF, double I_ZONE, double PEAK_OUTPUT){
         this.P = P;

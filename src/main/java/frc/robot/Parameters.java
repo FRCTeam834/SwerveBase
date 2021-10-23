@@ -5,6 +5,11 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
+/**
+ * @author Christian Piper (@CAP1Sup), Mohammed Durrani (@mdurrani808), Krishna Dihora (@kjdih2)
+ * @since 5/8/20
+ */
+
 package frc.robot;
 
 // Internal libraries

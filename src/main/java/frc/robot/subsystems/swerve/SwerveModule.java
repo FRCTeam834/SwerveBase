@@ -5,6 +5,11 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
+/**
+ * @author Christian Piper (@CAP1Sup)
+ * @since 5/8/20
+ */
+
 package frc.robot.subsystems.swerve;
 
 // Parameters
