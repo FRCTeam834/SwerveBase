@@ -56,15 +56,15 @@ public class LetsRoll1Joystick extends CommandBase {
         turning = -1;
       }
     }
-  
+
     // If any of the sticks are out of range, then we need to move. Otherwise, lock up the drivetrain (if specified)
     if (leftX != 0 || leftY != 0 || turning != 0) {
 
       // Move the drivetrain with the desired values
-      Robot.driveTrain.drive((leftX * Parameters.driver.CURRENT_PROFILE.MAX_SPEED), (leftY * Parameters.driver.CURRENT_PROFILE.MAX_SPEED),
-                        Math.toRadians(turning * Parameters.driver.CURRENT_PROFILE.MAX_STEER_SPEED), Parameters.driver.CURRENT_PROFILE.FIELD_CENTRIC);
+      Robot.driveTrain.drive((leftX * Parameters.driver.currentProfile.maxModSpeed), (leftY * Parameters.driver.currentProfile.maxModSpeed),
+                        Math.toRadians(turning * Parameters.driver.currentProfile.maxSteerRate), Parameters.driver.currentProfile.fieldCentric);
     }
-    else if (Parameters.driver.CURRENT_PROFILE.LOCKEM_UP) {
+    else if (Parameters.driver.currentProfile.lockemUp) {
       Robot.driveTrain.lockemUp();
     }
     else {

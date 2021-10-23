@@ -49,10 +49,10 @@ public class DriveTrain extends SubsystemBase {
   public SwerveModule backRight;
 
   // PID value storage, with default values from Parameters
-  public PIDController X_MOVE_PID = Parameters.driveTrain.movement.MOVEMENT_PID;
-  public PIDController Y_MOVE_PID = Parameters.driveTrain.movement.MOVEMENT_PID;
-  public Constraints ROTATION_CONSTRAINTS = Parameters.driveTrain.movement.ROTATION_CONSTRAINTS;
-  public ProfiledPIDController ROTATION_PID = Parameters.driveTrain.movement.ROTATION_PID;
+  public PIDController X_MOVE_PID = Parameters.driveTrain.movement.movementPID;
+  public PIDController Y_MOVE_PID = Parameters.driveTrain.movement.movementPID;
+  public Constraints ROTATION_CONSTRAINTS = Parameters.driveTrain.movement.rotationConstraints;
+  public ProfiledPIDController ROTATION_PID = Parameters.driveTrain.movement.rotationPID;
 
   // NetworkTable entries
   NetworkTableEntry X_MOVE_PID_P_ENTRY;
@@ -475,10 +475,10 @@ public class DriveTrain extends SubsystemBase {
   public void updateParameters() {
 
     // Update the PID parameters with the new driver profile values
-    Parameters.driveTrain.pid.FL_STEER_PID.setPeakOutput(Parameters.driver.CURRENT_PROFILE.MAX_SPEED);
-    Parameters.driveTrain.pid.FR_STEER_PID.setPeakOutput(Parameters.driver.CURRENT_PROFILE.MAX_SPEED);
-    Parameters.driveTrain.pid.BL_STEER_PID.setPeakOutput(Parameters.driver.CURRENT_PROFILE.MAX_SPEED);
-    Parameters.driveTrain.pid.BR_STEER_PID.setPeakOutput(Parameters.driver.CURRENT_PROFILE.MAX_SPEED);
+    Parameters.driveTrain.pid.FL_STEER_PID.setPeakOutput(Parameters.driver.currentProfile.maxModSpeed);
+    Parameters.driveTrain.pid.FR_STEER_PID.setPeakOutput(Parameters.driver.currentProfile.maxModSpeed);
+    Parameters.driveTrain.pid.BL_STEER_PID.setPeakOutput(Parameters.driver.currentProfile.maxModSpeed);
+    Parameters.driveTrain.pid.BR_STEER_PID.setPeakOutput(Parameters.driver.currentProfile.maxModSpeed);
 
     //Parameters.driveTrain.pid.FL_DRIVE_PID.setPeakOutput(Parameters.driver.CURRENT_PROFILE.MAX_SPEED);
     //Parameters.driveTrain.pid.FR_DRIVE_PID.setPeakOutput(Parameters.driver.CURRENT_PROFILE.MAX_SPEED);
@@ -486,16 +486,16 @@ public class DriveTrain extends SubsystemBase {
     //Parameters.driveTrain.pid.BR_DRIVE_PID.setPeakOutput(Parameters.driver.CURRENT_PROFILE.MAX_SPEED);
 
     // Set steering parameters
-    frontLeft.setSteerMParams(Parameters.driveTrain.pid.FL_STEER_PID,  Parameters.driver.CURRENT_PROFILE.STEER_IDLE_MODE);
-    frontRight.setSteerMParams(Parameters.driveTrain.pid.FR_STEER_PID, Parameters.driver.CURRENT_PROFILE.STEER_IDLE_MODE);
-    backLeft.setSteerMParams(Parameters.driveTrain.pid.BL_STEER_PID,   Parameters.driver.CURRENT_PROFILE.STEER_IDLE_MODE);
-    backRight.setSteerMParams(Parameters.driveTrain.pid.BR_STEER_PID,  Parameters.driver.CURRENT_PROFILE.STEER_IDLE_MODE);
+    frontLeft.setSteerMParams(Parameters.driveTrain.pid.FL_STEER_PID,  Parameters.driver.currentProfile.steerIdleMode);
+    frontRight.setSteerMParams(Parameters.driveTrain.pid.FR_STEER_PID, Parameters.driver.currentProfile.steerIdleMode);
+    backLeft.setSteerMParams(Parameters.driveTrain.pid.BL_STEER_PID,   Parameters.driver.currentProfile.steerIdleMode);
+    backRight.setSteerMParams(Parameters.driveTrain.pid.BR_STEER_PID,  Parameters.driver.currentProfile.steerIdleMode);
 
     // Set driving parameters
-    frontLeft.setDriveMParams(Parameters.driveTrain.pid.FL_DRIVE_PID,  Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
-    frontRight.setDriveMParams(Parameters.driveTrain.pid.FR_DRIVE_PID, Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
-    backLeft.setDriveMParams(Parameters.driveTrain.pid.BL_DRIVE_PID,   Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
-    backRight.setDriveMParams(Parameters.driveTrain.pid.BR_DRIVE_PID,  Parameters.driver.CURRENT_PROFILE.DRIVE_IDLE_MODE);
+    frontLeft.setDriveMParams(Parameters.driveTrain.pid.FL_DRIVE_PID,  Parameters.driver.currentProfile.driveIdleMode);
+    frontRight.setDriveMParams(Parameters.driveTrain.pid.FR_DRIVE_PID, Parameters.driver.currentProfile.driveIdleMode);
+    backLeft.setDriveMParams(Parameters.driveTrain.pid.BL_DRIVE_PID,   Parameters.driver.currentProfile.driveIdleMode);
+    backRight.setDriveMParams(Parameters.driveTrain.pid.BR_DRIVE_PID,  Parameters.driver.currentProfile.driveIdleMode);
   }
 
 
@@ -520,23 +520,23 @@ public class DriveTrain extends SubsystemBase {
     backRight.saveParameters();
 
     // X Movement PID
-    Parameters.SAVED_PARAMS.putDouble("DRIVETRAIN_X_MOVE_PID_P", X_MOVE_PID.getP());
-    Parameters.SAVED_PARAMS.putDouble("DRIVETRAIN_X_MOVE_PID_I", X_MOVE_PID.getI());
-    Parameters.SAVED_PARAMS.putDouble("DRIVETRAIN_X_MOVE_PID_D", X_MOVE_PID.getD());
+    Parameters.savedParams.putDouble("DRIVETRAIN_X_MOVE_PID_P", X_MOVE_PID.getP());
+    Parameters.savedParams.putDouble("DRIVETRAIN_X_MOVE_PID_I", X_MOVE_PID.getI());
+    Parameters.savedParams.putDouble("DRIVETRAIN_X_MOVE_PID_D", X_MOVE_PID.getD());
 
     // Y Movement PID
-    Parameters.SAVED_PARAMS.putDouble("DRIVETRAIN_Y_MOVE_PID_P", Y_MOVE_PID.getP());
-    Parameters.SAVED_PARAMS.putDouble("DRIVETRAIN_Y_MOVE_PID_I", Y_MOVE_PID.getI());
-    Parameters.SAVED_PARAMS.putDouble("DRIVETRAIN_Y_MOVE_PID_D", Y_MOVE_PID.getD());
+    Parameters.savedParams.putDouble("DRIVETRAIN_Y_MOVE_PID_P", Y_MOVE_PID.getP());
+    Parameters.savedParams.putDouble("DRIVETRAIN_Y_MOVE_PID_I", Y_MOVE_PID.getI());
+    Parameters.savedParams.putDouble("DRIVETRAIN_Y_MOVE_PID_D", Y_MOVE_PID.getD());
 
     // Rotation PID (PID values)
-    Parameters.SAVED_PARAMS.putDouble("DRIVETRAIN_ROTATION_PID_P", ROTATION_PID.getP());
-    Parameters.SAVED_PARAMS.putDouble("DRIVETRAIN_ROTATION_PID_I", ROTATION_PID.getI());
-    Parameters.SAVED_PARAMS.putDouble("DRIVETRAIN_ROTATION_PID_D", ROTATION_PID.getD());
+    Parameters.savedParams.putDouble("DRIVETRAIN_ROTATION_PID_P", ROTATION_PID.getP());
+    Parameters.savedParams.putDouble("DRIVETRAIN_ROTATION_PID_I", ROTATION_PID.getI());
+    Parameters.savedParams.putDouble("DRIVETRAIN_ROTATION_PID_D", ROTATION_PID.getD());
 
     // Rotation PID (Constraints)
-    Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_ROTATION_PID_MAX_VEL", Math.toDegrees(ROTATION_CONSTRAINTS.maxVelocity));
-    Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_ROTATION_PID_MAX_ACCEL", Math.toDegrees(ROTATION_CONSTRAINTS.maxAcceleration));
+    Parameters.savedParams.getDouble("DRIVETRAIN_ROTATION_PID_MAX_VEL", Math.toDegrees(ROTATION_CONSTRAINTS.maxVelocity));
+    Parameters.savedParams.getDouble("DRIVETRAIN_ROTATION_PID_MAX_ACCEL", Math.toDegrees(ROTATION_CONSTRAINTS.maxAcceleration));
   }
 
 
@@ -550,23 +550,23 @@ public class DriveTrain extends SubsystemBase {
     backRight.saveParameters();
 
     // X Movement PID
-    X_MOVE_PID.setP(Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_X_MOVE_PID_P", X_MOVE_PID.getP()));
-    X_MOVE_PID.setI(Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_X_MOVE_PID_I", X_MOVE_PID.getI()));
-    X_MOVE_PID.setD(Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_X_MOVE_PID_D", X_MOVE_PID.getD()));
+    X_MOVE_PID.setP(Parameters.savedParams.getDouble("DRIVETRAIN_X_MOVE_PID_P", X_MOVE_PID.getP()));
+    X_MOVE_PID.setI(Parameters.savedParams.getDouble("DRIVETRAIN_X_MOVE_PID_I", X_MOVE_PID.getI()));
+    X_MOVE_PID.setD(Parameters.savedParams.getDouble("DRIVETRAIN_X_MOVE_PID_D", X_MOVE_PID.getD()));
 
     // Y Movement PID
-    Y_MOVE_PID.setP(Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_Y_MOVE_PID_P", Y_MOVE_PID.getP()));
-    Y_MOVE_PID.setI(Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_Y_MOVE_PID_I", Y_MOVE_PID.getI()));
-    Y_MOVE_PID.setD(Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_Y_MOVE_PID_D", Y_MOVE_PID.getD()));
+    Y_MOVE_PID.setP(Parameters.savedParams.getDouble("DRIVETRAIN_Y_MOVE_PID_P", Y_MOVE_PID.getP()));
+    Y_MOVE_PID.setI(Parameters.savedParams.getDouble("DRIVETRAIN_Y_MOVE_PID_I", Y_MOVE_PID.getI()));
+    Y_MOVE_PID.setD(Parameters.savedParams.getDouble("DRIVETRAIN_Y_MOVE_PID_D", Y_MOVE_PID.getD()));
 
     // Rotation PID (PID values)
-    ROTATION_PID.setP(Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_ROTATION_PID_P", ROTATION_PID.getP()));
-    ROTATION_PID.setI(Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_ROTATION_PID_I", ROTATION_PID.getI()));
-    ROTATION_PID.setD(Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_ROTATION_PID_D", ROTATION_PID.getD()));
+    ROTATION_PID.setP(Parameters.savedParams.getDouble("DRIVETRAIN_ROTATION_PID_P", ROTATION_PID.getP()));
+    ROTATION_PID.setI(Parameters.savedParams.getDouble("DRIVETRAIN_ROTATION_PID_I", ROTATION_PID.getI()));
+    ROTATION_PID.setD(Parameters.savedParams.getDouble("DRIVETRAIN_ROTATION_PID_D", ROTATION_PID.getD()));
 
     // Rotation PID (Constraints)
-    ROTATION_CONSTRAINTS.maxVelocity = Math.toRadians(Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_ROTATION_PID_MAX_VEL", Math.toDegrees(ROTATION_CONSTRAINTS.maxVelocity)));
-    ROTATION_CONSTRAINTS.maxAcceleration = Math.toRadians(Parameters.SAVED_PARAMS.getDouble("DRIVETRAIN_ROTATION_PID_MAX_ACCEL", Math.toDegrees(ROTATION_CONSTRAINTS.maxAcceleration)));
+    ROTATION_CONSTRAINTS.maxVelocity = Math.toRadians(Parameters.savedParams.getDouble("DRIVETRAIN_ROTATION_PID_MAX_VEL", Math.toDegrees(ROTATION_CONSTRAINTS.maxVelocity)));
+    ROTATION_CONSTRAINTS.maxAcceleration = Math.toRadians(Parameters.savedParams.getDouble("DRIVETRAIN_ROTATION_PID_MAX_ACCEL", Math.toDegrees(ROTATION_CONSTRAINTS.maxAcceleration)));
     ROTATION_PID.setConstraints(ROTATION_CONSTRAINTS);
 
     // Redeclare the drive controller

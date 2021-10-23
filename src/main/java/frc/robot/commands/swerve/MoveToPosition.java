@@ -35,7 +35,7 @@ public class MoveToPosition extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(Robot.driveTrain);
     this.desiredPosition = desiredPose;
-    this.linearVel = Parameters.driver.CURRENT_PROFILE.MAX_SPEED;
+    this.linearVel = Parameters.driver.currentProfile.maxModSpeed;
   }
 
   // Called when the command is initially scheduled.

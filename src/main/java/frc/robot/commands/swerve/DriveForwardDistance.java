@@ -47,7 +47,7 @@ public class DriveForwardDistance extends CommandBase {
     double newX = currentPosition.getX() + (distance * currentPosition.getRotation().getCos());
     double newY = currentPosition.getY() + (distance * currentPosition.getRotation().getSin());
     this.desiredPose2d = new Pose2d(newX, newY, currentPosition.getRotation());
-    this.linearVel = Parameters.driver.CURRENT_PROFILE.MAX_SPEED;
+    this.linearVel = Parameters.driver.currentProfile.maxModSpeed;
   }
 
 

@@ -42,7 +42,7 @@ public class SnapToAngle extends CommandBase {
 
     // Set the variables for the function
     this.desiredPosition = new Pose2d(currentPose.getX(), currentPose.getY(), Rotation2d.fromDegrees(this.desiredAngle));
-    this.linearVel = Parameters.driver.CURRENT_PROFILE.MAX_SPEED;
+    this.linearVel = Parameters.driver.currentProfile.maxModSpeed;
   }
 
   // Called every time the scheduler runs while the command is scheduled.

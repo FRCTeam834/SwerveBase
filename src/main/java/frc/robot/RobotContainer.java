@@ -13,12 +13,12 @@ import frc.robot.commands.swerve.LetsRoll2Joysticks;
 import frc.robot.commands.swerve.PullNTSwerveParams;
 import frc.robot.commands.swerve.SaveSwerveParameters;
 import frc.robot.commands.swerve.TestModulePID;
-import frc.robot.commands.swerve.TestModulePositioning;
+//import frc.robot.commands.swerve.TestModulePositioning;
 import frc.robot.commands.swerve.TestModuleVelocity;
 import frc.robot.commands.swerve.TestMovementPID;
 import frc.robot.commands.swerve.ZeroCanCoders;
 import frc.robot.commands.swerve.ZeroNavX;
-import frc.robot.enums.JOYSTICK_OUTPUT_TYPES;
+//import frc.robot.enums.JOYSTICK_OUTPUT_TYPES;
 import frc.robot.enums.ROBOT_STATE;
 
 // WPI Libraries
@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.XboxController.Button;
+//import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
@@ -238,11 +238,11 @@ public class RobotContainer {
   public static double constrainJoystick(double rawValue) {
 
     // If the value is out of tolerance, then zero it. Otherwise return the value of the joystick
-    if (Math.abs(rawValue) < Parameters.driver.CURRENT_PROFILE.JOYSTICK_PARAMS.getDeadzone()) {
+    if (Math.abs(rawValue) < Parameters.driver.currentProfile.joystickParams.getDeadzone()) {
       return 0;
     }
     else {
-      switch (Parameters.driver.CURRENT_PROFILE.JOYSTICK_PARAMS.getOutputType()) {
+      switch (Parameters.driver.currentProfile.joystickParams.getOutputType()) {
         case LINEAR: {
           return rawValue;
         }
@@ -256,17 +256,25 @@ public class RobotContainer {
            * This equation allows the output to start at 0 when leaving the threshold,
            * then scales it so that the maximum output of the joysticks is always 1
            */
-          return Math.signum(rawValue) * ((Math.abs(rawValue) - Parameters.driver.CURRENT_PROFILE.JOYSTICK_PARAMS.getDeadzone()) / (1 - Parameters.driver.CURRENT_PROFILE.JOYSTICK_PARAMS.getDeadzone()));
+          return Math.signum(rawValue) * ((Math.abs(rawValue) - Parameters.driver.currentProfile.joystickParams.getDeadzone()) / (1 - Parameters.driver.currentProfile.joystickParams.getDeadzone()));
         }
         case ZEROED_QUAD_LINEAR: {
           /**
            * Implements an output for the joysticks that uses a quadratic on the lower end and a linear slope up to 1.
            * I'm not going to bother explaining it, here's the graph: https://www.desmos.com/calculator/5lqgnstb1k
-           *
-           *
            */
-          // TODO: Implement quadratic and linear equations
-          return 0;
+
+          // No need to implement the threshold checking, that is done above
+          if (Math.abs(rawValue) < Parameters.driver.currentProfile.joystickParams.getCrossoverValue()) {
+
+            // This is the quadratic range, return the result of the scaled quadratic
+            return (Math.signum(rawValue) * Parameters.driver.currentProfile.joystickParams.getRampRate()
+                   * Math.pow(Math.abs(rawValue) - Parameters.driver.currentProfile.joystickParams.getDeadzone(), 2));
+          }
+          else {
+            // Linear equation range
+            return Math.signum(rawValue) * ((Parameters.driver.currentProfile.joystickParams.getLinearSlope() * (Math.abs(rawValue) - 1)) + 1);
+          }
         }
         default:
           // This will never be reached, but a default case is needed (0 for no output)
