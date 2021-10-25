@@ -26,6 +26,7 @@ public class NavX extends SubsystemBase {
   AHRS navX = new AHRS(SPI.Port.kMXP);
 
   public NavX() {
+    navX.calibrate();
   }
 
   @Override
@@ -45,7 +46,7 @@ public class NavX extends SubsystemBase {
 
   // The Rotation2D is the big brother of fused heading
   public Rotation2d getRotation2d() {
-    return navX.getRotation2d();
+    return Rotation2d.fromDegrees(navX.getFusedHeading());
   }
 
   // Grabs the roll
