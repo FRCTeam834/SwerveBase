@@ -143,7 +143,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Left joystick
-    lJoystick1.toggleWhenPressed(letsRoll2Joysticks);
+    lJoystick1.whenPressed(letsRoll2Joysticks);
     //lJoystick2.whenPressed(saveSwerveParameters);
     //lJoystick3.whenPressed(pullNtSwerveParams);
     //lJoystick4.whenPressed(testModulePID);
@@ -262,6 +262,12 @@ public class RobotContainer {
            * then scales it so that the maximum output of the joysticks is always 1
            */
           return Math.signum(rawValue) * ((Math.abs(rawValue) - Parameters.driver.currentProfile.joystickParams.getDeadzone()) / (1 - Parameters.driver.currentProfile.joystickParams.getDeadzone()));
+        }
+        case ZEROED_QUAD: {
+          /**
+           * Implements a quadratic curve, with the vertex at (t,0) and scaled to pass through the point (1,1)
+           */
+          return Math.signum(rawValue) * (Math.pow(Math.abs(rawValue) - Parameters.driver.currentProfile.joystickParams.getDeadzone(), 2) / Math.pow(Parameters.driver.currentProfile.joystickParams.getDeadzone() - 1, 2));
         }
         case ZEROED_QUAD_LINEAR: {
           /**
