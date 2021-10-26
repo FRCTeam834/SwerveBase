@@ -263,6 +263,12 @@ public class RobotContainer {
            */
           return Math.signum(rawValue) * ((Math.abs(rawValue) - Parameters.driver.currentProfile.joystickParams.getDeadzone()) / (1 - Parameters.driver.currentProfile.joystickParams.getDeadzone()));
         }
+        case ZEROED_QUAD: {
+          /**
+           * Implements a quadratic curve, with the vertex at (t,0) and scaled to pass through the point (1,1)
+           */
+          return Math.signum(rawValue) * (Math.pow(Math.abs(rawValue) - Parameters.driver.currentProfile.joystickParams.getDeadzone(), 2) / Math.pow(Parameters.driver.currentProfile.joystickParams.getDeadzone() - 1, 2));
+        }
         case ZEROED_QUAD_LINEAR: {
           /**
            * Implements an output for the joysticks that uses a quadratic on the lower end and a linear slope up to 1.

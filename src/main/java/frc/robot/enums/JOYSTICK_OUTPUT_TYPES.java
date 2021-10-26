@@ -9,7 +9,9 @@ public enum JOYSTICK_OUTPUT_TYPES {
     // Main definition of types (each should have their own index)
     LINEAR(0),
     ZEROED_LINEAR(1),
+    ZEROED_QUAD(3),
     ZEROED_QUAD_LINEAR(2);
+
 
     // The index of each output type
     private int index;

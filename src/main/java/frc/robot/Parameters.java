@@ -83,7 +83,7 @@ public final class Parameters {
          * @param steerIdleMode      If the steering motor should coast of brake after they exceed the current set speed. Modules will most likely only work with braking enabled
         */
         public static DriverProfile[] driverProfiles = {
-            new DriverProfile("CAP1Sup", new JoystickParams(0.075, JOYSTICK_OUTPUT_TYPES.ZEROED_QUAD_LINEAR, 2), 180.0, 0.5, true, false, 8.0, IdleMode.kBrake, IdleMode.kBrake),
+            new DriverProfile("CAP1Sup", new JoystickParams(0.075, JOYSTICK_OUTPUT_TYPES.ZEROED_QUAD), 180.0, 0.5, true, false, 8.0, IdleMode.kBrake, IdleMode.kBrake),
             new DriverProfile("Test", new JoystickParams(0.1, JOYSTICK_OUTPUT_TYPES.ZEROED_LINEAR), 45.0, 0.5, true, false, 1.0, IdleMode.kBrake, IdleMode.kBrake)
         };
 
