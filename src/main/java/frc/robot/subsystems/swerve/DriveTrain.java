@@ -131,6 +131,9 @@ public class DriveTrain extends SubsystemBase {
     // Push the parameters to NetworkTables
     publishTuningValues();
 
+    // Load the saved parameters from memory
+    loadParameters();
+
     // Center the odometry of the robot
     resetOdometry(Parameters.positions.STARTING_POS);
   }
