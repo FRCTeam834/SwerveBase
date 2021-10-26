@@ -143,7 +143,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
 
     // Left joystick
-    lJoystick1.toggleWhenPressed(letsRoll2Joysticks);
+    lJoystick1.whenPressed(letsRoll2Joysticks);
     //lJoystick2.whenPressed(saveSwerveParameters);
     //lJoystick3.whenPressed(pullNtSwerveParams);
     //lJoystick4.whenPressed(testModulePID);
