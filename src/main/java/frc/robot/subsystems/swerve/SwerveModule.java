@@ -289,7 +289,7 @@ public class SwerveModule {
       driveMotorPID.setReference(speed, ControlType.kVelocity);
 
       if (Parameters.debug) {
-        System.out.println("D_SPD: " + speed + " | A_SPD: " + driveMotorEncoder.getVelocity());
+        System.out.println("D_SPD: " + speed + " | A_SPD: " + getVelocity());
       }
 
       // Return if the velocity is within tolerance
@@ -348,7 +348,7 @@ public class SwerveModule {
 
   // Gets the state of the module
   public SwerveModuleState getState() {
-    return new SwerveModuleState(driveMotorEncoder.getVelocity(), Rotation2d.fromDegrees(getAngle()));
+    return new SwerveModuleState(getVelocity(), Rotation2d.fromDegrees(getAngle()));
   }
 
 
