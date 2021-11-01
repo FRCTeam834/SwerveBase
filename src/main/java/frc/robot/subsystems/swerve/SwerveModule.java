@@ -63,6 +63,9 @@ public class SwerveModule {
   private NetworkTableEntry velocity;
   private NetworkTableEntry angle;
 
+  // Central swerve variables
+  double desiredAngle = 0;
+
 
   // Set up the module and address each of the motor controllers
   public SwerveModule(String moduleName, int steerMID, int driveMID, int CANCoderID, PID_PARAMS steerPIDParams, PID_PARAMS drivePIDParams, boolean reversedDrive) {
@@ -207,7 +210,7 @@ public class SwerveModule {
 
 
   // Sets the direction of the wheel, in degrees
-  public boolean setDesiredAngle(double targetAngle) {
+  public void setDesiredAngle(double targetAngle) {
 
     // Check to see if the module is enabled
     if (enabled) {
@@ -215,27 +218,30 @@ public class SwerveModule {
       // Motor angle optimization code (makes sure that the motor doesn't go all the way around)
       while (Math.abs(getAdjustedSteerMotorAngle() - targetAngle) >= 90) {
 
+        // Calculate the angular deviation
+        double angularDev = getAdjustedSteerMotorAngle() - targetAngle;
+
         // Full rotation optimizations
-        if((getAdjustedSteerMotorAngle() - targetAngle) >= 180) {
+        if(angularDev >= 180) {
           angularOffset += 360;
         }
-        else if ((getAdjustedSteerMotorAngle() - targetAngle) <= -180) {
+        else if (angularDev <= -180) {
           angularOffset -= 360;
         }
 
         // Half rotation optimizations (full are prioritized first)
-        else if ((getAdjustedSteerMotorAngle() - targetAngle) >= 90) {
+        else if (angularDev >= 90) {
           angularOffset -= 180;
           driveMotor.setInverted(!driveMotor.getInverted());
         }
-        else if ((getAdjustedSteerMotorAngle() - targetAngle) <= -90) {
+        else if (angularDev <= -90) {
           angularOffset -= 180;
           driveMotor.setInverted(!driveMotor.getInverted());
         }
       }
 
       // Calculate the optimal angle for the motor (needs to be corrected as it thinks that the position is 0 at it's startup location)
-      double desiredAngle = targetAngle + angularOffset;
+      desiredAngle = targetAngle + angularOffset;
 
       // Set the PID reference
       steerMotorPID.setReference(desiredAngle, ControlType.kSmartMotion);
@@ -244,9 +250,21 @@ public class SwerveModule {
       if (Parameters.debug) {
         printDebugString(targetAngle);
       }
+    }
+  }
+
+
+  // Function to check if a module is at it's desired angle
+  public boolean atDesiredAngle() {
+
+    // We need to check if the module is supposed to be enabled or not
+    if (enabled) {
+
+      // Get the current angle of the module
+      double currentAngle = getAngle();
 
       // Return if the module has reached the desired angle
-      return (getAngle() < (targetAngle + Parameters.driveTrain.angleTolerance) && (getAngle() > (targetAngle - Parameters.driveTrain.angleTolerance)));
+      return (currentAngle < (desiredAngle + Parameters.driveTrain.angleTolerance) && (currentAngle > (desiredAngle - Parameters.driveTrain.angleTolerance)));
     }
     else {
 
@@ -259,13 +277,13 @@ public class SwerveModule {
   // Moves the module to the desired angle
   public void moveToAngle(double angle) {
 
-    // Continuously move the motor at the calculated speeds until it reaches the angle
-    while (!setDesiredAngle(angle)) {
+    // Set the desired angle for the module
+    setDesiredAngle(angle);
+
+    // Wait for the motor to reach the desired angle
+    while (!atDesiredAngle()) {
       publishPerformanceData();
     }
-
-    // Shut off the motor once done (probably shouldn't be done to ensure position is held)
-    //steerMotor.set(0);
   }
 
 
