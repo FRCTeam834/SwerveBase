@@ -277,6 +277,12 @@ public class DriveTrain extends SubsystemBase {
    */
   public void setDesiredAngles(double FLAngle, double FRAngle, double BLAngle, double BRAngle, boolean wait) {
 
+    // Set the desired angles
+    frontLeft.setDesiredAngle(FLAngle);
+    frontRight.setDesiredAngle(FRAngle);
+    backLeft.setDesiredAngle(BLAngle);
+    backRight.setDesiredAngle(BRAngle);
+
     // Check to see if we need to wait
     if (wait) {
 
@@ -284,19 +290,15 @@ public class DriveTrain extends SubsystemBase {
       Timer timer = new Timer();
 
       // Continuously loop, checking to see the current time in seconds. If we've exceeded the timeout, end the loop early
-      while(!(frontLeft.setDesiredAngle(FLAngle) && frontRight.setDesiredAngle(FRAngle) && backLeft.setDesiredAngle(BLAngle) && backRight.setDesiredAngle(BRAngle))) {
+      while(!(frontLeft.atDesiredAngle() && frontRight.atDesiredAngle() && backLeft.atDesiredAngle() && backRight.atDesiredAngle())) {
         if (timer.hasElapsed(Parameters.driveTrain.movement.TIMEOUT)) {
           break;
         }
       }
     }
-    else {
-      // Just set the angles, then finish
-      frontLeft.setDesiredAngle(FLAngle);
-      frontRight.setDesiredAngle(FRAngle);
-      backLeft.setDesiredAngle(BLAngle);
-      backRight.setDesiredAngle(BRAngle);
-    }
+    //else {
+      // We can finish, we already set the desired angles
+    //}
   }
 
 
