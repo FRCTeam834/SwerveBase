@@ -205,10 +205,11 @@ public final class Parameters {
     public static final class positions {
 
         // All of the possible starting positions (and their angles)
-        public static final Pose2d[] POSSIBLE_STARTING_POSITIONS = {new Pose2d(0, 0, Rotation2d.fromDegrees(0)), new Pose2d(0, 0, Rotation2d.fromDegrees(0)), new Pose2d(0, 0, Rotation2d.fromDegrees(0))};
+        // In format (default (no station assigned), 1st station, 2nd station, 3rd station)
+        public static final Pose2d[] POSSIBLE_STARTING_POSITIONS = {new Pose2d(0, 0, Rotation2d.fromDegrees(0)), new Pose2d(0, 0, Rotation2d.fromDegrees(0)), new Pose2d(0, 0, Rotation2d.fromDegrees(0)), new Pose2d(0, 0, Rotation2d.fromDegrees(0))};
 
         // Actual starting position (declared in the global scope)
-        public static final Pose2d STARTING_POS = Parameters.positions.POSSIBLE_STARTING_POSITIONS[Parameters.driverStation.getLocation() - 1];
+        public static Pose2d STARTING_POS = Parameters.positions.POSSIBLE_STARTING_POSITIONS[Parameters.driverStation.getLocation()];
     }
 
 
