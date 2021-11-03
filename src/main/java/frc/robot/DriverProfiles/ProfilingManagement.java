@@ -54,7 +54,7 @@ public class ProfilingManagement extends SubsystemBase {
     DriverProfile selectedProfile = driverProfileChooser.getSelected();
 
     // Check to make sure that the profile isn't the same as the previous one
-    if(selectedProfile != Parameters.driver.currentProfile) {
+    if(!selectedProfile.equals(Parameters.driver.currentProfile)) {
 
       // Update the current profile with the new one
       updateCurrentProfile(selectedProfile);
