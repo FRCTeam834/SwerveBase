@@ -16,7 +16,8 @@ package frc.robot.commands.swerve;
 import frc.robot.Parameters;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
-
+import frc.robot.enums.ControlInputs;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 // WPI libraries
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -35,6 +36,9 @@ public class LetsRoll2Joysticks extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+
+    // Clear the trigger pressed flag
+    RobotContainer.leftJoystick.getTriggerPressed();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -46,19 +50,27 @@ public class LetsRoll2Joysticks extends CommandBase {
       fieldCentric = !fieldCentric;
     }
 
+    // Create variables for storing movement values
+    double leftX, rightX, rightY;
+
     // Get all of the current joystick inputs
-    double leftX =  RobotContainer.constrainJoystick(RobotContainer.leftJoystick.getX());
-    double rightX = RobotContainer.constrainJoystick(RobotContainer.rightJoystick.getX());
-    double rightY = RobotContainer.constrainJoystick(RobotContainer.rightJoystick.getY());
-    //double leftX =  constrainJoystick(RobotContainer.xbox.getX(Hand.kLeft));
-    //double rightX = constrainJoystick(RobotContainer.xbox.getX(Hand.kRight));
-    //double rightY = constrainJoystick(RobotContainer.xbox.getY(Hand.kRight));
+    if (Parameters.driver.currentProfile.inputType == ControlInputs.JOYSTICKS) {
+      leftX =  RobotContainer.constrainJoystick(RobotContainer.leftJoystick.getX());
+      rightX = RobotContainer.constrainJoystick(RobotContainer.rightJoystick.getX());
+      rightY = RobotContainer.constrainJoystick(RobotContainer.rightJoystick.getY());
+    }
+    else {
+      leftX =  RobotContainer.constrainJoystick(RobotContainer.xbox.getX(Hand.kLeft));
+      rightX = RobotContainer.constrainJoystick(RobotContainer.xbox.getX(Hand.kRight));
+      rightY = RobotContainer.constrainJoystick(RobotContainer.xbox.getY(Hand.kRight));
+    }
+
 
     // If any of the sticks are out of range, then we need to move. Otherwise, lock up the drivetrain (if specified) or just halt the modules
     if (leftX != 0 || rightX != 0 || rightY != 0) {
 
       // Move the drivetrain with the desired values (left right values are flipped from the logical way, thanks WPI)
-      Robot.driveTrain.drive((rightY * Parameters.driver.currentProfile.maxModSpeed), (rightX * Parameters.driver.currentProfile.maxModSpeed),
+      Robot.driveTrain.drive((rightY * Parameters.driver.currentProfile.maxModVelocity), (rightX * Parameters.driver.currentProfile.maxModVelocity),
                         Math.toRadians(leftX * Parameters.driver.currentProfile.maxSteerRate), fieldCentric);
     }
     else if (Parameters.driver.currentProfile.lockemUp) {
@@ -70,7 +82,6 @@ public class LetsRoll2Joysticks extends CommandBase {
 
     // Update driver profile if available
     Robot.profilingManagement.checkForUpdate();
-
   }
 
   // Called once the command ends or is interrupted.

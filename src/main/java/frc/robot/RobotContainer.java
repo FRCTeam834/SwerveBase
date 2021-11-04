@@ -67,7 +67,7 @@ public class RobotContainer {
   // Define the joysticks (need to be public so commands can access axes)
   public static Joystick leftJoystick = new Joystick(0);
   public static Joystick rightJoystick = new Joystick(1);
-  //public static XboxController xbox = new XboxController(2);
+  public static XboxController xbox = new XboxController(2);
 
   // Left Joystick button array
   //public static JoystickButton leftJoystickButtons[];

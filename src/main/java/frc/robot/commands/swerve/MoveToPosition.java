@@ -34,13 +34,13 @@ public class MoveToPosition extends CommandBase {
     this.linearVel = linearVelocity;
   }
 
-  // Default to 2 m/s for the linear speed
+  // Default to maximum module velocity for the linear velocity
   public MoveToPosition(Pose2d desiredPose) {
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(Robot.driveTrain);
     this.desiredPosition = desiredPose;
-    this.linearVel = Parameters.driver.currentProfile.maxModSpeed;
+    this.linearVel = Parameters.driver.currentProfile.maxModVelocity;
   }
 
   // Called when the command is initially scheduled.

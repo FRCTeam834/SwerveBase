@@ -8,7 +8,7 @@ package frc.robot.subsystems.swerve;
 /**
  *  Class that organizes gains used when assigning values to slots
  */
-public class PID_PARAMS {
+public class PIDParams {
 
     // The values of the PID loop
     public double P;
@@ -19,7 +19,7 @@ public class PID_PARAMS {
     public double PEAK_OUTPUT;
 
     // Creating a new set of PID Parameters
-    public PID_PARAMS(double P, double I, double D, double FF, double I_ZONE, double PEAK_OUTPUT){
+    public PIDParams(double P, double I, double D, double FF, double I_ZONE, double PEAK_OUTPUT){
         this.P = P;
         this.I = I;
         this.D = D;
@@ -29,7 +29,7 @@ public class PID_PARAMS {
     }
 
     // Change the parameters with the new values
-    public void setPIDParams(PID_PARAMS params) {
+    public void setPIDParams(PIDParams params) {
         this.P = params.P;
         this.I = params.I;
         this.D = params.D;

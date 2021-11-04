@@ -18,9 +18,11 @@ import java.lang.Math;
 import frc.robot.Parameters;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
+import frc.robot.enums.ControlInputs;
 
 // WPI libraries
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 
 
 public class LetsRoll1Joystick extends CommandBase {
@@ -39,9 +41,18 @@ public class LetsRoll1Joystick extends CommandBase {
   @Override
   public void execute() {
 
+    // Declare variables for the X and Y
+    double leftX, leftY;
+
     // Get all of the current joystick inputs
-    double leftX = RobotContainer.constrainJoystick(RobotContainer.leftJoystick.getX());
-    double leftY = RobotContainer.constrainJoystick(RobotContainer.leftJoystick.getY());
+    if (Parameters.driver.currentProfile.inputType == ControlInputs.JOYSTICKS) {
+      leftX = RobotContainer.constrainJoystick(RobotContainer.leftJoystick.getX());
+      leftY = RobotContainer.constrainJoystick(RobotContainer.leftJoystick.getY());
+    }
+    else {
+      leftX = RobotContainer.constrainJoystick(RobotContainer.xbox.getX(Hand.kRight));
+      leftY = RobotContainer.constrainJoystick(RobotContainer.xbox.getY(Hand.kRight));
+    }
 
     // Declare here so the value is in scope
     double turning = 0;
@@ -66,7 +77,7 @@ public class LetsRoll1Joystick extends CommandBase {
     if (leftX != 0 || leftY != 0 || turning != 0) {
 
       // Move the drivetrain with the desired values
-      Robot.driveTrain.drive((leftX * Parameters.driver.currentProfile.maxModSpeed), (leftY * Parameters.driver.currentProfile.maxModSpeed),
+      Robot.driveTrain.drive((leftX * Parameters.driver.currentProfile.maxModVelocity), (leftY * Parameters.driver.currentProfile.maxModVelocity),
                         Math.toRadians(turning * Parameters.driver.currentProfile.maxSteerRate), Parameters.driver.currentProfile.fieldCentric);
     }
     else if (Parameters.driver.currentProfile.lockemUp) {

@@ -28,7 +28,7 @@ public class SnapToAngle extends CommandBase {
   Pose2d desiredPosition;
   double linearVel;
 
-  // Default to 2 m/s for the linear speed
+  // Default to the maximum module velocity for the linear velocity
   public SnapToAngle(double desiredAngle) {
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -47,7 +47,7 @@ public class SnapToAngle extends CommandBase {
 
     // Set the variables for the function
     this.desiredPosition = new Pose2d(currentPose.getX(), currentPose.getY(), Rotation2d.fromDegrees(this.desiredAngle));
-    this.linearVel = Parameters.driver.currentProfile.maxModSpeed;
+    this.linearVel = Parameters.driver.currentProfile.maxModVelocity;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
