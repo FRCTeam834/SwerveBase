@@ -84,21 +84,21 @@ public class ProfilingManagement extends SubsystemBase {
     // Saves the input profile for next boot
 
     // Strings
-    Parameters.savedParams.putString("NAME",                profile.name);
+    Parameters.savedParams.putString("NAME",               profile.name);
 
     // Ints / Doubles
-    Parameters.savedParams.putDouble("JOYSTICK_DEADZONE",   profile.joystickParams.getDeadzone());
+    Parameters.savedParams.putDouble("JOYSTICK_DEADZONE",  profile.joystickParams.getDeadzone());
     Parameters.savedParams.putDouble("JOYSTICK_RAMP_RATE", profile.joystickParams.getRampRate());
-    Parameters.savedParams.putInt("JOYSTICK_OUTPUT_TYPE",   profile.joystickParams.getOutputType().getInt());
-    Parameters.savedParams.putInt("CONTROL_INPUTS",         profile.inputType.getInt());
-    Parameters.savedParams.putDouble("MAX_STEER_RATE",      profile.maxSteerRate);
-    Parameters.savedParams.putDouble("MAX_MOD_VELOCITY",    profile.maxModVelocity);
-    Parameters.savedParams.putInt("DRIVE_BRAKE_MODE",       profile.driveIdleMode.value);
-    Parameters.savedParams.putInt("STEER_BRAKE_MODE",       profile.steerIdleMode.value);
+    Parameters.savedParams.putInt("JOYSTICK_OUTPUT_TYPE",  profile.joystickParams.getOutputType().getInt());
+    Parameters.savedParams.putInt("CONTROL_INPUTS",        profile.inputType.getInt());
+    Parameters.savedParams.putDouble("MAX_STEER_RATE",     profile.maxSteerRate);
+    Parameters.savedParams.putDouble("MAX_MOD_VELOCITY",   profile.maxModVelocity);
+    Parameters.savedParams.putInt("DRIVE_BRAKE_MODE",      profile.driveIdleMode.value);
+    Parameters.savedParams.putInt("STEER_BRAKE_MODE",      profile.steerIdleMode.value);
 
     // Booleans
-    Parameters.savedParams.putBoolean("LOCKEM_UP",          profile.lockemUp);
-    Parameters.savedParams.putBoolean("FIELD_CENTRIC",      profile.fieldCentric);
+    Parameters.savedParams.putBoolean("LOCKEM_UP",         profile.lockemUp);
+    Parameters.savedParams.putBoolean("FIELD_CENTRIC",     profile.fieldCentric);
   }
 
 

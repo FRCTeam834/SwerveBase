@@ -423,15 +423,6 @@ public class DriveTrain extends SubsystemBase {
 
 
   /**
-   * Gets the estimated pose of the robot
-   * @return The estimated Pose2d of the robot
-   */
-  public Pose2d getEstimatedPose() {
-    return poseEstimator.getEstimatedPosition();
-  }
-
-
-  /**
    * Gets the estimated X position of the drivetrain on the field
    * @return Estimated X position (m)
    */
