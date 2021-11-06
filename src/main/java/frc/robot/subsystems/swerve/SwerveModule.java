@@ -70,7 +70,16 @@ public class SwerveModule {
   private NetworkTableEntry currentAngle;
 
 
-  // Set up the module and address each of the motor controllers
+  /**
+   * Set up the module and address each of the motor controllers
+   * @param moduleName The name of the module (used on NetworkTables)
+   * @param steerMID The CAN ID of the steer motor
+   * @param driveMID The CAN ID of the drive motor
+   * @param CANCoderID The CAN ID of the CANCoder angle sensor
+   * @param steerPIDParams The PID parameters object for the steer motor
+   * @param drivePIDParams The PID parameters object for the drive motor
+   * @param reversedDrive If the drive motor should be reversed
+   */
   public SwerveModule(String moduleName, int steerMID, int driveMID, int CANCoderID, PIDParams steerPIDParams, PIDParams drivePIDParams, boolean reversedDrive) {
 
     // Set the name
@@ -159,7 +168,11 @@ public class SwerveModule {
   }
 
 
-  // Sets the steer motor parameters
+  /**
+   * Sets the steer motor parameters
+   * @param pidParams The PID parameters
+   * @param idleMode The idle mode of the motor
+   */
   public void setSteerMParams(PIDParams pidParams, IdleMode idleMode) {
 
     // PID parameters
@@ -176,7 +189,11 @@ public class SwerveModule {
   }
 
 
-  // Sets the drive motor parameters
+  /**
+   * Sets the drive motor parameters
+   * @param pidParams The PID parameters
+   * @param idleMode The idle mode of the motor
+   */
   public void setDriveMParams(PIDParams pidParams, IdleMode idleMode) {
 
     // PIDF parameters
@@ -193,25 +210,37 @@ public class SwerveModule {
   }
 
 
-  // Gets the steering motor for the selected module
+  /**
+   * Gets the steering motor object for the selected module
+   * @return The steering motor object
+   */
   public CANSparkMax getSteerMotor() {
     return steerMotor;
   }
 
 
-  // Gets the drive motor for the selected module
+  /**
+   * Gets the drive motor object for the selected module
+   * @return The drive motor object
+   */
   public CANSparkMax getDriveMotor() {
     return driveMotor;
   }
 
 
-  // Gets the CANCoder for the selected module
+  /**
+   * Gets the CANCoder object for the selected module
+   * @return The CANCoder object
+   */
   public CANCoder getCANCoder() {
     return steerCANCoder;
   }
 
 
-  // Sets the direction of the wheel, in degrees
+  /**
+   * Moves the wheel to the target angle, complete with optimizations
+   * @param targetAngle The angle to move the module to
+   */
   public void setDesiredAngle(double targetAngle) {
 
     // Check to see if the module is enabled
@@ -256,7 +285,10 @@ public class SwerveModule {
   }
 
 
-  // Function to check if a module is at it's desired angle
+  /**
+   * Checks if the module is at it's desired angle
+   * @return Has the module reached it's desired angle?
+   */
   public boolean isAtDesiredAngle() {
 
     // We need to check if the module is supposed to be enabled or not
@@ -276,7 +308,10 @@ public class SwerveModule {
   }
 
 
-  // Moves the module to the desired angle
+  /**
+   * Halts execution until the module reaches the desired angle
+   * @param angle The angle to move to
+   */
   public void moveToAngle(double angle) {
 
     // Set the desired angle for the module

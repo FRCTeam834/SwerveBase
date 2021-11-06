@@ -86,7 +86,9 @@ public class DriveTrain extends SubsystemBase {
   private HolonomicDriveController driveController = new HolonomicDriveController(X_MOVE_PID, Y_MOVE_PID, ROTATION_PID);
 
 
-  // Setup the drivetrain
+  /**
+   * Creates a new Drivetrain object
+   */
   public DriveTrain() {
 
     // Create each swerve module instance
