@@ -150,26 +150,30 @@ public class SwerveModule {
     steerMotor.burnFlash();
     driveMotor.burnFlash();
 
-    // Set up the module's table on NetworkTables
-    NetworkTable swerveTable = NetworkTableInstance.getDefault().getTable("Swerve");
-    NetworkTable moduleTable = swerveTable.getSubTable(name + "_MODULE");
+    // Don't mess with NetworkTables unless we have to
+    if (Parameters.networkTables) {
 
-    // Put all of the module's current values on NetworkTables
-    // Steer PID
-    steerPEntry  = moduleTable.getEntry("STEER_P");
-    steerIEntry  = moduleTable.getEntry("STEER_I");
-    steerDEntry  = moduleTable.getEntry("STEER_D");
-    steerFFEntry = moduleTable.getEntry("STEER_FF");
+      // Set up the module's table on NetworkTables
+      NetworkTable swerveTable = NetworkTableInstance.getDefault().getTable("Swerve");
+      NetworkTable moduleTable = swerveTable.getSubTable(name + "_MODULE");
 
-    // Drive PID
-    drivePEntry  = moduleTable.getEntry("DRIVE_P");
-    driveIEntry  = moduleTable.getEntry("DRIVE_I");
-    driveDEntry  = moduleTable.getEntry("DRIVE_D");
-    driveFFEntry = moduleTable.getEntry("DRIVE_FF");
+      // Put all of the module's current values on NetworkTables
+      // Steer PID
+      steerPEntry  = moduleTable.getEntry("STEER_P");
+      steerIEntry  = moduleTable.getEntry("STEER_I");
+      steerDEntry  = moduleTable.getEntry("STEER_D");
+      steerFFEntry = moduleTable.getEntry("STEER_FF");
 
-    // Performance data
-    currentVelocity = moduleTable.getEntry("CURRENT_VELOCITY");
-    currentAngle = moduleTable.getEntry("CURRENT_ANGLE");
+      // Drive PID
+      drivePEntry  = moduleTable.getEntry("DRIVE_P");
+      driveIEntry  = moduleTable.getEntry("DRIVE_I");
+      driveDEntry  = moduleTable.getEntry("DRIVE_D");
+      driveFFEntry = moduleTable.getEntry("DRIVE_FF");
+
+      // Performance data
+      currentVelocity = moduleTable.getEntry("CURRENT_VELOCITY");
+      currentAngle = moduleTable.getEntry("CURRENT_ANGLE");
+    }
   }
 
 
@@ -537,41 +541,53 @@ public class SwerveModule {
   // Push the values to NetworkTables
   public void publishTuningValues() {
 
-    // Steer PIDs
-    steerPEntry.setDouble(steerMotorPID.getP());
-    steerIEntry.setDouble(steerMotorPID.getI());
-    steerDEntry.setDouble(steerMotorPID.getD());
-    steerFFEntry.setDouble(steerMotorPID.getFF());
+    // Don't mess with NetworkTables unless we have to
+    if (Parameters.networkTables) {
 
-    // Drive PIDs
-    drivePEntry.setDouble(driveMotorPID.getP());
-    driveIEntry.setDouble(driveMotorPID.getI());
-    driveDEntry.setDouble(driveMotorPID.getD());
-    driveFFEntry.setDouble(driveMotorPID.getFF());
+      // Steer PIDs
+      steerPEntry.setDouble(steerMotorPID.getP());
+      steerIEntry.setDouble(steerMotorPID.getI());
+      steerDEntry.setDouble(steerMotorPID.getD());
+      steerFFEntry.setDouble(steerMotorPID.getFF());
+
+      // Drive PIDs
+      drivePEntry.setDouble(driveMotorPID.getP());
+      driveIEntry.setDouble(driveMotorPID.getI());
+      driveDEntry.setDouble(driveMotorPID.getD());
+      driveFFEntry.setDouble(driveMotorPID.getFF());
+    }
   }
 
 
   // Get the values from NetworkTables
   public void pullTuningValues() {
 
-    // Steer PIDs
-    steerMotorPID.setP(steerPEntry.getDouble(steerMotorPID.getP()));
-    steerMotorPID.setI(steerIEntry.getDouble(steerMotorPID.getI()));
-    steerMotorPID.setD(steerDEntry.getDouble(steerMotorPID.getD()));
-    steerMotorPID.setFF(steerFFEntry.getDouble(steerMotorPID.getFF()));
+    // Don't mess with NetworkTables unless we have to
+    if (Parameters.networkTables) {
 
-    // Drive PIDs
-    driveMotorPID.setP(drivePEntry.getDouble(driveMotorPID.getP()));
-    driveMotorPID.setI(driveIEntry.getDouble(driveMotorPID.getI()));
-    driveMotorPID.setD(driveDEntry.getDouble(driveMotorPID.getD()));
-    driveMotorPID.setFF(driveFFEntry.getDouble(driveMotorPID.getFF()));
+      // Steer PIDs
+      steerMotorPID.setP(steerPEntry.getDouble(steerMotorPID.getP()));
+      steerMotorPID.setI(steerIEntry.getDouble(steerMotorPID.getI()));
+      steerMotorPID.setD(steerDEntry.getDouble(steerMotorPID.getD()));
+      steerMotorPID.setFF(steerFFEntry.getDouble(steerMotorPID.getFF()));
+
+      // Drive PIDs
+      driveMotorPID.setP(drivePEntry.getDouble(driveMotorPID.getP()));
+      driveMotorPID.setI(driveIEntry.getDouble(driveMotorPID.getI()));
+      driveMotorPID.setD(driveDEntry.getDouble(driveMotorPID.getD()));
+      driveMotorPID.setFF(driveFFEntry.getDouble(driveMotorPID.getFF()));
+    }
   }
 
 
   // Pushes the performance data to the NetworkTable
   public void publishPerformanceData() {
-    currentVelocity.setDouble(getVelocity());
-    currentAngle.setDouble(getAngle());
+
+    // Don't mess with NetworkTables unless we have to
+    if (Parameters.networkTables) {
+      currentVelocity.setDouble(getVelocity());
+      currentAngle.setDouble(getAngle());
+    }
   }
 
   // Print out a debug string
