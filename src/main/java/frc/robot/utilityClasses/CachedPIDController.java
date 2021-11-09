@@ -22,6 +22,7 @@ public class CachedPIDController extends CANPIDController {
      * @param deviceID The CAN ID of the motor controller
      * @param type     The type of motor being used
      */
+    @SuppressWarnings("all")
     public CachedPIDController(CANSparkMax device) {
         super(device);
     }
