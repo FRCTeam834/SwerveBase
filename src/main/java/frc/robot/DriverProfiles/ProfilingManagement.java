@@ -20,7 +20,7 @@ import frc.robot.Robot;
 
 // Enums
 import frc.robot.enums.ControlInputs;
-import frc.robot.enums.JOYSTICK_OUTPUT_TYPES;
+import frc.robot.enums.JoystickOutputTypes;
 
 // Vendor Libraries
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -114,7 +114,7 @@ public class ProfilingManagement extends SubsystemBase {
     // Ints / Doubles
     double deadzone                  = Parameters.savedParams.getDouble("JOYSTICK_DEADZONE", Parameters.driver.defaultDriverProfile.joystickParams.getDeadzone());
     double rampRate                  = Parameters.savedParams.getDouble("JOYSTICK_RAMP_RATE", Parameters.driver.defaultDriverProfile.joystickParams.getRampRate());
-    JOYSTICK_OUTPUT_TYPES outputType = JOYSTICK_OUTPUT_TYPES.fromInt(Parameters.savedParams.getInt("JOYSTICK_OUTPUT_TYPE", Parameters.driver.defaultDriverProfile.joystickParams.getOutputType().getInt()));
+    JoystickOutputTypes outputType = JoystickOutputTypes.fromInt(Parameters.savedParams.getInt("JOYSTICK_OUTPUT_TYPE", Parameters.driver.defaultDriverProfile.joystickParams.getOutputType().getInt()));
     profile.inputType                = ControlInputs.fromInt(Parameters.savedParams.getInt("CONTROL_INPUTS", Parameters.driver.defaultDriverProfile.inputType.getInt()));
     profile.joystickParams           = new JoystickParams(deadzone, outputType, rampRate);
     profile.maxSteerRate             = Parameters.savedParams.getDouble("MAX_STEER_RATE",     Parameters.driver.defaultDriverProfile.maxSteerRate);

@@ -4,7 +4,7 @@
  */
 package frc.robot.enums;
 
-public enum JOYSTICK_OUTPUT_TYPES {
+public enum JoystickOutputTypes {
 
     // Main definition of types (each should have their own index)
     LINEAR(0),
@@ -20,7 +20,7 @@ public enum JOYSTICK_OUTPUT_TYPES {
      * Creates a new output type
      * @param index The index to set each output type to
      */
-    private JOYSTICK_OUTPUT_TYPES(int index) {
+    private JoystickOutputTypes(int index) {
         this.index = index;
     }
 
@@ -37,10 +37,10 @@ public enum JOYSTICK_OUTPUT_TYPES {
      * @param index The index that you wish to look up
      * @return Output type matching index
      */
-    public static JOYSTICK_OUTPUT_TYPES fromInt(int index) {
+    public static JoystickOutputTypes fromInt(int index) {
 
         // Loop through all of the possible output types
-        for (JOYSTICK_OUTPUT_TYPES type : values()) {
+        for (JoystickOutputTypes type : values()) {
 
             // Return the type if the index matches
             if (type.getInt() == index) {

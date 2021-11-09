@@ -15,6 +15,10 @@ package frc.robot.subsystems.swerve;
 // Parameters
 import frc.robot.Parameters;
 
+// Utility classes
+import frc.robot.utilityClasses.CachedPIDController;
+import frc.robot.utilityClasses.PIDParams;
+
 // Vendor Libs
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
@@ -24,7 +28,6 @@ import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.revrobotics.CANEncoder;
-import com.revrobotics.CANPIDController;
 
 // WPI Libraries
 import edu.wpi.first.wpilibj.kinematics.SwerveModuleState;
@@ -41,8 +44,8 @@ public class SwerveModule {
   // Motors
   private CANSparkMax steerMotor;
   private CANSparkMax driveMotor;
-  private CANPIDController steerMotorPID;
-  private CANPIDController driveMotorPID;
+  private CachedPIDController steerMotorPID;
+  private CachedPIDController driveMotorPID;
   private CANCoder steerCANCoder;
   private CANEncoder steerMotorEncoder;
   private CANEncoder driveMotorEncoder;
@@ -107,7 +110,7 @@ public class SwerveModule {
     steerMotorEncoder.setPosition(getAngle());
 
     // Steering PID controller (from motor)
-    steerMotorPID = steerMotor.getPIDController();
+    steerMotorPID = new CachedPIDController(steerMotor);
     steerMotorPID.setP(steerPIDParams.P);
     steerMotorPID.setI(steerPIDParams.I);
     steerMotorPID.setD(steerPIDParams.D);
@@ -138,7 +141,7 @@ public class SwerveModule {
     driveMotorEncoder.setVelocityConversionFactor((Math.PI * Parameters.driveTrain.dimensions.MODULE_WHEEL_DIA_M) / (60.0 * Parameters.driveTrain.ratios.DRIVE_GEAR_RATIO));
 
     // Drive motor PID controller (from motor)
-    driveMotorPID = driveMotor.getPIDController();
+    driveMotorPID = new CachedPIDController(driveMotor);
     driveMotorPID.setP(drivePIDParams.P);
     driveMotorPID.setI(drivePIDParams.I);
     driveMotorPID.setD(drivePIDParams.D);
@@ -284,7 +287,7 @@ public class SwerveModule {
       desiredAngle = targetAngle + angularOffset;
 
       // Set the PID reference
-      steerMotorPID.setReference(desiredAngle, ControlType.kSmartMotion);
+      steerMotorPID.setRef(desiredAngle, ControlType.kSmartMotion);
 
       // Print out info (for debugging)
       if (Parameters.debug) {
@@ -352,7 +355,7 @@ public class SwerveModule {
     if (enabled) {
 
       // Calculate the output of the drive
-      driveMotorPID.setReference(targetVelocity, ControlType.kVelocity);
+      driveMotorPID.setRef(targetVelocity, ControlType.kVelocity);
 
       // Print out debug info if needed
       if (Parameters.debug) {

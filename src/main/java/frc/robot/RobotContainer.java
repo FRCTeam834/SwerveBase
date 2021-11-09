@@ -24,7 +24,7 @@ import frc.robot.commands.swerve.TestMovementPID;
 import frc.robot.commands.swerve.ZeroCanCoders;
 import frc.robot.commands.swerve.ZeroNavX;
 //import frc.robot.enums.JOYSTICK_OUTPUT_TYPES;
-import frc.robot.enums.ROBOT_STATE;
+import frc.robot.enums.RobotState;
 
 // WPI Libraries
 import edu.wpi.first.wpilibj2.command.Command;
@@ -76,7 +76,7 @@ public class RobotContainer {
   //public static JoystickButton rightJoystickButtons[];
 
   // The robot's state
-  public static ROBOT_STATE robotState;
+  public static RobotState robotState;
 
 
   public static final JoystickButton

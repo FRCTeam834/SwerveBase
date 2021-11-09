@@ -3,7 +3,7 @@
  * @since 5/22/20
  */
 
-package frc.robot.subsystems.swerve;
+package frc.robot.utilityClasses;
 
 /**
  *  Class that organizes gains used when assigning values to slots

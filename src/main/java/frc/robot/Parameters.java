@@ -16,8 +16,8 @@ package frc.robot;
 import frc.robot.DriverProfiles.DriverProfile;
 import frc.robot.DriverProfiles.JoystickParams;
 import frc.robot.enums.ControlInputs;
-import frc.robot.enums.JOYSTICK_OUTPUT_TYPES;
-import frc.robot.subsystems.swerve.PIDParams;
+import frc.robot.enums.JoystickOutputTypes;
+import frc.robot.utilityClasses.PIDParams;
 
 // Vendor libraries
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -83,8 +83,8 @@ public final class Parameters {
          * @param inputType      The devices used to control the robot
          */
         public static DriverProfile[] driverProfiles = {
-            new DriverProfile("CAP1Sup", new JoystickParams(0.075, JOYSTICK_OUTPUT_TYPES.ZEROED_QUAD), 180.0, true, false, 8.0, IdleMode.kBrake, IdleMode.kBrake, ControlInputs.JOYSTICKS),
-            new DriverProfile("Test", new JoystickParams(0.1, JOYSTICK_OUTPUT_TYPES.ZEROED_LINEAR), 45.0, true, false, 1.0, IdleMode.kBrake, IdleMode.kBrake, ControlInputs.JOYSTICKS)
+            new DriverProfile("CAP1Sup", new JoystickParams(0.075, JoystickOutputTypes.ZEROED_QUAD), 180.0, true, false, 8.0, IdleMode.kBrake, IdleMode.kBrake, ControlInputs.JOYSTICKS),
+            new DriverProfile("Test", new JoystickParams(0.1, JoystickOutputTypes.ZEROED_LINEAR), 45.0, true, false, 1.0, IdleMode.kBrake, IdleMode.kBrake, ControlInputs.JOYSTICKS)
         };
 
         // Default profile (must be kept!)

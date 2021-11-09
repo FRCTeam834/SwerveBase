@@ -7,7 +7,7 @@ package frc.robot.enums;
 /**
  *  Class that organizes gains used when assigning values to slots
  */
-public enum ROBOT_STATE {
+public enum RobotState {
     TWO_JOYSTICKS,
     ONE_JOYSTICK,
     NO_JOYSTICKS;

@@ -5,13 +5,13 @@
 
 package frc.robot.DriverProfiles;
 
-import frc.robot.enums.JOYSTICK_OUTPUT_TYPES;
+import frc.robot.enums.JoystickOutputTypes;
 
 /**
  * @param deadzone     The deadzone of the joysticks. Joystick values
  *                              range from -1 to 1, so a 0.1 deadzone is usually
  *                              sufficient to deal with any wobble
- * @param outputTypes The type of output curve for the joysticks. Can be any value of {@link frc.robot.enums.JOYSTICK_OUTPUT_TYPES}
+ * @param outputTypes The type of output curve for the joysticks. Can be any value of {@link frc.robot.enums.JoystickOutputTypes}
  * @param rampConst    The ramp rate of the quatratic function (only
  *                              used if JOYSTICK_OUTPUT_TYPE ==
  *                              ZEROED_QUAD_LINEAR). The a value in this graph:
@@ -23,7 +23,7 @@ public class JoystickParams {
 
     // Private variables
     private double deadzone, rampConst;
-    private JOYSTICK_OUTPUT_TYPES outputType;
+    private JoystickOutputTypes outputType;
     private double crossoverVal, linearSlope;
 
 
@@ -32,9 +32,9 @@ public class JoystickParams {
      * @param deadzone     The deadzone of the joysticks. Joystick values
      *                              range from -1 to 1, so a 0.1 deadzone is usually
      *                              sufficient to deal with any wobble
-     * @param outputType The type of output curve for the joysticks. Can be any value of {@link frc.robot.enums.JOYSTICK_OUTPUT_TYPES}
+     * @param outputType The type of output curve for the joysticks. Can be any value of {@link frc.robot.enums.JoystickOutputTypes}
      */
-    public JoystickParams(double deadzone, JOYSTICK_OUTPUT_TYPES outputType) {
+    public JoystickParams(double deadzone, JoystickOutputTypes outputType) {
         setJoystickParams(deadzone, outputType);
     }
 
@@ -44,7 +44,7 @@ public class JoystickParams {
      * @param deadzone     The deadzone of the joysticks. Joystick values
      *                              range from -1 to 1, so a 0.1 deadzone is usually
      *                              sufficient to deal with any wobble
-     * @param outputType The type of output curve for the joysticks. Can be any value of {@link frc.robot.enums.JOYSTICK_OUTPUT_TYPES}
+     * @param outputType The type of output curve for the joysticks. Can be any value of {@link frc.robot.enums.JoystickOutputTypes}
      * @param rampConst    The ramp rate of the quadratic function (only
      *                              used if outputType ==
      *                              ZEROED_QUAD_LINEAR). The a value in this graph:
@@ -52,7 +52,7 @@ public class JoystickParams {
      *                              Note that this value MUST BE CHECKED, otherwise
      *                              crazy things will happen (not so good!)
      */
-    public JoystickParams(double deadzone, JOYSTICK_OUTPUT_TYPES outputType, double rampConst) {
+    public JoystickParams(double deadzone, JoystickOutputTypes outputType, double rampConst) {
         setJoystickParams(deadzone, outputType, rampConst);
     }
 
@@ -62,15 +62,15 @@ public class JoystickParams {
      * @param deadzone     The deadzone of the joysticks. Joystick values
      *                              range from -1 to 1, so a 0.1 deadzone is usually
      *                              sufficient to deal with any wobble
-     * @param outputType The type of output curve for the joysticks. Can be any value of {@link frc.robot.enums.JOYSTICK_OUTPUT_TYPES}
+     * @param outputType The type of output curve for the joysticks. Can be any value of {@link frc.robot.enums.JoystickOutputTypes}
      */
-    public void setJoystickParams(double deadzone, JOYSTICK_OUTPUT_TYPES outputType) {
+    public void setJoystickParams(double deadzone, JoystickOutputTypes outputType) {
 
         // Make sure that the output type isn't ZEROED_QUAD_LINEAR
-        if (outputType == JOYSTICK_OUTPUT_TYPES.ZEROED_QUAD_LINEAR) {
+        if (outputType == JoystickOutputTypes.ZEROED_QUAD_LINEAR) {
 
             // We can't use ZEROED_QUAD_LINEAR without a proper ramp rate term, so fall back to ZEROED_LINEAR
-            outputType = JOYSTICK_OUTPUT_TYPES.ZEROED_LINEAR;
+            outputType = JoystickOutputTypes.ZEROED_LINEAR;
             System.out.println("WARNING: No ramp rate specified with ZEROED_QUAD_LINEAR, falling back to ZEROED_LINEAR!");
         }
 
@@ -85,7 +85,7 @@ public class JoystickParams {
      * @param deadzone     The deadzone of the joysticks. Joystick values
      *                              range from -1 to 1, so a 0.1 deadzone is usually
      *                              sufficient to deal with any wobble
-     * @param outputType The type of output curve for the joysticks. Can be any value of {@link frc.robot.enums.JOYSTICK_OUTPUT_TYPES}
+     * @param outputType The type of output curve for the joysticks. Can be any value of {@link frc.robot.enums.JoystickOutputTypes}
      * @param rampConst    The ramp rate of the quadratic function (only
      *                              used if outputType ==
      *                              ZEROED_QUAD_LINEAR). The a value in this graph:
@@ -93,13 +93,13 @@ public class JoystickParams {
      *                              Note that this value MUST BE CHECKED, otherwise
      *                              crazy things will happen (not so good!)
      */
-    public void setJoystickParams(double deadzone, JOYSTICK_OUTPUT_TYPES outputType, double rampConst) {
+    public void setJoystickParams(double deadzone, JoystickOutputTypes outputType, double rampConst) {
 
         // Set the basic parameters
         setJoystickParams(deadzone, outputType);
 
         // We only need to do the fancy math if we're using the fancy scaling method
-        if (outputType == JOYSTICK_OUTPUT_TYPES.ZEROED_QUAD_LINEAR) {
+        if (outputType == JoystickOutputTypes.ZEROED_QUAD_LINEAR) {
 
             // Create short little variables to simplify the formula
             // Wastes time, but well worth it in readability,
@@ -131,7 +131,7 @@ public class JoystickParams {
      * @return "A" term of quadratic equation
      */
     public double getRampRate() {
-        if (this.outputType == JOYSTICK_OUTPUT_TYPES.ZEROED_QUAD_LINEAR) {
+        if (this.outputType == JoystickOutputTypes.ZEROED_QUAD_LINEAR) {
             return this.rampConst;
         }
         else {
@@ -146,7 +146,7 @@ public class JoystickParams {
      * @return Precomputed crossover value
      */
     public double getCrossoverValue() {
-        if (this.outputType == JOYSTICK_OUTPUT_TYPES.ZEROED_QUAD_LINEAR) {
+        if (this.outputType == JoystickOutputTypes.ZEROED_QUAD_LINEAR) {
             return this.crossoverVal;
         }
         else {
@@ -160,7 +160,7 @@ public class JoystickParams {
      * @return Precomputed linear slope
      */
     public double getLinearSlope() {
-        if (this.outputType == JOYSTICK_OUTPUT_TYPES.ZEROED_QUAD_LINEAR) {
+        if (this.outputType == JoystickOutputTypes.ZEROED_QUAD_LINEAR) {
             return this.linearSlope;
         }
         else {
@@ -170,10 +170,10 @@ public class JoystickParams {
 
 
     /**
-     * Returns output mode of the joysticks (a value of {@link frc.robot.enums.JOYSTICK_OUTPUT_TYPES})
+     * Returns output mode of the joysticks (a value of {@link frc.robot.enums.JoystickOutputTypes})
      * @return Joystick threshold
      */
-    public JOYSTICK_OUTPUT_TYPES getOutputType() {
+    public JoystickOutputTypes getOutputType() {
         return this.outputType;
     }
 }
