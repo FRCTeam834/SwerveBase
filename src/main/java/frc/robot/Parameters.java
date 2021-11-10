@@ -88,7 +88,7 @@ public final class Parameters {
         };
 
         // Default profile (must be kept!)
-        public static final DriverProfile defaultDriverProfile = driverProfiles[0]; //new DriverProfile("Default", 0.15, 45.0, 0.5, true, true, 1.0, IdleMode.kBrake, IdleMode.kBrake);
+        public static final DriverProfile defaultDriverProfile = driverProfiles[0];
 
         // Current Driver Profile being used
         public static DriverProfile currentProfile = driverProfiles[0];
