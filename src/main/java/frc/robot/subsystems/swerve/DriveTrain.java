@@ -270,86 +270,54 @@ public class DriveTrain extends SubsystemBase {
 
 
   /**
-   * Moves all of the swerve modules. If wait is specified, then the function will wait until the modules reach their desired angles.
+   * Moves all of the swerve modules to the specified angles
    * @param FLAngle Angle of the front left module
    * @param FRAngle Angle of the front right module
    * @param BLAngle Angle of the back left module
    * @param BRAngle Angle of the back right module
-   * @param wait If true, then this function will block execution until the movement has been completed
    */
-  public void setDesiredAngles(double FLAngle, double FRAngle, double BLAngle, double BRAngle, boolean wait) {
+  public void setDesiredAngles(double FLAngle, double FRAngle, double BLAngle, double BRAngle) {
 
     // Set the desired angles
     frontLeft.setDesiredAngle(FLAngle);
     frontRight.setDesiredAngle(FRAngle);
     backLeft.setDesiredAngle(BLAngle);
     backRight.setDesiredAngle(BRAngle);
-
-    // Check to see if we need to wait
-    if (wait) {
-
-      // Create a new timer (for timeout)
-      Timer timer = new Timer();
-
-      // Continuously loop, checking to see the current time in seconds. If we've exceeded the timeout, end the loop early
-      while(!(frontLeft.isAtDesiredAngle() && frontRight.isAtDesiredAngle() && backLeft.isAtDesiredAngle() && backRight.isAtDesiredAngle())) {
-        if (timer.hasElapsed(Parameters.driveTrain.movement.TIMEOUT)) {
-          break;
-        }
-      }
-    }
   }
 
 
   /**
    * Moves the modules to the desired angles, just with an array of angles instead of individual parameters
    * @param angleArray An array of module angles in form [Front Left, Front Right, Back Left, Back Right]
-   * @param wait If true, then this function will block execution until the movement has been completed
    */
-  public void setDesiredAngles(double[] angleArray, boolean wait) {
-    setDesiredAngles(angleArray[0], angleArray[1], angleArray[2], angleArray[3], wait);
+  public void setDesiredAngles(double[] angleArray) {
+    setDesiredAngles(angleArray[0], angleArray[1], angleArray[2], angleArray[3]);
   }
 
 
   /**
-   * Moves all of the swerve modules. If wait is true, then the function will wait until the modules reach their desired velocities.
+   * Sets all of the swerve modules to their specified velocities
    * @param FLVelocity Velocity of the front left module
    * @param FRVelocity Velocity of the front right module
    * @param BLVelocity Velocity of the back left module
    * @param BRVelocity Velocity of the back right module
-   * @param wait If true, then this function will block execution until the velocity has been reached
    */
-  public void setDesiredVelocities(double FLVelocity, double FRVelocity, double BLVelocity, double BRVelocity, boolean wait) {
+  public void setDesiredVelocities(double FLVelocity, double FRVelocity, double BLVelocity, double BRVelocity) {
 
     // Set the modules to run at the specified velocities
     frontLeft.setDesiredVelocity(FLVelocity);
     frontRight.setDesiredVelocity(FRVelocity);
     backLeft.setDesiredVelocity(BLVelocity);
     backRight.setDesiredVelocity(BRVelocity);
-
-    // Check to see if we need to wait
-    if (wait) {
-
-      // Create a new timer (for timeout)
-      Timer timer = new Timer();
-
-      // Continuously loop, checking to see the current time in seconds. If we've exceeded the timeout, end the loop early
-      while(!(frontLeft.isAtDesiredVelocity() && frontRight.isAtDesiredVelocity() && backLeft.isAtDesiredVelocity() && backRight.isAtDesiredVelocity())) {
-        if (timer.hasElapsed(Parameters.driveTrain.movement.TIMEOUT)) {
-          break;
-        }
-      }
-    }
   }
 
 
   /**
    * Moves the modules to the desired velocities, just with an array of velocities instead of individual parameters
    * @param velocityArray An array of module velocities in form [Front Left, Front Right, Back Left, Back Right]
-   * @param wait If true, then this function will block execution until the velocity has been reached
    */
-  public void setDesiredVelocities(double[] velocityArray, boolean wait) {
-    setDesiredVelocities(velocityArray[0], velocityArray[1], velocityArray[2], velocityArray[3], wait);
+  public void setDesiredVelocities(double[] velocityArray) {
+    setDesiredVelocities(velocityArray[0], velocityArray[1], velocityArray[2], velocityArray[3]);
   }
 
 
@@ -357,7 +325,7 @@ public class DriveTrain extends SubsystemBase {
    * Stops the drive wheel of the modules and sets it to hold stopped
    */
   public void stopModules() {
-    setDesiredVelocities(0, 0, 0, 0, false);
+    setDesiredVelocities(0, 0, 0, 0);
   }
 
 

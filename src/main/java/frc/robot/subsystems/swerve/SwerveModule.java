@@ -320,24 +320,6 @@ public class SwerveModule {
   }
 
 
-  /**
-   * Halts execution until the module reaches the desired angle
-   * @param angle The angle to move to
-   */
-  public void moveToAngle(double angle) {
-
-    // Set the desired angle for the module
-    setDesiredAngle(angle);
-
-    // Wait for the motor to reach the desired angle
-    while (!isAtDesiredAngle()) {
-      if (Parameters.debug) {
-        publishPerformanceData();
-      }
-    }
-  }
-
-
   // Sets the power of the drive motor
   public void setRawDrivePower(double percentage) {
 
@@ -406,14 +388,6 @@ public class SwerveModule {
 
     // Return a true, module is disabled
     return true;
-  }
-
-
-  // Moves the wheel to a desired velocity
-  public void reachVelocity(double velocity) {
-
-    // Wait until the module reaches it's desired velocity, setting that the wheel should reach the specified velocity
-    while (!isAtDesiredVelocity()) { setDesiredVelocity(velocity); };
   }
 
 

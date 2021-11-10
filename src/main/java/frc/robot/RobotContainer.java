@@ -18,12 +18,10 @@ import frc.robot.commands.swerve.LetsRoll2Joysticks;
 import frc.robot.commands.swerve.PullNTSwerveParams;
 import frc.robot.commands.swerve.SaveSwerveParameters;
 import frc.robot.commands.swerve.TestModulePID;
-//import frc.robot.commands.swerve.TestModulePositioning;
 import frc.robot.commands.swerve.TestModuleVelocity;
 import frc.robot.commands.swerve.TestMovementPID;
 import frc.robot.commands.swerve.ZeroCanCoders;
 import frc.robot.commands.swerve.ZeroNavX;
-//import frc.robot.enums.JOYSTICK_OUTPUT_TYPES;
 import frc.robot.enums.RobotState;
 
 // WPI Libraries
@@ -32,7 +30,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj.XboxController;
-//import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
