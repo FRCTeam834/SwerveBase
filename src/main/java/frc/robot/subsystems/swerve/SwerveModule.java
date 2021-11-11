@@ -111,17 +111,23 @@ public class SwerveModule {
 
     // Steering PID controller (from motor)
     steerMotorPID = new CachedPIDController(steerMotor);
-    steerMotorPID.setP(steerPIDParams.P);
-    steerMotorPID.setI(steerPIDParams.I);
-    steerMotorPID.setD(steerPIDParams.D);
-    steerMotorPID.setIZone(steerPIDParams.I_ZONE);
-    steerMotorPID.setFF(steerPIDParams.FF);
+    steerMotorPID.setP(steerPIDParams.kP);
+    steerMotorPID.setI(steerPIDParams.kI);
+    steerMotorPID.setD(steerPIDParams.kD);
+    steerMotorPID.setIZone(steerPIDParams.iZone);
     steerMotorPID.setOutputRange(-1, 1);
 
-    // Set the angular velocity and acceleration values
-    steerMotorPID.setSmartMotionMaxAccel(Parameters.driveTrain.maximums.MAX_ACCEL, 0);
-    steerMotorPID.setSmartMotionMaxVelocity(Parameters.driveTrain.maximums.MAX_VELOCITY, 0);
-    steerMotorPID.setSmartMotionAccelStrategy(AccelStrategy.kSCurve, 0);
+    // Only set feedforward if it's a non-zero
+    if (steerPIDParams.kFF != 0) {
+      steerMotorPID.setFF(steerPIDParams.kFF);
+    }
+
+    // Set the angular velocity and acceleration values (if smart motion is being used)
+    if (steerPIDParams.controlType.equals(ControlType.kSmartMotion)) {
+      steerMotorPID.setSmartMotionMaxAccel(Parameters.driveTrain.maximums.MAX_ACCEL, 0);
+      steerMotorPID.setSmartMotionMaxVelocity(Parameters.driveTrain.maximums.MAX_VELOCITY, 0);
+      steerMotorPID.setSmartMotionAccelStrategy(AccelStrategy.kSCurve, 0);
+    }
 
     // Drive motor
     driveMotor = new CANSparkMax(driveMID, CANSparkMax.MotorType.kBrushless);
@@ -142,12 +148,16 @@ public class SwerveModule {
 
     // Drive motor PID controller (from motor)
     driveMotorPID = new CachedPIDController(driveMotor);
-    driveMotorPID.setP(drivePIDParams.P);
-    driveMotorPID.setI(drivePIDParams.I);
-    driveMotorPID.setD(drivePIDParams.D);
-    driveMotorPID.setIZone(drivePIDParams.I_ZONE);
-    driveMotorPID.setFF(drivePIDParams.FF);
+    driveMotorPID.setP(drivePIDParams.kP);
+    driveMotorPID.setI(drivePIDParams.kI);
+    driveMotorPID.setD(drivePIDParams.kD);
+    driveMotorPID.setIZone(drivePIDParams.iZone);
     driveMotorPID.setOutputRange(-1, 1);
+
+    // Only set feedforward if it's a non-zero
+    if (drivePIDParams.kFF != 0) {
+      driveMotorPID.setFF(drivePIDParams.kFF);
+    }
 
     // Burn the flash parameters to the Sparks (prevents loss of parameters after brownouts)
     steerMotor.burnFlash();
@@ -188,10 +198,10 @@ public class SwerveModule {
   public void setSteerMParams(PIDParams pidParams, IdleMode idleMode) {
 
     // PID parameters
-    steerMotorPID.setP(pidParams.P);
-    steerMotorPID.setI(pidParams.I);
-    steerMotorPID.setD(pidParams.D);
-    steerMotorPID.setFF(pidParams.FF);
+    steerMotorPID.setP(pidParams.kP);
+    steerMotorPID.setI(pidParams.kI);
+    steerMotorPID.setD(pidParams.kD);
+    steerMotorPID.setFF(pidParams.kFF);
 
     // Idle mode of the motor
     steerMotor.setIdleMode(idleMode);
@@ -209,10 +219,10 @@ public class SwerveModule {
   public void setDriveMParams(PIDParams pidParams, IdleMode idleMode) {
 
     // PIDF parameters
-    driveMotorPID.setP(pidParams.P);
-    driveMotorPID.setI(pidParams.I);
-    driveMotorPID.setD(pidParams.D);
-    driveMotorPID.setFF(pidParams.FF);
+    driveMotorPID.setP(pidParams.kP);
+    driveMotorPID.setI(pidParams.kI);
+    driveMotorPID.setD(pidParams.kD);
+    driveMotorPID.setFF(pidParams.kFF);
 
     // Idle mode of the motor
     driveMotor.setIdleMode(idleMode);

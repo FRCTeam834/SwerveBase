@@ -5,42 +5,61 @@
 
 package frc.robot.utilityClasses;
 
+import com.revrobotics.ControlType;
+
 /**
  *  Class that organizes gains used when assigning values to slots
  */
 public class PIDParams {
 
     // The values of the PID loop
-    public double P;
-    public double I;
-    public double D;
-    public double FF;
-    public double I_ZONE;
-    public double PEAK_OUTPUT;
+    public double kP;
+    public double kI;
+    public double kD;
+    public double kFF;
+    public double iZone;
+    public double maxOutput;
+    public ControlType controlType;
 
-    // Creating a new set of PID Parameters
-    public PIDParams(double P, double I, double D, double FF, double I_ZONE, double PEAK_OUTPUT){
-        this.P = P;
-        this.I = I;
-        this.D = D;
-        this.FF = FF;
-        this.I_ZONE = I_ZONE;
-        this.PEAK_OUTPUT = PEAK_OUTPUT;
+
+    // Creates a new set of PID Parameters
+    public PIDParams(double kP, double kI, double kD, double kFF, double iZone, double maxOutput, ControlType ctrlType){
+        this.kP = kP;
+        this.kI = kI;
+        this.kD = kD;
+        this.kFF = kFF;
+        this.iZone = iZone;
+        this.maxOutput = maxOutput;
+        this.controlType = ctrlType;
     }
+
+
+    // Creates a new set of PID Parameters
+    public PIDParams(double kP, double kI, double kD, double kFF, double maxOutput, ControlType ctrlType){
+        this.kP = kP;
+        this.kI = kI;
+        this.kD = kD;
+        this.kFF = kFF;
+        this.iZone = 0; // (Disabled when set to 0)
+        this.maxOutput = maxOutput;
+        this.controlType = ctrlType;
+    }
+
 
     // Change the parameters with the new values
     public void setPIDParams(PIDParams params) {
-        this.P = params.P;
-        this.I = params.I;
-        this.D = params.D;
-        this.FF = params.FF;
-        this.I_ZONE = params.I_ZONE;
-        this.PEAK_OUTPUT = params.PEAK_OUTPUT;
+        this.kP = params.kP;
+        this.kI = params.kI;
+        this.kD = params.kD;
+        this.kFF = params.kFF;
+        this.iZone = params.iZone;
+        this.maxOutput = params.maxOutput;
+        this.controlType = params.controlType;
     }
 
-    // Set only the peak output (needed when the driver profile changes)
-    public void setPeakOutput(double PEAK_OUTPUT) {
-        this.PEAK_OUTPUT = PEAK_OUTPUT;
-    }
 
+    // Set only the max output (needed when the driver profile changes)
+    public void setPeakOutput(double maxOutput) {
+        this.maxOutput = maxOutput;
+    }
 }

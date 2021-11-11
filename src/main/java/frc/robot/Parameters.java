@@ -19,6 +19,7 @@ import frc.robot.enums.ControlInputs;
 import frc.robot.enums.JoystickOutputTypes;
 import frc.robot.utilityClasses.PIDParams;
 
+import com.revrobotics.ControlType;
 // Vendor libraries
 import com.revrobotics.CANSparkMax.IdleMode;
 
@@ -157,15 +158,15 @@ public final class Parameters {
              * Gains used in each module's steering motor, to be adjusted accordingly
              * Gains(kp, ki, kd, feedforward, iZone, peak output);
              */
-            public static PIDParams FL_STEER_PID = new PIDParams(0.00000009, 0.0, 0.000, driveTrain.pid.MODULE_S_FF, 0, driver.currentProfile.maxModVelocity);
-            public static PIDParams FR_STEER_PID = new PIDParams(0.00000009, 0.0, 0.000, driveTrain.pid.MODULE_S_FF, 0, driver.currentProfile.maxModVelocity);
-            public static PIDParams BL_STEER_PID = new PIDParams(0.00000009, 0.0, 0.000, driveTrain.pid.MODULE_S_FF, 0, driver.currentProfile.maxModVelocity);
-            public static PIDParams BR_STEER_PID = new PIDParams(0.00000009, 0.0, 0.000, driveTrain.pid.MODULE_S_FF, 0, driver.currentProfile.maxModVelocity);
+            public static PIDParams FL_STEER_PID = new PIDParams(1.0, 0.0, 0.1, driveTrain.pid.MODULE_S_FF, driver.currentProfile.maxModVelocity, ControlType.kPosition);
+            public static PIDParams FR_STEER_PID = new PIDParams(1.0, 0.0, 0.1, driveTrain.pid.MODULE_S_FF, driver.currentProfile.maxModVelocity, ControlType.kPosition);
+            public static PIDParams BL_STEER_PID = new PIDParams(1.0, 0.0, 0.1, driveTrain.pid.MODULE_S_FF, driver.currentProfile.maxModVelocity, ControlType.kPosition);
+            public static PIDParams BR_STEER_PID = new PIDParams(1.0, 0.0, 0.1, driveTrain.pid.MODULE_S_FF, driver.currentProfile.maxModVelocity, ControlType.kPosition);
 
-            public static PIDParams FL_DRIVE_PID = new PIDParams(0.500, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, 0, driver.currentProfile.maxModVelocity);
-            public static PIDParams FR_DRIVE_PID = new PIDParams(0.500, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, 0, driver.currentProfile.maxModVelocity);
-            public static PIDParams BL_DRIVE_PID = new PIDParams(0.500, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, 0, driver.currentProfile.maxModVelocity);
-            public static PIDParams BR_DRIVE_PID = new PIDParams(0.500, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, 0, driver.currentProfile.maxModVelocity);
+            public static PIDParams FL_DRIVE_PID = new PIDParams(0.500, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, driver.currentProfile.maxModVelocity, ControlType.kVelocity);
+            public static PIDParams FR_DRIVE_PID = new PIDParams(0.500, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, driver.currentProfile.maxModVelocity, ControlType.kVelocity);
+            public static PIDParams BL_DRIVE_PID = new PIDParams(0.500, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, driver.currentProfile.maxModVelocity, ControlType.kVelocity);
+            public static PIDParams BR_DRIVE_PID = new PIDParams(0.500, 0.0, 0.00, driveTrain.pid.MODULE_D_FF, driver.currentProfile.maxModVelocity, ControlType.kVelocity);
 
             public static final double MODULE_S_FF = 0.000000; // Must be tuned for the modules!
             public static final double MODULE_D_FF = 0.000000; // Maybe: 0.000156;
