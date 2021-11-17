@@ -58,6 +58,10 @@ public class SwerveModule {
   private String name;
   private boolean enabled = true;
 
+  // PID control types
+  ControlType steerMControlType;
+  ControlType driveMControlType;
+
   // NetworkTable values
   private NetworkTableEntry steerPEntry;
   private NetworkTableEntry steerIEntry;
@@ -129,6 +133,9 @@ public class SwerveModule {
       steerMotorPID.setSmartMotionAccelStrategy(AccelStrategy.kSCurve, 0);
     }
 
+    // Save the control type for the steering motor
+    steerMControlType = steerPIDParams.controlType;
+
     // Drive motor
     driveMotor = new CANSparkMax(driveMID, CANSparkMax.MotorType.kBrushless);
     driveMotor.restoreFactoryDefaults();
@@ -158,6 +165,9 @@ public class SwerveModule {
     if (drivePIDParams.kFF != 0) {
       driveMotorPID.setFF(drivePIDParams.kFF);
     }
+
+    // Save the control type for the drive motor
+    driveMControlType = drivePIDParams.controlType;
 
     // Burn the flash parameters to the Sparks (prevents loss of parameters after brownouts)
     steerMotor.burnFlash();
@@ -206,6 +216,9 @@ public class SwerveModule {
     // Idle mode of the motor
     steerMotor.setIdleMode(idleMode);
 
+    // Set the control type
+    steerMControlType = pidParams.controlType;
+
     // Save the parameters (prevents loss of parameters after brownouts)
     steerMotor.burnFlash();
   }
@@ -226,6 +239,9 @@ public class SwerveModule {
 
     // Idle mode of the motor
     driveMotor.setIdleMode(idleMode);
+
+    // Set the control type
+    driveMControlType = pidParams.controlType;
 
     // Save the parameters (prevents loss of parameters after brownouts)
     driveMotor.burnFlash();
@@ -297,7 +313,7 @@ public class SwerveModule {
       desiredAngle = targetAngle + angularOffset;
 
       // Set the PID reference
-      steerMotorPID.setRef(desiredAngle, ControlType.kSmartMotion);
+      steerMotorPID.setRef(desiredAngle, steerMControlType);
 
       // Print out info (for debugging)
       if (Parameters.debug) {
@@ -347,7 +363,7 @@ public class SwerveModule {
     if (enabled) {
 
       // Calculate the output of the drive
-      driveMotorPID.setRef(targetVelocity, ControlType.kVelocity);
+      driveMotorPID.setRef(targetVelocity, driveMControlType);
 
       // Print out debug info if needed
       if (Parameters.debug) {
