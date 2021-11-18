@@ -17,6 +17,7 @@ import frc.robot.commands.swerve.LetsRoll1Joystick;
 import frc.robot.commands.swerve.LetsRoll2Joysticks;
 import frc.robot.commands.swerve.PullNTSwerveParams;
 import frc.robot.commands.swerve.SaveSwerveParameters;
+import frc.robot.commands.swerve.StraightenWheels;
 import frc.robot.commands.swerve.TestModulePID;
 import frc.robot.commands.swerve.TestModuleVelocity;
 import frc.robot.commands.swerve.TestMovementPID;
@@ -57,6 +58,7 @@ public class RobotContainer {
   private final TestModuleVelocity testModuleVelocity = new TestModuleVelocity();
   private final SaveSwerveParameters saveSwerveParameters = new SaveSwerveParameters();
   private final ZeroNavX zeroNavX = new ZeroNavX();
+  private final StraightenWheels straightenWheels = new StraightenWheels();
 
   // Timer (for delays)
   public static Timer timer = new Timer();
@@ -146,6 +148,7 @@ public class RobotContainer {
     //lJoystick4.whenPressed(testModulePID);
     //lJoystick5.whenPressed(testMovementPID);
     lJoystick8.whenPressed(zeroCanCoders);
+    lJoystick9.whenPressed(straightenWheels);
 
     // Right joystick
     rJoystick1.toggleWhenPressed(zeroNavX);

@@ -257,7 +257,7 @@ public class DriveTrain extends SubsystemBase {
 
 
   /**
-   * Halts all of the modules (sets all the motors to 0%)
+   * Halts all of the modules
    */
   public void haltAllModules() {
 
@@ -296,6 +296,15 @@ public class DriveTrain extends SubsystemBase {
 
 
   /**
+   * Checks if the modules are at their desired angles (must all be at desired angles in order to return true)
+   * @return Are the modules at their desired angles?
+   */
+  public boolean isAtDesiredAngles() {
+    return (frontLeft.isAtDesiredAngle() && frontRight.isAtDesiredAngle() && backLeft.isAtDesiredAngle() && backRight.isAtDesiredAngle());
+  }
+
+
+  /**
    * Sets all of the swerve modules to their specified velocities
    * @param FLVelocity Velocity of the front left module
    * @param FRVelocity Velocity of the front right module
@@ -318,6 +327,15 @@ public class DriveTrain extends SubsystemBase {
    */
   public void setDesiredVelocities(double[] velocityArray) {
     setDesiredVelocities(velocityArray[0], velocityArray[1], velocityArray[2], velocityArray[3]);
+  }
+
+
+  /**
+   * Checks if the modules are at their desired velocities (must all be at desired velocities in order to return true)
+   * @return Are the modules at their desired velocities?
+   */
+  public boolean isAtDesiredVelocities() {
+    return (frontLeft.isAtDesiredVelocity() && frontRight.isAtDesiredVelocity() && backLeft.isAtDesiredVelocity() && backRight.isAtDesiredVelocity());
   }
 
 
