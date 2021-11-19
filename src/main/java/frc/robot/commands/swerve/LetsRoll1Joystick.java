@@ -12,7 +12,6 @@
 
 package frc.robot.commands.swerve;
 
-import java.lang.Math;
 
 // Robot libraries
 import frc.robot.Parameters;
