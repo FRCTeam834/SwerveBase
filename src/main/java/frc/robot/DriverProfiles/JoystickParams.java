@@ -68,7 +68,8 @@ public class JoystickParams {
       // ZEROED_LINEAR
       outputType = JoystickOutputTypes.ZEROED_LINEAR;
       System.out.println(
-          "WARNING: No ramp rate specified with ZEROED_QUAD_LINEAR, falling back to ZEROED_LINEAR!");
+          "WARNING: No ramp rate specified with ZEROED_QUAD_LINEAR, falling back to"
+              + " ZEROED_LINEAR!");
     }
 
     // Save the values of the parameters
