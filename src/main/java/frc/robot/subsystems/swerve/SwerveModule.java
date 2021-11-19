@@ -109,8 +109,10 @@ public class SwerveModule {
     // Steer motor encoder (position is converted from rotations to degrees)
     // (For the conversion factor) First we multiply by 360 to convert rotations to degrees,
     // then divide by the steer gear ratio because the motor must move that many times for a full module rotation
+    // For the velocity, we can use the same conversion factor and divide by 60 to convert RPM to deg/s
     steerMotorEncoder = steerMotor.getEncoder();
     steerMotorEncoder.setPositionConversionFactor(360.0 / Parameters.driveTrain.ratios.STEER_GEAR_RATIO);
+    steerMotorEncoder.setVelocityConversionFactor(360.0 / (Parameters.driveTrain.ratios.STEER_GEAR_RATIO * 60));
     steerMotorEncoder.setPosition(getAngle());
 
     // Steering PID controller (from motor)
@@ -150,8 +152,10 @@ public class SwerveModule {
     // First we need to multiply by min/sec (1/60) to get to rotations/s
     // Then we divide by the drive gear ratio, converting motor rotations/s to wheel rotations/s
     // Finally, we multiply by Pi * d, which is the circumference of the wheel, converting it to wheel m/s
+    // It's similar with position, we just don't need to divide by 60. Converts rotations to meters
     driveMotorEncoder = driveMotor.getEncoder();
     driveMotorEncoder.setVelocityConversionFactor((Math.PI * Parameters.driveTrain.dimensions.MODULE_WHEEL_DIA_M) / (60.0 * Parameters.driveTrain.ratios.DRIVE_GEAR_RATIO));
+    driveMotorEncoder.setPositionConversionFactor((Math.PI * Parameters.driveTrain.dimensions.MODULE_WHEEL_DIA_M) / Parameters.driveTrain.ratios.DRIVE_GEAR_RATIO);
 
     // Drive motor PID controller (from motor)
     driveMotorPID = new CachedPIDController(driveMotor);
