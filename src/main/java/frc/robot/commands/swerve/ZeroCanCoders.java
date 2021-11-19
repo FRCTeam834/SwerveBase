@@ -6,12 +6,11 @@
  * @author Christian Piper (@CAP1Sup)
  * @since 3/6/21
  */
-
 package frc.robot.commands.swerve;
 
-import frc.robot.Robot;
-
+// Imports
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Robot;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:

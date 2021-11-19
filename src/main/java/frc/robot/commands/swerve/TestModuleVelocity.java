@@ -6,9 +6,9 @@
  * @author Christian Piper (@CAP1Sup)
  * @since 5/12/21
  */
-
 package frc.robot.commands.swerve;
 
+// Imports
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
@@ -39,15 +39,15 @@ public class TestModuleVelocity extends CommandBase {
     joystickValues = RobotContainer.getJoystickValues();
 
     // Multiply each of the elements by the angle value
-    for(int index = 0; index < joystickValues.length; index++) {
+    for (int index = 0; index < joystickValues.length; index++) {
       joystickValues[index] = joystickValues[index] * 2;
     }
 
     // Move the modules to those positions
     Robot.driveTrain.frontLeft.setDesiredVelocity(joystickValues[0]);
-    //Robot.driveTrain.frontRight.setDesiredAngle(joystickValues[1]);
-    //Robot.driveTrain.backLeft.setDesiredAngle(joystickValues[2]);
-    //Robot.driveTrain.backRight.setDesiredAngle(joystickValues[3]);
+    // Robot.driveTrain.frontRight.setDesiredAngle(joystickValues[1]);
+    // Robot.driveTrain.backLeft.setDesiredAngle(joystickValues[2]);
+    // Robot.driveTrain.backRight.setDesiredAngle(joystickValues[3]);
   }
 
   // Called once the command ends or is interrupted.

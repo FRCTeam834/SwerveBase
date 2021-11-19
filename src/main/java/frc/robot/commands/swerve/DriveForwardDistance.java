@@ -6,27 +6,23 @@
  * @author Christian Piper (@CAP1Sup)
  * @since 5/26/20
  */
-
 package frc.robot.commands.swerve;
 
-// Parameters
-import frc.robot.Parameters;
-
-// Robot
-import frc.robot.Robot;
-
-// WPI libraries
+// Import
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Parameters;
+import frc.robot.Robot;
 
 public class DriveForwardDistance extends CommandBase {
   /** Moves the robot to the desired position */
 
   // Main carrier variables
   Pose2d desiredPose2d;
+
   double linearVel;
 
   // Move forward at the set linear velocity
@@ -43,7 +39,6 @@ public class DriveForwardDistance extends CommandBase {
     this.linearVel = linearVelocity;
   }
 
-
   // Default to current driver profile for the linear velocity
   public DriveForwardDistance(double distance) {
 
@@ -54,20 +49,20 @@ public class DriveForwardDistance extends CommandBase {
     Pose2d currentPosition = Robot.driveTrain.getPose2D();
 
     // Physics equations (done with basic logic)
-    //double newX = currentPosition.getX() + (distance * currentPosition.getRotation().getCos());
-    //double newY = currentPosition.getY() + (distance * currentPosition.getRotation().getSin());
-    //this.desiredPose2d = new Pose2d(newX, newY, currentPosition.getRotation());
+    // double newX = currentPosition.getX() + (distance * currentPosition.getRotation().getCos());
+    // double newY = currentPosition.getY() + (distance * currentPosition.getRotation().getSin());
+    // this.desiredPose2d = new Pose2d(newX, newY, currentPosition.getRotation());
 
     // WPI equations (should work better)
-    this.desiredPose2d = currentPosition.transformBy(new Transform2d(new Translation2d(distance, 0), new Rotation2d()));
+    this.desiredPose2d =
+        currentPosition.transformBy(
+            new Transform2d(new Translation2d(distance, 0), new Rotation2d()));
     this.linearVel = Parameters.driver.currentProfile.maxModVelocity;
   }
-
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
-
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override

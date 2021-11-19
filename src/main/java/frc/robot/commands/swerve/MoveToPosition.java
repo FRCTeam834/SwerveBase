@@ -6,24 +6,20 @@
  * @author Christian Piper (@CAP1Sup)
  * @since 2/22/21
  */
-
 package frc.robot.commands.swerve;
 
-// Parameters
-import frc.robot.Parameters;
-
-// Robot
-import frc.robot.Robot;
-
-// WPI libraries
+// Imports
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Parameters;
+import frc.robot.Robot;
 
 public class MoveToPosition extends CommandBase {
   /** Moves the robot to the desired position */
 
   // Main defines
   Pose2d desiredPosition;
+
   double linearVel;
 
   public MoveToPosition(Pose2d desiredPose, double linearVelocity) {
@@ -45,9 +41,7 @@ public class MoveToPosition extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -59,9 +53,7 @@ public class MoveToPosition extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

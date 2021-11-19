@@ -6,21 +6,19 @@
 /*----------------------------------------------------------------------------*/
 
 /**
- * @author Christian Piper (@CAP1Sup), Mohammed Durrani (@mdurrani808), Jadon Trackim (@JadonTrackim), Krishna Dihora (@kjdih2)
+ * @author Christian Piper (@CAP1Sup), Mohammed Durrani (@mdurrani808), Jadon Trackim
+ *     (@JadonTrackim), Krishna Dihora (@kjdih2)
  * @since 5/8/20
  */
-
 package frc.robot;
 
-// WPI libraries
+// Imports
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-
-// Subsystems
+import frc.robot.DriverProfiles.ProfilingManagement;
 import frc.robot.subsystems.NavX;
 import frc.robot.subsystems.swerve.DriveTrain;
-import frc.robot.DriverProfiles.ProfilingManagement;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -37,12 +35,12 @@ public class Robot extends TimedRobot {
   public static DriveTrain driveTrain;
 
   // Commands
-  //public static LetsRoll2Joysticks letsRoll2Joysticks;
-  //public static LetsRoll1Joystick letsRoll1Joystick;
-  //public static ZeroCanCoders zeroCanCoders;
-  //public static PullNTSwerveParams pullNTSwerveParams;
-  //public static TestModulePID testPID;
-  //public static SaveSwerveParameters saveSwerveParameters;
+  // public static LetsRoll2Joysticks letsRoll2Joysticks;
+  // public static LetsRoll1Joystick letsRoll1Joystick;
+  // public static ZeroCanCoders zeroCanCoders;
+  // public static PullNTSwerveParams pullNTSwerveParams;
+  // public static TestModulePID testPID;
+  // public static SaveSwerveParameters saveSwerveParameters;
 
   private RobotContainer m_robotContainer;
 
@@ -59,12 +57,12 @@ public class Robot extends TimedRobot {
     driveTrain = new DriveTrain();
 
     // Commands
-    //letsRoll2Joysticks = new LetsRoll2Joysticks();
-    //letsRoll1Joystick = new LetsRoll1Joystick();
-    //zeroCanCoders = new ZeroCanCoders();
-    //pullNTSwerveParams = new PullNTSwerveParams();
-    //testPID = new TestModulePID();
-    //saveSwerveParameters = new SaveSwerveParameters();
+    // letsRoll2Joysticks = new LetsRoll2Joysticks();
+    // letsRoll1Joystick = new LetsRoll1Joystick();
+    // zeroCanCoders = new ZeroCanCoders();
+    // pullNTSwerveParams = new PullNTSwerveParams();
+    // testPID = new TestModulePID();
+    // saveSwerveParameters = new SaveSwerveParameters();
 
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
@@ -77,8 +75,8 @@ public class Robot extends TimedRobot {
    * This function is called every robot packet, no matter the mode. Use this for items like
    * diagnostics that you want ran during disabled, autonomous, teleoperated and test.
    *
-   * <p>This runs after the mode specific periodic functions, but before
-   * LiveWindow and SmartDashboard integrated updating.
+   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
+   * SmartDashboard integrated updating.
    */
   @Override
   public void robotPeriodic() {
@@ -89,20 +87,14 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().run();
   }
 
-  /**
-   * This function is called once each time the robot enters Disabled mode.
-   */
+  /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {
-  }
+  public void disabledInit() {}
 
   @Override
-  public void disabledPeriodic() {
-  }
+  public void disabledPeriodic() {}
 
-  /**
-   * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
-   */
+  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
@@ -113,12 +105,9 @@ public class Robot extends TimedRobot {
     }
   }
 
-  /**
-   * This function is called periodically during autonomous.
-   */
+  /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {
-  }
+  public void autonomousPeriodic() {}
 
   @Override
   public void teleopInit() {
@@ -131,13 +120,9 @@ public class Robot extends TimedRobot {
     }
   }
 
-  /**
-   * This function is called periodically during operator control.
-   */
+  /** This function is called periodically during operator control. */
   @Override
-  public void teleopPeriodic() {
-
-  }
+  public void teleopPeriodic() {}
 
   @Override
   public void testInit() {
@@ -145,10 +130,7 @@ public class Robot extends TimedRobot {
     CommandScheduler.getInstance().cancelAll();
   }
 
-  /**
-   * This function is called periodically during test mode.
-   */
+  /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {
-  }
+  public void testPeriodic() {}
 }

@@ -6,25 +6,20 @@
  * @author Christian Piper (@CAP1Sup)
  * @since 3/9/21
  */
-
 package frc.robot.commands.swerve;
 
-// Robot, RobotContainer
+// Imports
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 
-// WPI libraries
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj.Timer;
-
 public class TestModulePID extends CommandBase {
   /** Creates a new TestPID. */
-
   public TestModulePID() {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(Robot.driveTrain);
   }
-
 
   // Called when the command is initially scheduled.
   @Override
@@ -36,7 +31,6 @@ public class TestModulePID extends CommandBase {
     // Move each of the wheels to 0
     Robot.driveTrain.setDesiredAngles(0, 0, 0, 0);
   }
-
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -74,7 +68,6 @@ public class TestModulePID extends CommandBase {
       Timer.delay(1);
     }
 
-
     // The top right button
     else if (RobotContainer.rightJoystick.getRawButton(11)) {
       Robot.driveTrain.frontRight.setDesiredVelocity(2);
@@ -105,8 +98,7 @@ public class TestModulePID extends CommandBase {
       Timer.delay(3);
       Robot.driveTrain.backRight.setDesiredVelocity(-2);
       Timer.delay(3);
-    }
-    else {
+    } else {
 
       // Halt the motors, then move to the zeros
       Robot.driveTrain.setDesiredVelocities(0, 0, 0, 0);
@@ -117,11 +109,9 @@ public class TestModulePID extends CommandBase {
     Robot.driveTrain.publishPerformanceData();
   }
 
-
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
-
 
   // Returns true when the command should end.
   @Override

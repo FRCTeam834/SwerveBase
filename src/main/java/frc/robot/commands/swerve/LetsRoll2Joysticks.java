@@ -9,19 +9,15 @@
  * @author Christian Piper (@CAP1Sup)
  * @since 5/8/20
  */
-
 package frc.robot.commands.swerve;
 
-// Robot libraries
+// Imports
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Parameters;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.enums.ControlInputs;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-
-// WPI libraries
-import edu.wpi.first.wpilibj2.command.CommandBase;
-
 
 public class LetsRoll2Joysticks extends CommandBase {
 
@@ -55,28 +51,29 @@ public class LetsRoll2Joysticks extends CommandBase {
 
     // Get all of the current joystick inputs
     if (Parameters.driver.currentProfile.inputType == ControlInputs.JOYSTICKS) {
-      leftX =  RobotContainer.constrainJoystick(RobotContainer.leftJoystick.getX());
+      leftX = RobotContainer.constrainJoystick(RobotContainer.leftJoystick.getX());
       rightX = RobotContainer.constrainJoystick(RobotContainer.rightJoystick.getX());
       rightY = RobotContainer.constrainJoystick(RobotContainer.rightJoystick.getY());
-    }
-    else {
-      leftX =  RobotContainer.constrainJoystick(RobotContainer.xbox.getX(Hand.kLeft));
+    } else {
+      leftX = RobotContainer.constrainJoystick(RobotContainer.xbox.getX(Hand.kLeft));
       rightX = RobotContainer.constrainJoystick(RobotContainer.xbox.getX(Hand.kRight));
       rightY = RobotContainer.constrainJoystick(RobotContainer.xbox.getY(Hand.kRight));
     }
 
-
-    // If any of the sticks are out of range, then we need to move. Otherwise, lock up the drivetrain (if specified) or just halt the modules
+    // If any of the sticks are out of range, then we need to move. Otherwise, lock up the
+    // drivetrain (if specified) or just halt the modules
     if (leftX != 0 || rightX != 0 || rightY != 0) {
 
-      // Move the drivetrain with the desired values (left right values are flipped from the logical way, thanks WPI)
-      Robot.driveTrain.drive((rightY * Parameters.driver.currentProfile.maxModVelocity), (rightX * Parameters.driver.currentProfile.maxModVelocity),
-                        Math.toRadians(leftX * Parameters.driver.currentProfile.maxSteerRate), fieldCentric);
-    }
-    else if (Parameters.driver.currentProfile.lockemUp) {
+      // Move the drivetrain with the desired values (left right values are flipped from the logical
+      // way, thanks WPI)
+      Robot.driveTrain.drive(
+          (rightY * Parameters.driver.currentProfile.maxModVelocity),
+          (rightX * Parameters.driver.currentProfile.maxModVelocity),
+          Math.toRadians(leftX * Parameters.driver.currentProfile.maxSteerRate),
+          fieldCentric);
+    } else if (Parameters.driver.currentProfile.lockemUp) {
       Robot.driveTrain.lockemUp();
-    }
-    else {
+    } else {
       Robot.driveTrain.stopModules();
     }
 

@@ -9,20 +9,15 @@
  * @author Christian Piper (@CAP1Sup)
  * @since 5/8/20
  */
-
 package frc.robot.commands.swerve;
 
-
-// Robot libraries
+// Imports
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Parameters;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.enums.ControlInputs;
-
-// WPI libraries
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-
 
 public class LetsRoll1Joystick extends CommandBase {
 
@@ -33,8 +28,7 @@ public class LetsRoll1Joystick extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -47,8 +41,7 @@ public class LetsRoll1Joystick extends CommandBase {
     if (Parameters.driver.currentProfile.inputType == ControlInputs.JOYSTICKS) {
       leftX = RobotContainer.constrainJoystick(RobotContainer.leftJoystick.getX());
       leftY = RobotContainer.constrainJoystick(RobotContainer.leftJoystick.getY());
-    }
-    else {
+    } else {
       leftX = RobotContainer.constrainJoystick(RobotContainer.xbox.getX(Hand.kRight));
       leftY = RobotContainer.constrainJoystick(RobotContainer.xbox.getY(Hand.kRight));
     }
@@ -57,32 +50,33 @@ public class LetsRoll1Joystick extends CommandBase {
     double turning = 0;
 
     // Check the values of the buttons
-    boolean counterClockwiseButton = false; //RobotContainer.leftJoystick.getRawButton(6);
-    boolean clockwiseButton = false; //RobotContainer.leftJoystick.getRawButton(7);
+    boolean counterClockwiseButton = false; // RobotContainer.leftJoystick.getRawButton(6);
+    boolean clockwiseButton = false; // RobotContainer.leftJoystick.getRawButton(7);
 
     // Determine the correct amount of turning based on the button inputs
     if (!(clockwiseButton && counterClockwiseButton)) {
       if (counterClockwiseButton) {
         // Positive direction is pressed
         turning = 1;
-      }
-      else if (clockwiseButton) {
+      } else if (clockwiseButton) {
         // Negative direction is pressed
         turning = -1;
       }
     }
 
-    // If any of the sticks are out of range, then we need to move. Otherwise, lock up the drivetrain (if specified)
+    // If any of the sticks are out of range, then we need to move. Otherwise, lock up the
+    // drivetrain (if specified)
     if (leftX != 0 || leftY != 0 || turning != 0) {
 
       // Move the drivetrain with the desired values
-      Robot.driveTrain.drive((leftX * Parameters.driver.currentProfile.maxModVelocity), (leftY * Parameters.driver.currentProfile.maxModVelocity),
-                        Math.toRadians(turning * Parameters.driver.currentProfile.maxSteerRate), Parameters.driver.currentProfile.fieldCentric);
-    }
-    else if (Parameters.driver.currentProfile.lockemUp) {
+      Robot.driveTrain.drive(
+          (leftX * Parameters.driver.currentProfile.maxModVelocity),
+          (leftY * Parameters.driver.currentProfile.maxModVelocity),
+          Math.toRadians(turning * Parameters.driver.currentProfile.maxSteerRate),
+          Parameters.driver.currentProfile.fieldCentric);
+    } else if (Parameters.driver.currentProfile.lockemUp) {
       Robot.driveTrain.lockemUp();
-    }
-    else {
+    } else {
       Robot.driveTrain.stopModules();
     }
 

@@ -1,7 +1,7 @@
 plugins {
     id "java"
     id "edu.wpi.first.GradleRIO" version "2021.3.1"
-    id "com.diffplug.spotless" version "5.0.0"
+    id "com.diffplug.spotless" version "5.5.0"
 }
 
 sourceCompatibility = JavaVersion.VERSION_11
@@ -82,13 +82,44 @@ jar {
 // Runs code formatting tasks
 spotless {
     java {
-        // Specify that we want all java files to be included
-        target "**/*.java"
-
-        // Specify the steps needed to complete
+        target fileTree('.') {
+            include '**/*.java'
+            exclude '**/build/**', '**/build-*/**'
+        }
+        toggleOffOn()
+        googleJavaFormat()
         removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+        indentWithSpaces(4)
+    }
+    groovyGradle {
+        target fileTree('.') {
+            include '**/*.gradle'
+            exclude '**/build/**', '**/build-*/**'
+        }
+        greclipse()
         indentWithSpaces(4)
         trimTrailingWhitespace()
-        //endWithNewLine()
+        endWithNewline()
+    }
+    format 'xml', {
+        target fileTree('.') {
+            include '**/*.xml'
+            exclude '**/build/**', '**/build-*/**'
+        }
+        eclipseWtp('xml')
+        trimTrailingWhitespace()
+        indentWithSpaces(2)
+        endWithNewline()
+    }
+    format 'misc', {
+        target fileTree('.') {
+            include '**/*.md', '**/.gitignore'
+            exclude '**/build/**', '**/build-*/**'
+        }
+        trimTrailingWhitespace()
+        indentWithSpaces(2)
+        endWithNewline()
     }
 }

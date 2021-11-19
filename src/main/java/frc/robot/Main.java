@@ -7,6 +7,7 @@
 
 package frc.robot;
 
+// Imports
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -15,8 +16,7 @@ import edu.wpi.first.wpilibj.RobotBase;
  * call.
  */
 public final class Main {
-  private Main() {
-  }
+  private Main() {}
 
   /**
    * Main initialization function. Do not perform any initialization here.

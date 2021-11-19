@@ -32,3 +32,14 @@ jobs:
     # Runs a single command using the runners shell
     - name: Compile and run tests on robot code
       run: ./gradlew build
+
+  # Formatting
+  formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2 # v2 minimum required
+      - uses: axel-op/googlejavaformat-action@v3
+        with:
+          args: "--skip-sorting-imports --replace"
+          # Recommended if you use MacOS:
+          # githubToken: ${{ secrets.GITHUB_TOKEN }}

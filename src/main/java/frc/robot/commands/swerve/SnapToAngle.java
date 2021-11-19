@@ -6,25 +6,21 @@
  * @author Christian Piper (@CAP1Sup)
  * @since 2/22/21
  */
-
 package frc.robot.commands.swerve;
 
-// Parameters
-import frc.robot.Parameters;
-
-// Robot
-import frc.robot.Robot;
-
-// WPI libraries
-import edu.wpi.first.wpilibj2.command.CommandBase;
+// Imports
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Parameters;
+import frc.robot.Robot;
 
 public class SnapToAngle extends CommandBase {
   /** Creates a new SnapToAngle. */
 
   // Main defines
   double desiredAngle;
+
   Pose2d desiredPosition;
   double linearVel;
 
@@ -46,7 +42,9 @@ public class SnapToAngle extends CommandBase {
     Pose2d currentPose = Robot.driveTrain.getPose2D();
 
     // Set the variables for the function
-    this.desiredPosition = new Pose2d(currentPose.getX(), currentPose.getY(), Rotation2d.fromDegrees(this.desiredAngle));
+    this.desiredPosition =
+        new Pose2d(
+            currentPose.getX(), currentPose.getY(), Rotation2d.fromDegrees(this.desiredAngle));
     this.linearVel = Parameters.driver.currentProfile.maxModVelocity;
   }
 
@@ -60,9 +58,7 @@ public class SnapToAngle extends CommandBase {
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override

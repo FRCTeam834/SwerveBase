@@ -9,20 +9,16 @@
  * @author Christian Piper (@CAP1Sup)
  * @since 5/8/20
  */
-
 package frc.robot.subsystems;
 
+// Imports
 import com.kauailabs.navx.frc.AHRS;
-
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class NavX extends SubsystemBase {
-  /**
-   * Creates a new NavX.
-   */
-
+  /** Creates a new NavX. */
   AHRS navX = new AHRS(SPI.Port.kMXP);
 
   public NavX() {
@@ -87,5 +83,4 @@ public class NavX extends SubsystemBase {
   public void resetDisplacement() {
     resetDisplacement();
   }
-
 }
