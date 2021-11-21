@@ -10,22 +10,23 @@ package frc.robot.commands.swerve;
 
 // Imports
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+
 import frc.robot.Robot;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ZeroCanCoders extends InstantCommand {
-  public ZeroCanCoders() {
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(Robot.driveTrain);
-  }
+    public ZeroCanCoders() {
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(Robot.driveTrain);
+    }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {
-    // Zero each of the modules
-    Robot.driveTrain.zeroEncoders();
-    System.out.println("All modules zeroed");
-  }
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {
+        // Zero each of the modules
+        Robot.driveTrain.zeroEncoders();
+        System.out.println("All modules zeroed");
+    }
 }

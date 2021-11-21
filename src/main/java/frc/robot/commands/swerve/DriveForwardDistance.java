@@ -14,73 +14,76 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Transform2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+
 import frc.robot.Parameters;
 import frc.robot.Robot;
 
 public class DriveForwardDistance extends CommandBase {
-  /** Moves the robot to the desired position */
+    /** Moves the robot to the desired position */
 
-  // Main carrier variables
-  Pose2d desiredPose2d;
+    // Main carrier variables
+    Pose2d desiredPose2d;
 
-  double linearVel;
+    double linearVel;
 
-  // Move forward at the set linear velocity
-  public DriveForwardDistance(double distance, double linearVelocity) {
+    // Move forward at the set linear velocity
+    public DriveForwardDistance(double distance, double linearVelocity) {
 
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(Robot.driveTrain);
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(Robot.driveTrain);
 
-    // Get the current position
-    Pose2d currentPosition = Robot.driveTrain.getPose2D();
-    double newX = currentPosition.getX() + (distance * currentPosition.getRotation().getCos());
-    double newY = currentPosition.getY() + (distance * currentPosition.getRotation().getSin());
-    this.desiredPose2d = new Pose2d(newX, newY, currentPosition.getRotation());
-    this.linearVel = linearVelocity;
-  }
+        // Get the current position
+        Pose2d currentPosition = Robot.driveTrain.getPose2D();
+        double newX = currentPosition.getX() + (distance * currentPosition.getRotation().getCos());
+        double newY = currentPosition.getY() + (distance * currentPosition.getRotation().getSin());
+        this.desiredPose2d = new Pose2d(newX, newY, currentPosition.getRotation());
+        this.linearVel = linearVelocity;
+    }
 
-  // Default to current driver profile for the linear velocity
-  public DriveForwardDistance(double distance) {
+    // Default to current driver profile for the linear velocity
+    public DriveForwardDistance(double distance) {
 
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(Robot.driveTrain);
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(Robot.driveTrain);
 
-    // Get the current position
-    Pose2d currentPosition = Robot.driveTrain.getPose2D();
+        // Get the current position
+        Pose2d currentPosition = Robot.driveTrain.getPose2D();
 
-    // Physics equations (done with basic logic)
-    // double newX = currentPosition.getX() + (distance * currentPosition.getRotation().getCos());
-    // double newY = currentPosition.getY() + (distance * currentPosition.getRotation().getSin());
-    // this.desiredPose2d = new Pose2d(newX, newY, currentPosition.getRotation());
+        // Physics equations (done with basic logic)
+        // double newX = currentPosition.getX() + (distance *
+        // currentPosition.getRotation().getCos());
+        // double newY = currentPosition.getY() + (distance *
+        // currentPosition.getRotation().getSin());
+        // this.desiredPose2d = new Pose2d(newX, newY, currentPosition.getRotation());
 
-    // WPI equations (should work better)
-    this.desiredPose2d =
-        currentPosition.transformBy(
-            new Transform2d(new Translation2d(distance, 0), new Rotation2d()));
-    this.linearVel = Parameters.driver.currentProfile.maxModVelocity;
-  }
+        // WPI equations (should work better)
+        this.desiredPose2d =
+                currentPosition.transformBy(
+                        new Transform2d(new Translation2d(distance, 0), new Rotation2d()));
+        this.linearVel = Parameters.driver.currentProfile.maxModVelocity;
+    }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {}
 
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
 
-    // Set the drivetrain to run to the position
-    Robot.driveTrain.trajectoryFollow(desiredPose2d, linearVel);
-  }
+        // Set the drivetrain to run to the position
+        Robot.driveTrain.trajectoryFollow(desiredPose2d, linearVel);
+    }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {}
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
 
-    // Check if the trajectory is complete
-    return Robot.driveTrain.finishedMovement();
-  }
+        // Check if the trajectory is complete
+        return Robot.driveTrain.finishedMovement();
+    }
 }
