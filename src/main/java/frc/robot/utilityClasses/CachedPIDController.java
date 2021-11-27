@@ -24,9 +24,9 @@ public class CachedPIDController extends CANPIDController {
      */
     @SuppressWarnings("all")
     public CachedPIDController(CANSparkMax device) {
-        super(
-                device); // ! IGNORE THIS WARNING, there's no other way to create the new
-                         // controller. Even REV themselves use it
+        // ! IGNORE THIS WARNING, there's no other way to create the new
+        // controller. Even REV themselves use it
+        super(device);
     }
 
     /**
