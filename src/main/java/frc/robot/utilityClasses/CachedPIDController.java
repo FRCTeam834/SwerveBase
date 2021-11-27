@@ -15,14 +15,14 @@ public class CachedPIDController extends CANPIDController {
     CANError previousCanError = CANError.kOk;
 
     /**
-     * Creates a new Cached Spark Max object
+     * Creates a new Cached Spark Max object. This is useful for preventing the sending of repeated values to the Spark Maxes. It will help to reduce the load on the CAN bus (only a set amount of information can be sent across the CAN bus in a given time).
      *
      * @param deviceID The CAN ID of the motor controller
      * @param type The type of motor being used
      */
     @SuppressWarnings("all")
     public CachedPIDController(CANSparkMax device) {
-        super(device);
+        super(device); // ! IGNORE THIS WARNING, there's no other way to create the new controller. Even REV themselves use it
     }
 
     /**
@@ -36,7 +36,7 @@ public class CachedPIDController extends CANPIDController {
      * @param ctrl is the control type
      * @return Set to REV_OK if successful
      */
-    public CANError setRef(double value, ControlType ctrl) {
+    public CANError setReference(double value, ControlType ctrl) {
 
         // Check if the values have been changed
         // We use separated if loops to reduce the typical amount of checks needed

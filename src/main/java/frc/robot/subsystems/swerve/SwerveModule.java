@@ -124,6 +124,9 @@ public class SwerveModule {
         steerMotorEncoder.setPosition(getAngle());
 
         // Steering PID controller (from motor)
+        // Note that we use a "cached" controller.
+        // This version of the PID controller checks if the desired setpoint is already set.
+        // This reduces the load on the CAN bus, as we can only send a set amount across at once.
         steerMotorPID = new CachedPIDController(steerMotor);
         steerMotorPID.setP(steerPIDParams.kP);
         steerMotorPID.setI(steerPIDParams.kI);
@@ -172,6 +175,9 @@ public class SwerveModule {
                         / Parameters.driveTrain.ratios.DRIVE_GEAR_RATIO);
 
         // Drive motor PID controller (from motor)
+        // Note that we use a "cached" controller.
+        // This version of the PID controller checks if the desired setpoint is already set.
+        // This reduces the load on the CAN bus, as we can only send a set amount across at once.
         driveMotorPID = new CachedPIDController(driveMotor);
         driveMotorPID.setP(drivePIDParams.kP);
         driveMotorPID.setI(drivePIDParams.kI);
@@ -332,7 +338,7 @@ public class SwerveModule {
             desiredAngle = targetAngle + angularOffset;
 
             // Set the PID reference
-            steerMotorPID.setRef(desiredAngle, steerMControlType);
+            steerMotorPID.setReference(desiredAngle, steerMControlType);
 
             // Print out info (for debugging)
             if (Parameters.debug) {
@@ -380,7 +386,7 @@ public class SwerveModule {
         if (enabled) {
 
             // Calculate the output of the drive
-            driveMotorPID.setRef(targetVelocity, driveMControlType);
+            driveMotorPID.setReference(targetVelocity, driveMControlType);
 
             // Print out debug info if needed
             if (Parameters.debug) {
