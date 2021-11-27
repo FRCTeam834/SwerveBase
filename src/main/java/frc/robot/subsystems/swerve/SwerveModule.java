@@ -107,6 +107,7 @@ public class SwerveModule {
         steerMotor.setIdleMode(Parameters.driver.currentProfile.steerIdleMode);
         steerMotor.setSmartCurrentLimit(Parameters.driveTrain.maximums.MAX_STEER_CURRENT);
         steerMotor.setInverted(false);
+        steerMotor.setSmartCurrentLimit(20);
 
         // Steer motor encoder (position is converted from rotations to degrees)
         // (For the conversion factor) First we multiply by 360 to convert rotations to degrees,
@@ -155,6 +156,7 @@ public class SwerveModule {
         driveMotor.enableVoltageCompensation(Parameters.driveTrain.nominalVoltage);
         driveMotor.setSmartCurrentLimit(Parameters.driveTrain.maximums.MAX_DRIVE_CURRENT);
         driveMotor.setIdleMode(Parameters.driver.currentProfile.driveIdleMode);
+        driveMotor.setSmartCurrentLimit(30);
 
         // Reverse the motor direction if specified
         driveMotor.setInverted(reversedDrive);
@@ -558,6 +560,7 @@ public class SwerveModule {
         // Encoder offset
         steerCANCoder.configMagnetOffset(
                 Parameters.savedParams.getDouble(name + "_ENCODER_OFFSET", cancoderOffset));
+        steerMotorEncoder.setPosition(getAngle());
 
         // Push the new values to the table
         publishTuningValues();

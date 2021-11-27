@@ -277,6 +277,19 @@ public final class Parameters {
             public static final double STEER_GEAR_RATIO = 12.8;
             public static final double DRIVE_GEAR_RATIO = 8.16;
         }
+
+        // Auton Constants
+        public static final class auton {
+
+            public static final double DRIVE_SPEED = -2; // m/s //DO NOT CHANGE!
+            public static final double TIME_OFF_LINE = 2.25; // s //DO NOT CHANGE!
+
+            public static final double LINE_UP_SPEED = 1.5; // m/s
+            public static final double LINEUP_TIME = .5; // s
+
+            public static final double TURN_180_STEER_RATE_PERCENT = 0.5; // The percentage of maxSteerRate (based on driver profile)
+
+        }
     }
 
     // DriverStation instance

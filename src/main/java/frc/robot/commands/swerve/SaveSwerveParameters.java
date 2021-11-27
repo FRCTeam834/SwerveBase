@@ -25,6 +25,6 @@ public class SaveSwerveParameters extends InstantCommand {
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
-        Robot.driveTrain.publishPerformanceData();
+        Robot.driveTrain.saveParameters();
     }
 }

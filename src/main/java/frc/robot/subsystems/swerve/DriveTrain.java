@@ -111,7 +111,7 @@ public class DriveTrain extends SubsystemBase {
                         Parameters.driveTrain.can.FL_CODER_ID,
                         Parameters.driveTrain.pid.FL_STEER_PID,
                         Parameters.driveTrain.pid.FL_DRIVE_PID,
-                        false);
+                        true);
         frontRight =
                 new SwerveModule(
                         "FR",
@@ -120,7 +120,7 @@ public class DriveTrain extends SubsystemBase {
                         Parameters.driveTrain.can.FR_CODER_ID,
                         Parameters.driveTrain.pid.FR_STEER_PID,
                         Parameters.driveTrain.pid.FR_DRIVE_PID,
-                        true);
+                        false);
         backLeft =
                 new SwerveModule(
                         "BL",
@@ -129,7 +129,7 @@ public class DriveTrain extends SubsystemBase {
                         Parameters.driveTrain.can.BL_CODER_ID,
                         Parameters.driveTrain.pid.BL_STEER_PID,
                         Parameters.driveTrain.pid.BL_DRIVE_PID,
-                        false);
+                        true);
         backRight =
                 new SwerveModule(
                         "BR",
@@ -138,7 +138,7 @@ public class DriveTrain extends SubsystemBase {
                         Parameters.driveTrain.can.BR_CODER_ID,
                         Parameters.driveTrain.pid.BR_STEER_PID,
                         Parameters.driveTrain.pid.BR_DRIVE_PID,
-                        true);
+                        false);
 
         // Don't mess with NetworkTables unless we have to
         if (Parameters.networkTables) {
@@ -420,6 +420,11 @@ public class DriveTrain extends SubsystemBase {
         setDesiredVelocities(0, 0, 0, 0);
     }
 
+    /** Sets the modules so that they all point forward */
+    public void straightenModules() {
+        setDesiredAngles(0, 0, 0, 0);
+    }
+
     /**
      * Locks the drivetrain up by halting the modules and moving them in an "X" pattern. Useful for
      * when someone is bullying us
@@ -529,7 +534,7 @@ public class DriveTrain extends SubsystemBase {
         return driveController.atReference();
     }
 
-    // Updates all of the steering parameters, such as PID loops and driver settings
+    /** Updates all of the steering parameters, such as PID loops and driver settings */
     public void updateParameters() {
 
         // Update the PID parameters with the new driver profile values
@@ -614,7 +619,7 @@ public class DriveTrain extends SubsystemBase {
                 Math.toDegrees(ROTATION_CONSTRAINTS.maxAcceleration));
     }
 
-    // Loads all of the currently saved parameters
+    /** Loads all of the currently saved parameters */
     public void loadParameters() {
 
         // Load module values
@@ -667,7 +672,7 @@ public class DriveTrain extends SubsystemBase {
         publishTuningValues();
     }
 
-    // Loads all of the NetworkTable parameters
+    /** Loads all of the NetworkTable parameters */
     public void pullTuningValues() {
 
         // Don't mess with NetworkTables unless we have to
@@ -710,7 +715,7 @@ public class DriveTrain extends SubsystemBase {
         }
     }
 
-    // Pushes all of the NetworkTable parameters
+    /** Pushes all of the NetworkTable parameters */
     public void publishTuningValues() {
 
         // Don't mess with NetworkTables unless we have to
@@ -744,7 +749,7 @@ public class DriveTrain extends SubsystemBase {
         }
     }
 
-    // Publish the performance data from each of the modules to the NetworkTable
+    /** Publish the performance data from each of the modules to the NetworkTable */
     public void publishPerformanceData() {
 
         // Don't mess with NetworkTables unless we have to

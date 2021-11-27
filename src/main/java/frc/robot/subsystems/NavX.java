@@ -33,7 +33,7 @@ public class NavX extends SubsystemBase {
 
     // Grabs the yaw
     public float getYaw() {
-        return navX.getYaw();
+        return -navX.getYaw();
     }
 
     // Fused heading is like yaw, but on crack
@@ -43,7 +43,7 @@ public class NavX extends SubsystemBase {
 
     // The Rotation2D is the big brother of fused heading
     public Rotation2d getRotation2d() {
-        return Rotation2d.fromDegrees(navX.getFusedHeading());
+        return Rotation2d.fromDegrees(navX.getYaw());
     }
 
     // Grabs the roll
@@ -78,7 +78,7 @@ public class NavX extends SubsystemBase {
 
     // Resets the NavX's yaw axis to zero
     public void resetYaw() {
-        navX.reset();
+        navX.zeroYaw();
     }
 
     public void resetDisplacement() {
