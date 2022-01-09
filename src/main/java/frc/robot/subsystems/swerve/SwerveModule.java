@@ -128,7 +128,7 @@ public class SwerveModule {
         // Note that we use a "cached" controller.
         // This version of the PID controller checks if the desired setpoint is already set.
         // This reduces the load on the CAN bus, as we can only send a set amount across at once.
-        steerMotorPID = new CachedPIDController(steerMotor);
+        steerMotorPID = (CachedPIDController)steerMotor.getPIDController();
         steerMotorPID.setP(steerPIDParams.kP);
         steerMotorPID.setI(steerPIDParams.kI);
         steerMotorPID.setD(steerPIDParams.kD);
@@ -180,7 +180,7 @@ public class SwerveModule {
         // Note that we use a "cached" controller.
         // This version of the PID controller checks if the desired setpoint is already set.
         // This reduces the load on the CAN bus, as we can only send a set amount across at once.
-        driveMotorPID = new CachedPIDController(driveMotor);
+        driveMotorPID = (CachedPIDController)driveMotor.getPIDController();
         driveMotorPID.setP(drivePIDParams.kP);
         driveMotorPID.setI(drivePIDParams.kI);
         driveMotorPID.setD(drivePIDParams.kD);
