@@ -611,10 +611,10 @@ public class DriveTrain extends SubsystemBase {
         Parameters.savedParams.putDouble("DRIVETRAIN_ROTATION_PID_D", ROTATION_PID.getD());
 
         // Rotation PID (Constraints)
-        Parameters.savedParams.getDouble(
+        Parameters.savedParams.putDouble(
                 "DRIVETRAIN_ROTATION_PID_MAX_VEL",
                 Math.toDegrees(ROTATION_CONSTRAINTS.maxVelocity));
-        Parameters.savedParams.getDouble(
+        Parameters.savedParams.putDouble(
                 "DRIVETRAIN_ROTATION_PID_MAX_ACCEL",
                 Math.toDegrees(ROTATION_CONSTRAINTS.maxAcceleration));
     }
